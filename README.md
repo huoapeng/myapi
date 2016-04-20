@@ -4,4 +4,5 @@ this is a test project for flask-restful
 
 #note
 
-shit,oh yeah !
+flask-restful flask-sqlalchemy mysql
+holly shit !
