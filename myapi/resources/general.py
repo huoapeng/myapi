@@ -1,32 +1,19 @@
-from flask import Blueprint
-from myweb.database import init_db, db_session
-from myweb.model.user import User
+from flask.ext.restful import Resource
+from myapi import db
 
-mod = Blueprint('general', __name__)
+class general(Resource):
+	def get(self):
+		# if method == 1:
+		# 	db.create_all()
+		# elif method == 'drop_all':
+		# 	db.drop_all()
+		# else:
+		# pass
+		db.create_all()
+		return {'result':'true'}
 
-@mod.route('/', methods=['GET', 'POST'])
-def index():
-	return 'this is index'
+	def get(self):
+		pass
 
-@mod.route('/init_db')
-def initdb():
-	init_db()
-	return 'init database'
-
-
-@mod.route('/adduser')
-def adduser():
-	u = User('admin','admin@test.com')
-	db_session.add(u)
-	db_session.commit()
-	return 'success add user' 
-
-
-@mod.route('/searchalluser')
-def searchalluser():
-	return User.query.all()[0].name
-
-
-@mod.route('/searchuser')
-def searchuser():
-	return User.query.filter(User.name == 'admin').first()
+	def post(self):
+		pass

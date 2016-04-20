@@ -1,16 +1,24 @@
 from flask import Flask
 from flask.ext import restful
 from flask.ext.sqlalchemy import SQLAlchemy
-from myapi.resources.user import User
 
-app = Flask(__name__, instance_relative_config=True)
-app.config.from_object('config.dev')
-app.config.from_pyfile('config.py')
-#app.config.from_envvar('APP_CONFIG_FILE')
-api = restful.Api(app)
+db = SQLAlchemy()
 
+def create_app(config_name):
+	app = Flask(__name__, instance_relative_config=True)
+	app.config.from_object(config_name)
+	app.config.from_pyfile('config.py')
+	#app.config.from_envvar('APP_CONFIG_FILE')
 
-api.add_resource(User, '/user', '/user/<int:userid>')
+	db.init_app(app)
+
+	from myapi.resources.user import User
+	from myapi.resources.general import general
+	api = restful.Api(app)
+	api.add_resource(User, '/user', '/user/<int:userid>')
+	api.add_resource(general, '/general/<int:m>')
+
+	return app
 
 # @app.teardown_appcontext
 # def shutdown_session(exception=None):
@@ -30,7 +38,6 @@ api.add_resource(User, '/user', '/user/<int:userid>')
 # @app.teardown_request
 # def remove_db_session(exception):
 #     db_session.remove()
-
 
 # @app.context_processor
 # def current_year():
