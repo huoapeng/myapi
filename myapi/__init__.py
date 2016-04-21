@@ -15,8 +15,8 @@ def create_app(config_name):
 	from myapi.resources.user import User
 	from myapi.resources.general import general
 	api = restful.Api(app)
-	api.add_resource(User, '/user', '/user/<int:userid>')
-	api.add_resource(general, '/general/<int:m>')
+	api.add_resource(User, '/user', '/user/<string:todo_id>')
+	api.add_resource(general, '/general/<string:method>')
 
 	return app
 

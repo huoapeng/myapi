@@ -1,57 +1,60 @@
 from flask.ext.restful import Resource
-from myapi.model.user import UserModel
+from flask.ext.restful import fields, marshal_with, reqparse
 from myapi import db
+from myapi.model.user import UserModel
+from myapi.common.util import valid_email
+
+post_parser = reqparse.RequestParser()
+post_parser.add_argument(
+    'email', dest='email',
+    type=str, location='form',
+    required=True, help='Missing required parameter in the JSON body ,The user\'s email',
+)
+post_parser.add_argument(
+    'password', dest='password',
+    type=str, 
+    required=True, help='The user\'s password',
+)
+# post_parser.add_argument(
+#     'user_priority', dest='user_priority',
+#     type=int, location='form',
+#     default=1, choices=range(5), help='The user\'s priority',
+# )
+
+user_fields = {
+    'id': fields.Integer,
+    'username': fields.String(default='Anonymous User'),
+    'email': fields.String,
+    'user_priority': fields.Integer,
+    'custom_greeting': fields.FormattedString('Hey there {username}!'),
+    'date_created': fields.DateTime,
+    'date_updated': fields.DateTime,
+    'links': fields.Nested({
+        'friends': fields.Url('/Users/{id}/Friends'),
+        'posts': fields.Url('Users/{id}/Posts'),
+    }),
+}
+
 
 class User(Resource):
-    def get(self, userid= None):
+    def get(self, todo_id= None):
         return {'result':'true'}
 
-    def get(self):
-        u = UserModel('admin','admin@mail.com')
-        db.session.add(u)
-        db.session.commit()
-
     def post(self):
+        args = post_parser.parse_args()
+        if not valid_email(args.email,):
+            return {'status':'False','message':'pls check email'}
+        else:
+            u = UserModel(args.email, args.password)
+            db.session.add(u)
+            db.session.commit()
+            return {'status':'True','message':'regist successfully'}
+
+    def put(self):
         pass
 
-
-
-# class HelloWorld(restful.Resource):
-#     def get(self):
-#         return {'hello': 'world'}
-
-# class todo(restful.Resource):
-# 	def get(self, todo_id):
-# 		return {'hello' : todo_id }
-
-# api.add_resource(HelloWorld, '/')
-# api.add_resource(todo, '/user/<string:todo_id>')
-
-# from datetime import datetime
-# from flask import Flask, request, flash, url_for, redirect, \
-#      render_template, abort
-# from flask_sqlalchemy import SQLAlchemy
-
-
-# app = Flask(__name__)
-# app.config.from_pyfile('hello.cfg')
-# db = SQLAlchemy(app)
-
-
-# class Todo(db.Model):
-#     __tablename__ = 'todos'
-#     id = db.Column('todo_id', db.Integer, primary_key=True)
-#     title = db.Column(db.String(60))
-#     text = db.Column(db.String)
-#     done = db.Column(db.Boolean)
-#     pub_date = db.Column(db.DateTime)
-
-#     def __init__(self, title, text):
-#         self.title = title
-#         self.text = text
-#         self.done = False
-#         self.pub_date = datetime.utcnow()
-
+    def delete(self):
+        pass
 
 # @app.route('/')
 # def show_all():
@@ -84,6 +87,3 @@ class User(Resource):
 #     db.session.commit()
 #     return redirect(url_for('show_all'))
 
-
-# if __name__ == '__main__':
-#     app.run()
