@@ -26,15 +26,12 @@ post_parser.add_argument(
 #     type=int, location='form',
 #     default=1, choices=range(5), help='The user\'s priority',
 # )
-usersss = {
-    'id':1,
-    'email':'123123',
-    'password':'dfsdfds'
-}
+
 user_fields = {
     'id': fields.Integer,
-    # 'username': fields.String(default='Anonymous User'),
+    'username': fields.String(default='Anonymous User'),
     'email': fields.String,
+    'ema111il': fields.String,
     'password': fields.String
     # 'user_priority': fields.Integer,
     # 'custom_greeting': fields.FormattedString('Hey there {username}!'),
