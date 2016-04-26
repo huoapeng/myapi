@@ -3,7 +3,7 @@ from flask.ext.restful import fields, marshal_with, reqparse
 # from flask import request, jsonify
 from myapi import db
 from myapi.model.user import UserModel
-from myapi.common.util import valid_email
+from myapi.common.util import valid_email, md5
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument(
@@ -51,14 +51,14 @@ class User(Resource):
             if args.type == 0:
                 user = UserModel.query.filter_by(email=args.email).first()
                 if user is None:
-                    u = UserModel(args.email, args.password)
+                    u = UserModel(args.email, md5(args.password))
                     db.session.add(u)
                     db.session.commit()
                     return {'status':'True','message':'regist successfully'}
                 else:
                     return {'status':'False','message':'account is already exist'}
             else:
-                user = UserModel.query.filter_by(email=args.email).filter_by(password=args.password).first()
+                user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.password)).first()
                 if user is None:
                     return {'status':'False','message':'account is not exist'}
                 else:

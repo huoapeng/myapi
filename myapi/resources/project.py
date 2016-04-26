@@ -44,9 +44,9 @@ project_fields = {
 
 
 class Project(Resource):
-    @marshal_with(project_fields)
+    # @marshal_with(project_fields)
     def get(self, projectid):
-        return ProjectModel.query.get(projectid)
+        return marshal_with(ProjectModel.query.get(projectid), project_fields)
         #return ProjectModel.query.filter_by(id=projectid).first()
         #todos=Todo.query.order_by(Todo.pub_date.desc()).all()
 
