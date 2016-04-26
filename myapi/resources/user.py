@@ -1,31 +1,21 @@
 from flask.ext.restful import Resource
 from flask.ext.restful import fields, marshal_with, reqparse
+# from flask import request, jsonify
 from myapi import db
 from myapi.model.user import UserModel
 from myapi.common.util import valid_email
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument(
-    'email', dest='email',
-    type=str, location='form',
-    required=True, help='Missing required parameter in the JSON body ,The user\'s email'
+    'email', type=str, location='json', required=True
 )
 post_parser.add_argument(
-    'password', dest='password',
-    type=str, 
-    required=True, help='The user\'s password'
+    'password', type=str, location='json', required=True
 )
 post_parser.add_argument(
-    'type', dest='type',
-    type=int, 
-    required=True,
-    choices=range(2)
+    'type', type=int, location='json', required=True,
+    choices=range(2)#, default=1
 )
-# post_parser.add_argument(
-#     'user_priority', dest='user_priority',
-#     type=int, location='form',
-#     default=1, choices=range(5), help='The user\'s priority',
-# )
 
 user_fields = {
     'id': fields.Integer,
@@ -53,6 +43,8 @@ class User(Resource):
 
     def post(self):
         args = post_parser.parse_args()
+        # json_data = request.get_json(force=True)
+        # un = json_data['email']
         if not valid_email(args.email,):
             return {'status':'False','message':'pls check email'}
         else:
