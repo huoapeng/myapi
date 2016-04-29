@@ -1,8 +1,9 @@
-import os
+import multiprocessing
+
 bind = '127.0.0.1:6000'
-workers = 2
+workers = multiprocessing.cpu_count() * 2 + 1
 backlog = 2048
-worker_class = "sync"
+worker_class = "gevent"
 debug = True
 proc_name = 'gunicorn.proc'
 pidfile = '/tmp/gunicorn.pid'
