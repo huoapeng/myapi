@@ -1,2 +1,2 @@
 SECRET_KEY = 'development key'
-SQLALCHEMY_DATABASE_URI = 'mysql://root:123@localhost/mydatabase'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/mydatabase'
