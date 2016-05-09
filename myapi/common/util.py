@@ -1,7 +1,7 @@
-import re
 
 # @staticmethod
 def valid_email(email_str):
+    import re
     m = re.match(r'(\w+)@(\w+)[.](\w+)', email_str)
     if m is None:
         return False
