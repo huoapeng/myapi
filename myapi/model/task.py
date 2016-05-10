@@ -18,8 +18,11 @@ class TaskModel(db.Model):
         backref=db.backref('tasks', lazy='dynamic'))
 
     project_id = db.Column(db.Integer, db.ForeignKey('project_model.id'))
-    owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    # owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     bidder_successful = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+
+    # user = relationship('User', foreign_keys='Friend.user_id')
+    # friend = relationship('User', foreign_keys='Friend.friend_id')
 
     versions = db.relationship('VersionModel',
         backref=db.backref('task', lazy='joined'), lazy='dynamic')
@@ -28,7 +31,7 @@ class TaskModel(db.Model):
         backref=db.backref('task', lazy='joined'), lazy='dynamic')
 
     bidders = db.relationship('UserModel',
-        backref=db.backref('bidde_tasks', lazy='joined'), lazy='dynamic')
+        backref=db.backref('bidde_tasks', lazy='joined'), lazy='joined')
 
     def __init__(self, taskName):
         self.name = taskName

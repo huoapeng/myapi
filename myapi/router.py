@@ -8,7 +8,7 @@ from myapi.resources.note import Note
 
 api = Api()
 api.add_resource(general, '/', '/general/<string:method>')
-api.add_resource(User, '/user', '/user/<int:userid>')
+api.add_resource(User, '/user', '/user/<int:userid>', endpoint='userep')
 api.add_resource(Project, '/project', '/project/<int:projectid>')
 api.add_resource(Task, '/task', '/task/<int:taskid>')
 api.add_resource(Version, '/version', '/version/<int:versionid>')

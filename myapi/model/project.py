@@ -12,7 +12,7 @@ class ProjectModel(db.Model):
     types = db.relationship('TypeModel', secondary=project_types,
         backref=db.backref('projects', lazy='dynamic'))
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
     tasks = db.relationship('TaskModel',
         backref=db.backref('project', lazy='joined'), lazy='dynamic')

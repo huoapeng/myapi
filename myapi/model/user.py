@@ -6,7 +6,7 @@ from tag import tags
 class UserModel(db.Model):
     # __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
-    nickname = db.Column(db.String(50), unique=True)
+    nickname = db.Column(db.String(50))
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(50))
     phone = db.Column(db.String(50))
@@ -19,7 +19,7 @@ class UserModel(db.Model):
     published_projects = db.relationship('ProjectModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
-    participate_tasks = db.relationship('TaskModel',
+    participate_tasks = db.relationship('TaskModel', #foreign_keys='TaskModel.owner_id',
         backref=db.backref('successful_bidder', lazy='joined'), lazy='dynamic')
 
     tags = db.relationship('TagModel', secondary=tags,

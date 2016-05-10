@@ -1,6 +1,6 @@
+#coding=utf-8
 from flask.ext.restful import Resource
 from flask.ext.restful import fields, marshal_with, reqparse
-# from flask import request, jsonify
 from myapi import db
 from myapi.model.user import UserModel
 from myapi.model.enum import user_actions
@@ -20,20 +20,26 @@ post_parser.add_argument(
 
 user_fields = {
     'id': fields.Integer,
-    'username': fields.String(default='Anonymous User'),
+    'nickname': fields.FormattedString('Hello {nickname}'),
     'email': fields.String,
-    'ema111il': fields.String,
-    'password': fields.String
-    # 'user_priority': fields.Integer,
-    # 'custom_greeting': fields.FormattedString('Hey there {username}!'),
-    # 'date_created': fields.DateTime,
-    # 'date_updated': fields.DateTime,
-    # 'links': fields.Nested({
-    #     'friends': fields.Url('/Users/{id}/Friends'),
-    #     'posts': fields.Url('Users/{id}/Posts'),
+    'password': fields.String(default='mima is security'),
+    'phone': fields.String,
+    'area': fields.String,
+    'description':fields.String,
+    'status':fields.Integer,
+    'regist_date': fields.DateTime,
+    'image': fields.Url('userep', absolute=True)
+    # 'image': fields.Nested({
+    #     'friends': fields.Url('/Users/{userep}/Friends'),
+    #     'posts': fields.Url('Users/{userep}/Posts'),
     # }),
 }
 
+# 发布的项目s
+# 参与的任务s
+# 标签s
+# 发布的versions
+# 发布的意见s
 
 class User(Resource):
     @marshal_with(user_fields)
@@ -44,9 +50,12 @@ class User(Resource):
     
     # @marshal_with(user_fields)
     def post(self):
-        args = post_parser.parse_args()
+        # from flask import request, jsonify
+        # print request.get_json(force=True)
         # json_data = request.get_json(force=True)
         # un = json_data['email']
+        # return {'hello world':un}
+        args = post_parser.parse_args()
         if not valid_email(args.email,):
             return {'status':'False','message':'pls check email'}
         else:
@@ -58,7 +67,7 @@ class User(Resource):
                     db.session.commit()
                     # return {'status':'True','message':'regist successfully'}
                     # return marshal_with(UserModel.query.filter_by(email=args.email).first(), user_fields),200
-                    return marshal_with(u, user_fields),200
+                    return marshal_with(u, user_fields), 200
                 else:
                     return {'status':'False','message':'account is already exist'}
             else:
@@ -66,7 +75,7 @@ class User(Resource):
                 if user is None:
                     return {'status':'False','message':'account is not exist'}
                 else:
-                    return {'status':'True','message':'account is logon'}
+                    return marshal_with(user, user_fields), 200
 
     def put(self):
         pass

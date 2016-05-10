@@ -10,7 +10,7 @@ def create_app(config_name):
     #app.config.from_envvar('APP_CONFIG_FILE')
 
     db.init_app(app)
-    
+
     from router import api
     api.init_app(app)
 
