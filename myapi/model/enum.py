@@ -8,6 +8,7 @@ class user_status:
 
 class project_status:
     normal = 0
+    delete = 1
 
 class task_status:
     normal = 0
