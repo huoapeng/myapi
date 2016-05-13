@@ -11,7 +11,8 @@ def create_app(config_name):
 
     db.init_app(app)
 
-    from router import api
-    api.init_app(app)
+    from router import api_bp
+    # api.init_app(app)
 
+    app.register_blueprint(api_bp, url_prefix='/api/v1.0')
     return app
