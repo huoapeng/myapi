@@ -14,3 +14,9 @@ class TypeModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     parent_id = db.Column(db.Integer)
+
+    def __init__(self, name, parent_id):
+    	self.name = name
+    	self.parent_id = parent_id
+
+    
