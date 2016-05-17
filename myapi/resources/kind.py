@@ -3,7 +3,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-from flask.ext.restful import Resource, fields, marshal_with, reqparse
+from flask import jsonify
+from flask.ext.restful import Resource, fields, marshal_with, reqparse, marshal
 from myapi import db
 from myapi.model.kind import KindModel
 from myapi.model.enum import kind_status
@@ -55,9 +56,11 @@ class Kind(Resource):
         return t
 
 class KindList(Resource):
-    @marshal_with(post_fields)
+    # @marshal_with(post_fields)
     def get(self):
-        return KindModel.query.all()
+        return jsonify({
+            "result": marshal(KindModel.query.all(), post_fields)
+            })           
 
     @marshal_with(post_fields)
     def post(self):
