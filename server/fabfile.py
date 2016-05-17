@@ -6,7 +6,7 @@ _TAR_FILE = 'dist/distribution.tar.gz'
 
 def build():
     includes = ['config', 'instance', 'myapi', 'server', '*.py', '*.pip']
-    excludes = ['.*', '*.pyc', '*.pyo']
+    excludes = ['.*', '*.pyc', '*.pyo', '*.sh']
     local('rm -f {}'.format(_TAR_FILE))
     with lcd(os.path.abspath('..')):
         cmd = ['tar', '--dereference', '-czvf', _TAR_FILE]
