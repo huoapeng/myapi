@@ -1,15 +1,13 @@
-#coding=utf-8
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-from flask import jsonify
-from flask.ext.restful import Resource, fields, marshal_with, reqparse, marshal
+from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.kind import KindModel
 from myapi.model.enum import kind_status
-from myapi.common.decorator import jsonp
 from myapi.common.util import itemStatus
+from myapi.common.decorator import jsonp
 
 parser = reqparse.RequestParser()
 parser.add_argument(
