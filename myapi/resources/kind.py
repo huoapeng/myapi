@@ -37,29 +37,29 @@ class Kind(Resource):
     @marshal_with(post_fields)
     def post(self):
         args = parser.parse_args()
-        t = KindModel(args.name, args.parent_id)
-        db.session.add(t)
+        kind = KindModel(args.name, args.parent_id)
+        db.session.add(kind)
         db.session.commit()
-        return t
+        return kind
 
     @jsonp
     @marshal_with(post_fields)
     def put(self):
         args = parser.parse_args()
-        t = KindModel.query.get(args.id)
-        t.name = args.name
-        t.parent_id = args.parent_id
+        kind = KindModel.query.get(args.id)
+        kind.name = args.name
+        kind.parent_id = args.parent_id
         db.session.commit()
-        return t
+        return kind
 
     @jsonp
     @marshal_with(post_fields)
     def delete(self):
         args = parser.parse_args()
-        t = KindModel.query.get(args.id)
-        t.status = kind_status.delete
+        kind = KindModel.query.get(args.id)
+        kind.status = kind_status.delete
         db.session.commit()
-        return t
+        return kind
 
 class KindList(Resource):
     @jsonp
@@ -71,12 +71,12 @@ class KindList(Resource):
     @marshal_with(post_fields)
     def post(self):
         args = parser.parse_args()
-        t = KindModel(args.name)
-        db.session.add(t)
+        kind = KindModel(args.name)
+        db.session.add(kind)
         db.session.commit()
 
-        t = KindModel.query.filter_by(name=args.name).filter_by(parent_id=None).first()
-        t.parent_id = t.id
+        kind = KindModel.query.filter_by(name=args.name).filter_by(parent_id=None).first()
+        kind.parent_id = kind.id
         db.session.commit()
-        return t
+        return kind
 
