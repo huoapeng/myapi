@@ -11,12 +11,12 @@ class UserModel(db.Model):
     phone = db.Column(db.String(50))
     area = db.Column(db.String(50))
     image = db.Column(db.String(50))
-    description = db.Column(db.String(500))
+    description = db.Column(db.String(4096))
     status = db.Column(db.Integer)
     regist_date = db.Column(db.DateTime)
 
-    # published_projects = db.relationship('ProjectModel',
-    #     backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    published_projects = db.relationship('ProjectModel',
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
     # participate_tasks = db.relationship('TaskModel', #foreign_keys='TaskModel.owner_id',
     #     backref=db.backref('successful_bidder', lazy='joined'), lazy='dynamic')

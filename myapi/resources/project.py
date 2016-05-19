@@ -1,45 +1,28 @@
-from flask.ext.restful import Resource
-from flask.ext.restful import fields, marshal_with, reqparse
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.project import ProjectModel
+from myapi.model.user import UserModel
+from myapi.model.kind import KindModel
 from myapi.model.enum import project_status
+from myapi.common.util import itemStatus
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument(
-    'id', dest='id',
-    type=int, location='json',
-)
-post_parser.add_argument(
-    'name', dest='name',
-    type=str, location='json',
-    required=True
-)
-post_parser.add_argument(
-    'description', dest='description',
-    type=str, location='json',
-)
-post_parser.add_argument(
-    'status', dest='status',
-    type=int, location='json',
-)
-post_parser.add_argument(
-    'type_id', dest='type_id',
-    type=int, location='json',
-    required=True
-)
-post_parser.add_argument(
-    'owner_id', dest='owner_id',
-    type=int, location='json',
-    required=True
-)
+parser = reqparse.RequestParser()
+parser.add_argument('name', type=str, location='json', required=True)
+parser.add_argument('description', type=str, location='json')
+parser.add_argument('owner_id', type=int, location='json', required=True)
+parser.add_argument('kind_id', type=int, location='json', required=True)
 
 project_fields = {
     'id': fields.Integer,
     'name': fields.String,
     'description': fields.String,
-    'status': fields.Integer,
-    'type_id': fields.Integer,
-    'owner_id':fields.Integer
+    'publish_date': fields.DateTime,
+    'status': itemStatus(attribute='status'),
+    'owner_id': fields.Integer
 }
 
 class Project(Resource):
@@ -49,30 +32,36 @@ class Project(Resource):
 
     @marshal_with(project_fields)
     def post(self):
-        args = post_parser.parse_args()
+        args = parser.parse_args()
 
-        p = ProjectModel(args.name, args.description, args.type_id, args.owner_id)
-        db.session.add(p)
+        kind = KindModel.query.get(args.kind_id)
+        project = ProjectModel(args.name, args.description)
+        project.kinds.append(kind)
+        db.session.add(project)
         db.session.commit()
-        return p
 
+        user = UserModel.query.get(args.owner_id)
+        user.published_projects.append(project)
+        # db.session.add(user)
+        db.session.commit()
+        return project
+
+    @marshal_with(project_fields)
     def put(self):
-        args = post_parser.parse_args()
-        # user = UserModel.query.filter_by(name=args.email).first()
-        print args.id
-        p = ProjectModel.query.get(args.id)
-        p.name = args.name
-        p.description = args.description
-        p.status = args.status
-        p.type_id = args.type_id
-        p.owner_id = args.owner_id
+        args = parser.parse_args()
+        kind = KindModel.query.get(args.kind_id)
+        project = ProjectModel.query.get(args.id)
+        project.name = args.name
+        project.description = args.description
+        project.kind = kind
         db.session.commit()
-        pass
+        return project
 
+    @marshal_with(project_fields)
     def delete(self):
-        args = post_parser.parse_args()
-        p = ProjectModel.query.get(args.id)
-        p.status = project_status.delete
+        args = parser.parse_args()
+        project = ProjectModel.query.get(args.id)
+        project.status = project_status.delete
         db.session.commit()
-        pass
+        return project
 
