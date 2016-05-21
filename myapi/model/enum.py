@@ -21,3 +21,7 @@ class message_type:
 class kind_status:
     normal = 0
     delete = 1
+
+class bid_status:
+    normal = 0
+        
