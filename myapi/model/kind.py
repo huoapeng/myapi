@@ -7,8 +7,8 @@ project_kinds = db.Table('project_kinds',
 )
 
 task_kinds = db.Table('task_kinds',
-    db.Column('kind_id', db.Integer, db.ForeignKey('kind_model.id')),
-    db.Column('task_id', db.Integer, db.ForeignKey('task_model.id'))
+    db.Column('kind_id', db.Integer, db.ForeignKey('kind_model.id'), primary_key=True),
+    db.Column('task_id', db.Integer, db.ForeignKey('task_model.id'), primary_key=True)
 )
 
 class KindModel(db.Model):

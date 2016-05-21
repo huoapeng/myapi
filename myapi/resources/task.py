@@ -1,83 +1,76 @@
-from flask.ext.restful import Resource
-from flask.ext.restful import fields, marshal_with, reqparse
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.task import TaskModel
+from myapi.model.user import UserModel
+from myapi.model.kind import KindModel
+from myapi.model.enum import task_status
+from myapi.common.util import itemStatus
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument(
-    'email', dest='email',
-    type=str, location='form',
-    required=True, help='The user\'s email'
-)
-post_parser.add_argument(
-    'password', dest='password',
-    type=str, 
-    required=True, help='The user\'s password'
-)
-post_parser.add_argument(
-    'type', dest='type',
-    type=int, 
-    required=True,
-    choices=range(2)
-)
-# post_parser.add_argument(
-#     'user_priority', dest='user_priority',
-#     type=int, location='form',
-#     default=1, choices=range(5), help='The user\'s priority',
-# )
+parser = reqparse.RequestParser()
+parser.add_argument('name', type=str, location='json', required=True)
+parser.add_argument('timespan', type=str, location='json')
+parser.add_argument('requirements', type=str, location='json')
+parser.add_argument('bonus', type=str, location='json')
+parser.add_argument('description', type=str, location='json')
+parser.add_argument('bidder_qualification_requirement', type=str, location='json')
+parser.add_argument('bidder_area_requirement', type=str, location='json')
+parser.add_argument('project_id', type=int, location='json', required=True)
+parser.add_argument('kind_id', type=int, location='json', required=True)
 
-project_fields = {
+task_fields = {
     'id': fields.Integer,
-    'username': fields.String(default='Anonymous User'),
-    'email': fields.String,
-    'ema111il': fields.String,
-    'password': fields.String
-    # 'user_priority': fields.Integer,
-    # 'custom_greeting': fields.FormattedString('Hey there {username}!'),
-    # 'date_created': fields.DateTime,
-    # 'date_updated': fields.DateTime,
-    # 'links': fields.Nested({
-    #     'friends': fields.Url('/Users/{id}/Friends'),
-    #     'posts': fields.Url('Users/{id}/Posts'),
-    # }),
+    'name': fields.String,
+    'timespan': fields.Integer,
+    'requirements': fields.String,
+    'bonus': fields.Integer,
+    'description': fields.String,
+    'publishDate': fields.DateTime,
+    'bidder_qualification_requirement': fields.String,
+    'bidder_area_requirement': fields.String,
+    'status': itemStatus(attribute='status'),
+    'project_id': fields.Integer,
+    'winner_id': fields.Integer
 }
 
-
 class Task(Resource):
-    # @marshal_with(project_fields)
-    def get(self, projectid):
-        return marshal_with(ProjectModel.query.get(projectid), project_fields)
-        #return ProjectModel.query.filter_by(id=projectid).first()
-        #todos=Todo.query.order_by(Todo.pub_date.desc()).all()
+    @marshal_with(task_fields)
+    def get(self, taskid):
+        return TaskModel.query.get(taskid)
 
+    @marshal_with(task_fields)
     def post(self):
-        args = post_parser.parse_args()
-        if not valid_email(args.email,):
-            return {'status':'False','message':'pls check email'}
-        else:
-            if args.type == 0:
-                user = ProjectModel.query.filter_by(email=args.email).first()
-                if user is None:
-                    u = ProjectModel(args.email, args.password)
-                    db.session.add(u)
-                    db.session.commit()
-                    return {'status':'True','message':'regist successfully'}
-                else:
-                    return {'status':'False','message':'account is already exist'}
-            else:
-                user = ProjectModel.query.filter_by(email=args.email).filter_by(password=args.password).first()
-                if user is None:
-                    return {'status':'False','message':'account is not exist'}
-                else:
-                    return {'status':'True','message':'account is logon'}
+        args = parser.parse_args()
 
+        kind = KindModel.query.get(args.kind_id)
+        task = TaskModel(args.name, 
+            args.timespan,
+            args.requirements,
+            args.bonus,
+            args.description,
+            args.bidder_qualification_requirement,
+            args.bidder_area_requirement)
+        task.kinds.append(kind)
+        db.session.add(task)
+        db.session.commit()
+
+        project = ProjectModel.query.get(args.project_id)
+        project.tasks.append(task)
+        db.session.commit()
+        return task
+
+    @marshal_with(task_fields)
     def put(self):
-        #     for todo in Todo.query.all():
-        #         todo.done = ('done.%d' % todo.id) in request.form
-        #     flash('Updated status')
-        #     db.session.commit()
         pass
 
+    @marshal_with(task_fields)
     def delete(self):
-        pass
+        args = parser.parse_args()
+        task = TaskModel.query.get(args.id)
+        task.status = project_status.delete
+        db.session.commit()
+        return task
 
