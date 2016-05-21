@@ -1,6 +1,7 @@
 import datetime
 from myapi import db
 from enum import user_status
+from tag import user_tags
 
 class UserModel(db.Model):
     # __tablename__ = 'todos'
@@ -18,17 +19,11 @@ class UserModel(db.Model):
     published_projects = db.relationship('ProjectModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
-    # participate_tasks = db.relationship('TaskModel', #foreign_keys='TaskModel.owner_id',
-    #     backref=db.backref('successful_bidder', lazy='joined'), lazy='dynamic')
+    won_tasks = db.relationship('ProjectModel', foreign_keys='TaskModel.winner_id',
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
-    # tags = db.relationship('TagModel', secondary=tags,
-    #     backref=db.backref('users', lazy='dynamic'))
-
-    # versions = db.relationship('VersionModel',
-    #     backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-
-    # notes = db.relationship('NoteModel',
-    #     backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    tags = db.relationship('TagModel', secondary=user_tags,
+        backref=db.backref('users', lazy='dynamic'))
 
     def __init__(self, email, password):
         self.nickname = email[:email.find(r'@')]
