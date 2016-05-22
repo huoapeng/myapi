@@ -38,11 +38,9 @@ class Project(Resource):
         project = ProjectModel(args.name, args.description)
         project.kinds.append(kind)
         db.session.add(project)
-        db.session.commit()
 
         user = UserModel.query.get(args.owner_id)
         user.published_projects.append(project)
-        # db.session.add(user)
         db.session.commit()
         return project
 

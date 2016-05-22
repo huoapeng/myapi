@@ -19,7 +19,7 @@ class UserModel(db.Model):
     published_projects = db.relationship('ProjectModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
-    won_tasks = db.relationship('ProjectModel', foreign_keys='TaskModel.winner_id',
+    won_tasks = db.relationship('TaskModel', foreign_keys='TaskModel.winner_id',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
     tags = db.relationship('TagModel', secondary=user_tags,

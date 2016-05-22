@@ -7,6 +7,7 @@ from myapi import db
 from myapi.model.task import TaskModel
 from myapi.model.user import UserModel
 from myapi.model.kind import KindModel
+from myapi.model.project import ProjectModel
 from myapi.model.enum import task_status
 from myapi.common.util import itemStatus
 
@@ -55,7 +56,6 @@ class Task(Resource):
             args.bidder_area_requirement)
         task.kinds.append(kind)
         db.session.add(task)
-        db.session.commit()
 
         project = ProjectModel.query.get(args.project_id)
         project.tasks.append(task)
