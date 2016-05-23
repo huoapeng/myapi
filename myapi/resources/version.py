@@ -1,83 +1,52 @@
-from flask.ext.restful import Resource
-from flask.ext.restful import fields, marshal_with, reqparse
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.version import VersionModel
+from myapi.model.task import TaskModel
+from myapi.model.enum import version_status
+from myapi.common.util import itemStatus
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument(
-    'email', dest='email',
-    type=str, location='form',
-    required=True, help='The user\'s email'
-)
-post_parser.add_argument(
-    'password', dest='password',
-    type=str, 
-    required=True, help='The user\'s password'
-)
-post_parser.add_argument(
-    'type', dest='type',
-    type=int, 
-    required=True,
-    choices=range(2)
-)
-# post_parser.add_argument(
-#     'user_priority', dest='user_priority',
-#     type=int, location='form',
-#     default=1, choices=range(5), help='The user\'s priority',
-# )
+parser = reqparse.RequestParser()
+parser.add_argument('title', type=str, location='json', required=True)
+parser.add_argument('task_id', type=int, location='json', required=True)
 
-project_fields = {
+version_fields = {
     'id': fields.Integer,
-    'username': fields.String(default='Anonymous User'),
-    'email': fields.String,
-    'ema111il': fields.String,
-    'password': fields.String
-    # 'user_priority': fields.Integer,
-    # 'custom_greeting': fields.FormattedString('Hey there {username}!'),
-    # 'date_created': fields.DateTime,
-    # 'date_updated': fields.DateTime,
-    # 'links': fields.Nested({
-    #     'friends': fields.Url('/Users/{id}/Friends'),
-    #     'posts': fields.Url('Users/{id}/Posts'),
-    # }),
+    'file': fields.String,
+    'image': fields.String,
+    'title': fields.String,
+    'publish_date': fields.DateTime,
+    'status':  itemStatus(attribute='status'),
 }
 
-
 class Version(Resource):
-    # @marshal_with(project_fields)
-    def get(self, projectid):
-        return marshal_with(ProjectModel.query.get(projectid), project_fields)
-        #return ProjectModel.query.filter_by(id=projectid).first()
-        #todos=Todo.query.order_by(Todo.pub_date.desc()).all()
+    @marshal_with(version_fields)
+    def get(self, versionid):
+        return VersionModel.query.get(versionid)
 
+    @marshal_with(version_fields)
     def post(self):
-        args = post_parser.parse_args()
-        if not valid_email(args.email,):
-            return {'status':'False','message':'pls check email'}
-        else:
-            if args.type == 0:
-                user = ProjectModel.query.filter_by(email=args.email).first()
-                if user is None:
-                    u = ProjectModel(args.email, args.password)
-                    db.session.add(u)
-                    db.session.commit()
-                    return {'status':'True','message':'regist successfully'}
-                else:
-                    return {'status':'False','message':'account is already exist'}
-            else:
-                user = ProjectModel.query.filter_by(email=args.email).filter_by(password=args.password).first()
-                if user is None:
-                    return {'status':'False','message':'account is not exist'}
-                else:
-                    return {'status':'True','message':'account is logon'}
+        args = parser.parse_args()
+        version = VersionModel(args.title)
+        db.session.add(version)
+
+        task = TaskModel.query.get(args.task_id)
+        task.versions.add(version)
+        db.session.commit()
+        return version
 
     def put(self):
-        #     for todo in Todo.query.all():
-        #         todo.done = ('done.%d' % todo.id) in request.form
-        #     flash('Updated status')
-        #     db.session.commit()
+        
         pass
 
+    @marshal_with(version_fields)
     def delete(self):
-        pass
+        args = parser.parse_args()
+        version = VersionModel.query.get(args.id)
+        version.status = version_status.delete
+        db.session.commit()
+        return version
 

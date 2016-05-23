@@ -70,7 +70,7 @@ class Task(Resource):
     def delete(self):
         args = parser.parse_args()
         task = TaskModel.query.get(args.id)
-        task.status = project_status.delete
+        task.status = task_status.delete
         db.session.commit()
         return task
 

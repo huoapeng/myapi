@@ -24,4 +24,11 @@ class kind_status:
 
 class bid_status:
     normal = 0
+
+class version_status:
+    normal = 0
+    delete = 1
         
+class note_status:
+    normal = 0
+    delete = 1
