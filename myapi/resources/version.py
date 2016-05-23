@@ -34,7 +34,7 @@ class Version(Resource):
         db.session.add(version)
 
         task = TaskModel.query.get(args.task_id)
-        task.versions.add(version)
+        task.versions.append(version)
         db.session.commit()
         return version
 

@@ -32,7 +32,7 @@ class Note(Resource):
         db.session.add(note)
 
         task = TaskModel.query.get(args.task_id)
-        task.notes.add(note)
+        task.notes.append(note)
         db.session.commit()
         return note
 
