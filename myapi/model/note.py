@@ -1,19 +1,19 @@
 import datetime
 from myapi import db
+from enum import note_status
 
 class NoteModel(db.Model):
-    # __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(500))
     publish_date = db.Column(db.DateTime)
+    status = db.Column(db.Integer)
 
     task_id = db.Column(db.Integer, db.ForeignKey('task_model.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     
-    def __init__(self, file, title, description):
-        self.file = file
+    def __init__(self, title):
         self.title = title
-        self.regist_date = datetime.datetime.now()
+        self.publish_date = datetime.datetime.now()
+        self.status = note_status.normal
 
     def __repr__(self):
         return '<User %r>' % (self.title)
