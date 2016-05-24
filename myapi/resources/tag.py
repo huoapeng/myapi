@@ -8,6 +8,7 @@ from myapi.model.tag import TagModel
 from myapi.model.user import UserModel
 
 parser = reqparse.RequestParser()
+parser.add_argument('id', type=int, location='json')
 parser.add_argument('name', type=str, location='json', required=True)
 parser.add_argument('user_id', type=int, location='json', required=True)
 
@@ -36,7 +37,11 @@ class Tag(Resource):
         pass
 
     def delete(self):
-        pass
+        args = parser.parse_args()
+        tag = TagModel.query.get(args.id)
+        db.session.delete(tag)
+        db.session.commit()
+        return {'result':'true'}
 
 class UserTags(Resource):
     @marshal_with(tag_fields)
