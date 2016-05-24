@@ -11,6 +11,7 @@ from myapi.common.util import itemStatus
 
 parser = reqparse.RequestParser()
 parser.add_argument('title', type=str, location='json', required=True)
+parser.add_argument('description', type=str, location='json')
 parser.add_argument('task_id', type=int, location='json', required=True)
 
 version_fields = {
@@ -18,6 +19,7 @@ version_fields = {
     'file': fields.String,
     'image': fields.String,
     'title': fields.String,
+    'description': fields.String,
     'publish_date': fields.DateTime,
     'status':  itemStatus(attribute='status'),
 }
@@ -30,7 +32,7 @@ class Version(Resource):
     @marshal_with(version_fields)
     def post(self):
         args = parser.parse_args()
-        version = VersionModel(args.title)
+        version = VersionModel(args.title, args.description)
         db.session.add(version)
 
         task = TaskModel.query.get(args.task_id)
