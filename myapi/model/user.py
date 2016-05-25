@@ -16,13 +16,23 @@ class UserModel(db.Model):
     regist_date = db.Column(db.DateTime)
 
     published_projects = db.relationship('ProjectModel',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+        backref=db.backref('owner', lazy='joined'), lazy='joined')
 
     won_tasks = db.relationship('TaskModel', foreign_keys='TaskModel.winner_id',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+        backref=db.backref('owner', lazy='joined'), lazy='joined')
 
     tags = db.relationship('TagModel', secondary=user_tags,
         backref=db.backref('users', lazy='dynamic'))
+
+    versions = db.relationship('VersionModel',
+        backref=db.backref('owner', lazy='joined'), lazy='joined')
+    # versionmessages = db.relationship('VersionMessageModel',
+    #     backref=db.backref('owner', lazy='joined'), lazy='joined')
+
+    notes = db.relationship('NoteModel',
+        backref=db.backref('owner', lazy='joined'), lazy='joined')
+    notemessages = db.relationship('NoteMessageModel',
+        backref=db.backref('owner', lazy='joined'), lazy='joined')
 
     def __init__(self, email, password):
         self.nickname = email[:email.find(r'@')]

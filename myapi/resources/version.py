@@ -5,6 +5,7 @@ sys.setdefaultencoding('utf-8')
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.version import VersionModel
+from myapi.model.user import UserModel
 from myapi.model.task import TaskModel
 from myapi.model.enum import version_status
 from myapi.common.util import itemStatus
@@ -13,6 +14,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('title', type=str, location='json', required=True)
 parser.add_argument('description', type=str, location='json')
 parser.add_argument('task_id', type=int, location='json', required=True)
+parser.add_argument('user_id', type=int, location='json', required=True)
 
 version_fields = {
     'id': fields.Integer,
@@ -22,6 +24,7 @@ version_fields = {
     'description': fields.String,
     'publish_date': fields.DateTime,
     'status':  itemStatus(attribute='status'),
+    'user_id': fields.Integer
 }
 
 class Version(Resource):
@@ -37,6 +40,9 @@ class Version(Resource):
 
         task = TaskModel.query.get(args.task_id)
         task.versions.append(version)
+
+        user = UserModel.query.get(args.user_id)
+        user.versions.append(version)
         db.session.commit()
         return version
 

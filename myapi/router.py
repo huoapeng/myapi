@@ -9,6 +9,7 @@ from myapi.resources.task import Task, UserWonTasks
 from myapi.resources.version import Version, TaskVersions
 from myapi.resources.note import Note, TaskNotes
 from myapi.resources.kind import Kind, KindList
+from myapi.resources.message import NoteMessage, NoteMessageList
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -24,6 +25,8 @@ api.add_resource(TaskNotes, '/<int:taskid>/tasknotes')
 api.add_resource(TaskVersions, '/<int:taskid>/taskversions')
 api.add_resource(Version, '/version', '/version/<int:versionid>')
 api.add_resource(Note, '/note', '/note/<int:noteid>')
+api.add_resource(NoteMessage, '/notemessage')
+api.add_resource(NoteMessageList, '/<int:noteid>/notemessagelist')
 api.add_resource(Kind, '/kind', '/kind/<int:kindid>')
 api.add_resource(KindList, '/kindlist')
 

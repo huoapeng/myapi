@@ -12,7 +12,8 @@ class VersionModel(db.Model):
     status = db.Column(db.Integer)
 
     task_id = db.Column(db.Integer, db.ForeignKey('task_model.id'))
-    
+    user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+
     def __init__(self, title, description):
         self.title = title
         self.description = description

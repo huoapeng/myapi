@@ -9,7 +9,11 @@ class NoteModel(db.Model):
     status = db.Column(db.Integer)
 
     task_id = db.Column(db.Integer, db.ForeignKey('task_model.id'))
-    
+    user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+
+    messages = db.relationship('NoteMessageModel', order_by="NoteMessageModel.publish_date",
+        backref=db.backref('note', lazy='joined'), lazy='joined')
+
     def __init__(self, title):
         self.title = title
         self.publish_date = datetime.datetime.now()
