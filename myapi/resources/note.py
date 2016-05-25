@@ -48,3 +48,8 @@ class Note(Resource):
         db.session.commit()
         return note
 
+class TaskNotes(Resource):
+    @marshal_with(note_fields)
+    def get(self, taskid):
+        task = TaskModel.query.get(taskid)
+        return task.notes

@@ -2,12 +2,12 @@
 from flask import Blueprint
 from flask.ext.restful import Api
 from myapi.resources.general import general
-from myapi.resources.user import User
+from myapi.resources.user import User, ChangePassword
 from myapi.resources.tag import Tag, UserTags
-from myapi.resources.project import Project, UserPublishedProjects
+from myapi.resources.project import Project, ProjectList, UserPublishedProjects
 from myapi.resources.task import Task, UserWonTasks
-from myapi.resources.version import Version
-from myapi.resources.note import Note
+from myapi.resources.version import Version, TaskVersions
+from myapi.resources.note import Note, TaskNotes
 from myapi.resources.kind import Kind, KindList
 
 api_bp = Blueprint('api', __name__)
@@ -15,9 +15,13 @@ api = Api(api_bp)
 
 api.add_resource(general, '/', '/general/<string:method>')
 api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')
+api.add_resource(ChangePassword, '/changepwd')
 api.add_resource(Tag, '/tag', '/tag/<int:tagid>')
 api.add_resource(Project, '/project', '/project/<int:projectid>')
+api.add_resource(ProjectList, '/projectlist')
 api.add_resource(Task, '/task', '/task/<int:taskid>')
+api.add_resource(TaskNotes, '/<int:taskid>/tasknotes')
+api.add_resource(TaskVersions, '/<int:taskid>/taskversions')
 api.add_resource(Version, '/version', '/version/<int:versionid>')
 api.add_resource(Note, '/note', '/note/<int:noteid>')
 api.add_resource(Kind, '/kind', '/kind/<int:kindid>')

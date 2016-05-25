@@ -52,3 +52,8 @@ class Version(Resource):
         db.session.commit()
         return version
 
+class TaskVersions(Resource):
+    @marshal_with(version_fields)
+    def get(self, taskid):
+        task = TaskModel.query.get(taskid)
+        return task.versions

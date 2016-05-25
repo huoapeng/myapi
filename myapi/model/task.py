@@ -27,10 +27,10 @@ class TaskModel(db.Model):
         backref=db.backref('participate_tasks', lazy='dynamic'))
 
     versions = db.relationship('VersionModel',
-        backref=db.backref('task', lazy='joined'), lazy='dynamic')
+        backref=db.backref('task', lazy='joined'), lazy='joined')
 
     notes = db.relationship('NoteModel',
-        backref=db.backref('task', lazy='joined'), lazy='dynamic')
+        backref=db.backref('task', lazy='joined'), lazy='joined')
 
     def __init__(self, name, timespan=None, requirements=None, bonus=None, description=None, 
         bidder_qualification_requirement=None, bidder_area_requirement=None):
