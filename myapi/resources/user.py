@@ -36,11 +36,6 @@ class User(Resource):
     def get(self, userid):
         user = UserModel.query.get(userid)
         return user if user else UserModel('','')
-        # return jsonify({
-        #     'id':u.id, 
-        #     'url':url_for('.userep', _external=True, userid=u.id),
-        #     })
-        # todos=Todo.query.order_by(Todo.pub_date.desc()).all()
     
     @jsonp
     @marshal_with(user_fields)
@@ -67,7 +62,6 @@ class User(Resource):
         user = UserModel.query.filter_by(email=args.email).one()
         if user :
             user.nickname = args.nickname
-            user.password = args.password
             user.phone = args.phone
             user.area = args.area
             user.description = args.description
@@ -87,3 +81,26 @@ class User(Resource):
             return user
         else:
             return UserModel('','')
+
+class ChangePassword(Resource):
+    @marshal_with(user_fields)
+    def post(self):
+        args = post_parser.parse_args()
+        user = UserModel.query.filter_by(email=args.email).one()
+        if user :
+            user.password = md5(args.password)
+            db.session.commit()
+            return user
+        else:
+            return UserModel('','')
+        
+class UserSummary(Resource):
+    def get(self, userid):
+        # user = UserModel.query.get(userid)
+        # return user if user else UserModel('','')
+        return jsonify({
+            # 'detail':url_for(), 
+            'url':url_for('.userep', _external=True, userid=userid),
+            })
+    
+        

@@ -9,8 +9,8 @@ from myapi.model.user import UserModel
 
 parser = reqparse.RequestParser()
 parser.add_argument('id', type=int, location='json')
-parser.add_argument('name', type=str, location='json', required=True)
-parser.add_argument('user_id', type=int, location='json', required=True)
+parser.add_argument('name', type=str, location='json')
+parser.add_argument('user_id', type=int, location='json')
 
 tag_fields = {
     'id': fields.Integer,
