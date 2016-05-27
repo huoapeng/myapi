@@ -2,6 +2,8 @@ import datetime
 from myapi import db
 from enum import user_status
 from tag import user_tags
+from note import NoteModel
+from message import NoteMessageModel
 
 class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,8 +20,8 @@ class UserModel(db.Model):
     published_projects = db.relationship('ProjectModel',
         backref=db.backref('owner', lazy='joined'), lazy='joined')
 
-    won_tasks = db.relationship('TaskModel', foreign_keys='TaskModel.winner_id',
-        backref=db.backref('owner', lazy='joined'), lazy='joined')
+    # won_tasks = db.relationship('TaskModel', foreign_keys='TaskModel.winner_id',
+    #     backref=db.backref('owner', lazy='joined'), lazy='joined')
 
     tags = db.relationship('TagModel', secondary=user_tags,
         backref=db.backref('users', lazy='dynamic'))

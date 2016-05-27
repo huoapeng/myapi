@@ -55,6 +55,9 @@ class Task(Resource):
             args.bidder_qualification_requirement,
             args.bidder_area_requirement)
         task.kinds.append(kind)
+
+        # user = UserModel.query.get(1)
+        # task.bidders.append(user)
         db.session.add(task)
 
         project = ProjectModel.query.get(args.project_id)
@@ -74,3 +77,8 @@ class Task(Resource):
         db.session.commit()
         return task
 
+class UserWonTasks(Resource):
+    @marshal_with(task_fields)
+    def get(self, userid):
+        user = UserModel.query.get(userid)
+        return user.won_tasks

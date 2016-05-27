@@ -2,6 +2,8 @@ import datetime
 from myapi import db
 from enum import project_status
 from kind import project_kinds
+from task import TaskModel
+from kind import KindModel
 
 class ProjectModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)

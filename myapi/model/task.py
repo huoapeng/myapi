@@ -1,8 +1,11 @@
 import datetime
 from myapi import db
 from enum import task_status
-from kind import task_kinds
+from kind import task_kinds, KindModel
 from bid import bid
+from user import UserModel
+from version import VersionModel
+from note import NoteModel
 
 class TaskModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
