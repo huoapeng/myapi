@@ -72,10 +72,10 @@ class ProjectList(Resource):
 
 class UserPublishedProjects(Resource):
     def get(self, userid):
-        user = UserModel.query.get(userid)
-
         kind_str_list = []
         project_obj_list = []
+        
+        user = UserModel.query.get(userid)
         for project in user.published_projects:
             for kind in project.kinds:
                 kind_str_list.append(kind.name)

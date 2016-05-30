@@ -2,6 +2,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.task import TaskModel
@@ -10,6 +11,7 @@ from myapi.model.kind import KindModel
 from myapi.model.project import ProjectModel
 from myapi.model.enum import task_status
 from myapi.common.util import itemStatus
+from myapi.view.task import TaskOfMovieMarketView
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', type=str, location='json', required=True)
@@ -77,11 +79,37 @@ class Task(Resource):
         db.session.commit()
         return task
 
-class TaskList(Resource):
+class GetTaskListByProjectID(Resource):
     @marshal_with(task_fields)
     def get(self, projectid):
         project = ProjectModel.query.get(projectid)
         return project.tasks
+
+class GetTaskList(Resource):
+    def get(self):
+        kind_str_list = []
+        task_obj_list = []
+        
+        tasks = TaskModel.query.all()
+        for task in tasks:
+            project = task.project
+            owner = project.owner
+            for kind in project.kinds:
+                kind_str_list.append(kind.name)
+
+            t = TaskOfMovieMarketView(task.id,
+                    task.name,
+                    project.id,
+                    project.name,
+                    owner.id,
+                    owner.nickname,
+                    task.publishDate,
+                    task.bonus,
+                    kind_str_list
+                )
+            task_obj_list.append(t)
+
+        return jsonify(result=[e.serialize() for e in task_obj_list])
 
 class UserWonTasks(Resource):
     @marshal_with(task_fields)

@@ -16,3 +16,4 @@ class UserPublishedProjectsView(object):
             'projectKinds': ','.join(self.kind_str_list),
             'tasks_url':url_for('.getTasksByProjectID', _external=True, projectid=self.projectid),
         }
+
