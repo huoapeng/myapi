@@ -65,16 +65,11 @@ class Project(Resource):
         db.session.commit()
         return project
 
-class ProjectList(Resource):
-    @marshal_with(project_fields)
-    def get(self):
-        return ProjectModel.query.filter_by(status=project_status.normal).all()
-
 class UserPublishedProjects(Resource):
     def get(self, userid):
         kind_str_list = []
         project_obj_list = []
-        
+
         user = UserModel.query.get(userid)
         for project in user.published_projects:
             for kind in project.kinds:

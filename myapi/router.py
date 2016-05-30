@@ -4,7 +4,7 @@ from flask.ext.restful import Api
 from myapi.resources.general import general
 from myapi.resources.user import User, ChangePassword
 from myapi.resources.tag import Tag, UserTags
-from myapi.resources.project import Project, ProjectList, UserPublishedProjects
+from myapi.resources.project import Project, UserPublishedProjects
 from myapi.resources.task import Task, GetTaskListByProjectID, GetTaskList
 from myapi.resources.version import Version, TaskVersions
 from myapi.resources.note import Note, TaskNotes
@@ -24,12 +24,13 @@ api.add_resource(UserTags, '/<int:userid>/usertags')
 api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects')
 
 api.add_resource(Project, '/project', '/project/<int:projectid>')
-api.add_resource(ProjectList, '/projectlist')
+
 api.add_resource(Task, '/task', '/task/<int:taskid>')
-api.add_resource(GetTaskList, '/tasklist/<int:page>')
-api.add_resource(GetTaskListByProjectID, '/<int:projectid>/GetTaskListByProjectID', endpoint='getTasksByProjectID')
 api.add_resource(TaskNotes, '/<int:taskid>/tasknotes')
 api.add_resource(TaskVersions, '/<int:taskid>/taskversions')
+
+api.add_resource(GetTaskList, '/tasklist/<int:page>')
+api.add_resource(GetTaskListByProjectID, '/<int:projectid>/GetTaskListByProjectID', endpoint='getTasksByProjectID')
 
 api.add_resource(Version, '/version', '/version/<int:versionid>')
 
