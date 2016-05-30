@@ -77,6 +77,12 @@ class Task(Resource):
         db.session.commit()
         return task
 
+class TaskList(Resource):
+    @marshal_with(task_fields)
+    def get(self, projectid):
+        project = ProjectModel.query.get(projectid)
+        return project.tasks
+
 class UserWonTasks(Resource):
     @marshal_with(task_fields)
     def get(self, userid):

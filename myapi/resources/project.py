@@ -2,6 +2,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.project import ProjectModel
@@ -9,6 +10,7 @@ from myapi.model.user import UserModel
 from myapi.model.kind import KindModel
 from myapi.model.enum import project_status
 from myapi.common.util import itemStatus
+from myapi.view.project import UserPublishedProjectsView
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', type=str, location='json', required=True)
@@ -62,4 +64,24 @@ class Project(Resource):
         project.status = project_status.delete
         db.session.commit()
         return project
+
+class ProjectList(Resource):
+    @marshal_with(project_fields)
+    def get(self):
+        return ProjectModel.query.filter_by(status=project_status.normal).all()
+
+class UserPublishedProjects(Resource):
+    def get(self, userid):
+        user = UserModel.query.get(userid)
+
+        kind_str_list = []
+        project_obj_list = []
+        for project in user.published_projects:
+            for kind in project.kinds:
+                kind_str_list.append(kind.name)
+
+            v = UserPublishedProjectsView(project.id, project.name, kind_str_list)
+            project_obj_list.append(v)
+
+        return jsonify(result=[e.serialize() for e in project_obj_list])
 

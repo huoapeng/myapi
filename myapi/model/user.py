@@ -18,7 +18,7 @@ class UserModel(db.Model):
     regist_date = db.Column(db.DateTime)
 
     published_projects = db.relationship('ProjectModel',
-        backref=db.backref('owner', lazy='joined'), lazy='joined')
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
     # won_tasks = db.relationship('TaskModel', foreign_keys='TaskModel.winner_id',
     #     backref=db.backref('owner', lazy='joined'), lazy='joined')
