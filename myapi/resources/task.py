@@ -4,7 +4,7 @@ sys.setdefaultencoding('utf-8')
 
 from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
-from myapi import db
+from myapi import db, app
 from myapi.model.task import TaskModel
 from myapi.model.user import UserModel
 from myapi.model.kind import KindModel
@@ -86,11 +86,11 @@ class GetTaskListByProjectID(Resource):
         return project.tasks
 
 class GetTaskList(Resource):
-    def get(self):
+    def get(self, page):
         kind_str_list = []
         task_obj_list = []
         
-        tasks = TaskModel.query.all()
+        tasks = TaskModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False).items
         for task in tasks:
             project = task.project
             owner = project.owner
