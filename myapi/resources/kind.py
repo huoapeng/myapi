@@ -80,3 +80,10 @@ class KindList(Resource):
         db.session.commit()
         return kind
 
+class SearchKindsByName(Resource):
+    @marshal_with(post_fields)
+    def get(self, kindname):
+        return KindModel.query.filter_by(status = kind_status.normal)\
+            .filter(KindModel.name.contains(kindname)).all()
+
+

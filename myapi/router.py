@@ -8,7 +8,7 @@ from myapi.resources.project import Project, UserPublishedProjects
 from myapi.resources.task import Task, GetTaskListByProjectID, GetTaskList
 from myapi.resources.version import Version, TaskVersions
 from myapi.resources.note import Note, TaskNotes
-from myapi.resources.kind import Kind, KindList
+from myapi.resources.kind import Kind, KindList, SearchKindsByName
 from myapi.resources.message import NoteMessage, NoteMessageList
 from myapi.resources.profile import Profile
 
@@ -40,6 +40,7 @@ api.add_resource(NoteMessageList, '/<int:noteid>/notemessagelist')
 
 api.add_resource(Kind, '/kind', '/kind/<int:kindid>')
 api.add_resource(KindList, '/kindlist')
+api.add_resource(SearchKindsByName, '/search/kindlist/<string:kindname>')
 
 # api.add_resource(UserWonTasks, '/<int:userid>/userwontasks')
 
