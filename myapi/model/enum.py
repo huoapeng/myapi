@@ -6,6 +6,11 @@ class user_status:
     normal = 0
     delete = 1
 
+class user_authorised_status:
+    none = 0
+    private = 1
+    company = 2
+
 class project_status:
     normal = 0
     delete = 1

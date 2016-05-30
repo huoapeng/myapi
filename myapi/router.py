@@ -2,7 +2,7 @@
 from flask import Blueprint
 from flask.ext.restful import Api
 from myapi.resources.general import general
-from myapi.resources.user import User, ChangePassword
+from myapi.resources.user import User, ChangePassword, GetUserList
 from myapi.resources.tag import Tag, UserTags
 from myapi.resources.project import Project, UserPublishedProjects
 from myapi.resources.task import Task, GetTaskListByProjectID, GetTaskList
@@ -19,6 +19,7 @@ api.add_resource(general, '/', '/general/<string:method>')
 api.add_resource(ChangePassword, '/changepwd')
 
 api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')
+api.add_resource(GetUserList, '/userlist/<int:page>')
 api.add_resource(Tag, '/tag', '/tag/<int:tagid>')
 api.add_resource(UserTags, '/<int:userid>/usertags')
 api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects')
