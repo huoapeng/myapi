@@ -57,5 +57,5 @@ class Note(Resource):
 class TaskNotes(Resource):
     @marshal_with(note_fields)
     def get(self, taskid):
-        task = TaskModel.query.get(taskid)
-        return task.notes
+        notes = NoteModel.query.filter_by(task_id=taskid)
+        return notes
