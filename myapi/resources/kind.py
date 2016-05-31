@@ -10,15 +10,9 @@ from myapi.common.util import itemStatus
 from myapi.common.decorator import jsonp
 
 parser = reqparse.RequestParser()
-parser.add_argument(
-    'id', dest='id', type=int, location='json',
-)
-parser.add_argument(
-    'name', dest='name', type=str, location='json'#, required=True
-)
-parser.add_argument(
-    'parent_id', dest='parent_id', type=int, location='json'
-)
+parser.add_argument('id', dest='id', type=int, location='json')
+parser.add_argument('name', dest='name', type=str, location='json')#, required=True)
+parser.add_argument('parent_id', dest='parent_id', type=int, location='json')
 
 post_fields = {
     'id': fields.Integer,
