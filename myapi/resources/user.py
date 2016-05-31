@@ -28,7 +28,7 @@ user_fields = {
     'area': fields.String,
     'description': fields.String,
     'status': itemStatus(attribute='status'),
-    'regist_date': fields.DateTime,
+    'registDate': fields.DateTime,
 }
 
 class User(Resource):
