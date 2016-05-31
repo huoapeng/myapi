@@ -7,7 +7,7 @@ from kind import KindModel
 
 class ProjectModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(500))
     status = db.Column(db.Integer)
     description = db.Column(db.String(4096))
     publish_date = db.Column(db.DateTime)

@@ -7,12 +7,12 @@ from message import NoteMessageModel
 
 class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nickname = db.Column(db.String(50))
+    nickname = db.Column(db.String(200))
     email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(50))
+    password = db.Column(db.String(200))
     phone = db.Column(db.String(50))
-    area = db.Column(db.String(50))
-    image = db.Column(db.String(50))
+    area = db.Column(db.String(200))
+    image = db.Column(db.String(200))
     description = db.Column(db.String(4096))
     status = db.Column(db.Integer)
     authorisedStatus = db.Column(db.Integer)
