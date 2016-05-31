@@ -61,6 +61,7 @@ class Version(Resource):
 class TaskVersions(Resource):
     @marshal_with(version_fields)
     def get(self, taskid):
-        versions = VersionModel.query.filter_by(task_id=taskid)
-        return versions
+        # versions = VersionModel.query.filter_by(task_id=taskid)
+        task = TaskModel.query.get(taskid)
+        return task.versions
 
