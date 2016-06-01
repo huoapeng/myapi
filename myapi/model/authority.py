@@ -64,3 +64,21 @@ class CompanyAuthorisedModel(db.Model):
         self.bankLocation = bankLocation
         self.authorisedDate = datetime.datetime.now()
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'businessScope': self.businessScope,
+            'businessLicenseID':self.businessLicenseID,
+            'businessLicenseImage': '',
+            'contactImage': '',
+            'verifyType': self.verifyType,
+            'bankAccount': self.bankAccount,
+            'bankName': self.bankName,
+            'bankLocation': self.bankLocation,
+            'authorisedDate': self.authorisedDate,
+            'approvalStatus': self.approval_status,
+            'approvalDate': self.approvalDate,
+            'ownerID': self.owner_id,
+            'owner': url_for('.userep', _external=True, userid=self.owner_id),
+        }

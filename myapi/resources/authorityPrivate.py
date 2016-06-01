@@ -8,8 +8,7 @@ from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db, app
 from myapi.model.user import UserModel
 from myapi.model.authority import PrivateAuthorisedModel
-from myapi.model.enum import verify_type, approval_status
-from myapi.common.util import itemStatus
+from myapi.model.enum import verify_type, approval_status, authorised_status
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, location='json', required=True)
@@ -55,7 +54,6 @@ class AuthorityPrivateList(Resource):
     def get(self):
         authorityList = PrivateAuthorisedModel.query.filter_by(approval_status=approval_status.start).all()
         return jsonify(data=[e.serialize() for e in authorityList])
-
 
 
 

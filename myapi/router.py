@@ -25,8 +25,10 @@ api.add_resource(Tag, '/tag', '/tag/<int:tagid>')
 api.add_resource(UserTags, '/<int:userid>/usertags')
 api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<int:page>')
 
-api.add_resource(AuthorityPrivate, '/private')
+api.add_resource(AuthorityPrivate, '/private', '/private/<int:id>')
 api.add_resource(AuthorityPrivateList, '/privatelist')
+api.add_resource(AuthorityCompany, '/company', '/company/<int:id>')
+api.add_resource(AuthorityCompanyList, '/companylist')
 
 api.add_resource(Project, '/project', '/project/<int:projectid>')
 
