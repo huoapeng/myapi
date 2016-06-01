@@ -3,23 +3,23 @@ class user_status:
     normal = 0
     delete = 1
 
-class user_authorised_status:
+class authorised_status:
     none = 0
     private = 1
     company = 2
 
-class verifyType:
+class verify_type:
     auto = 0
     manual = 1
 
-class approvalStatus:
+class approval_status:
     start = 0
-    wrong = 1
-    finish = 2
+    deny = 1
+    allow = 2
 
-class approvalResult:
-    success = 0
-    failed = 1
+# class approvalResult:
+#     success = 0
+#     failed = 1
 
 class project_status:
     normal = 0

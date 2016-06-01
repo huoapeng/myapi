@@ -1,6 +1,6 @@
 import datetime
 from myapi import db
-from enum import user_status, user_authorised_status
+from enum import user_status, authorised_status
 from tag import user_tags
 from note import NoteModel
 from message import NoteMessageModel
@@ -45,7 +45,7 @@ class UserModel(db.Model):
         self.password = password
         self.registDate = datetime.datetime.now()
         self.status = user_status.normal
-        self.authorisedStatus = user_authorised_status.none
+        self.authorisedStatus = authorised_status.none
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)
