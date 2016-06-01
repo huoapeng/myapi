@@ -90,9 +90,8 @@ class GetTaskList(Resource):
         kind_str_list = []
         task_obj_list = []
         
-        i = 0
-        tasks = TaskModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False).items
-        for task in tasks:
+        tasks = TaskModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        for task in tasks.items:
             project = task.project
             owner = project.owner
             for kind in project.kinds:
@@ -112,9 +111,16 @@ class GetTaskList(Resource):
                     kind_str_list
                 )
             task_obj_list.append(t)
-            i += 1
 
-        return jsonify(count=i, result=[e.serialize() for e in task_obj_list])
+        return jsonify(total = tasks.total,
+            pages = tasks.pages,
+            page = tasks.page,
+            per_page = tasks.per_page,
+            has_next = tasks.has_next,
+            has_prev = tasks.has_prev,
+            next_num = tasks.next_num,
+            prev_num = tasks.prev_num,
+            result=[e.serialize() for e in task_obj_list])
 
 class UserWonTasks(Resource):
     @marshal_with(task_fields)

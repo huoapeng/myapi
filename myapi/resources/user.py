@@ -29,6 +29,7 @@ user_fields = {
     'area': fields.String,
     'description': fields.String,
     'status': itemStatus(attribute='status'),
+    'authorisedStatus': fields.String,
     'registDate': fields.DateTime,
 }
 
@@ -110,9 +111,8 @@ class GetUserList(Resource):
         tag_str_list = []
         user_obj_list = []
         
-        i = 0
-        users = UserModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False).items
-        for user in users:
+        users = UserModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        for user in users.items:
             for tag in user.tags:
                 tag_str_list.append(tag.name)
 
@@ -128,8 +128,15 @@ class GetUserList(Resource):
                     tag_str_list
                 )
             user_obj_list.append(u)
-            i += 1
 
-        return jsonify(count=i, result=[e.serialize() for e in user_obj_list])
+        return jsonify(total = users.total,
+            pages = users.pages,
+            page = users.page,
+            per_page = users.per_page,
+            has_next = users.has_next,
+            has_prev = users.has_prev,
+            next_num = users.next_num,
+            prev_num = users.prev_num,
+            data=[e.serialize() for e in user_obj_list])
  
         

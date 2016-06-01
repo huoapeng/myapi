@@ -23,7 +23,7 @@ api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')
 api.add_resource(GetUserList, '/userlist/<int:page>')
 api.add_resource(Tag, '/tag', '/tag/<int:tagid>')
 api.add_resource(UserTags, '/<int:userid>/usertags')
-api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects')
+api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<int:page>')
 
 api.add_resource(AuthorityPrivate, '/private')
 

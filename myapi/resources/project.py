@@ -4,7 +4,7 @@ sys.setdefaultencoding('utf-8')
 
 from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
-from myapi import db
+from myapi import db, app
 from myapi.model.project import ProjectModel
 from myapi.model.user import UserModel
 from myapi.model.kind import KindModel
@@ -66,19 +66,25 @@ class Project(Resource):
         return project
 
 class UserPublishedProjects(Resource):
-    def get(self, userid):
+    def get(self, userid, page):
         kind_str_list = []
         project_obj_list = []
 
-        i = 0
-        user = UserModel.query.get(userid)
-        for project in user.published_projects:
+        projects = UserModel.query.get(userid).published_projects.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        for project in projects.items:
             for kind in project.kinds:
                 kind_str_list.append(kind.name)
 
             v = UserPublishedProjectsView(project.id, project.name, kind_str_list)
             project_obj_list.append(v)
-            i += 1
 
-        return jsonify(count=i, result=[e.serialize() for e in project_obj_list])
+        return jsonify(total = projects.total,
+            pages = projects.pages,
+            page = projects.page,
+            per_page = projects.per_page,
+            has_next = projects.has_next,
+            has_prev = projects.has_prev,
+            next_num = projects.next_num,
+            prev_num = projects.prev_num,
+            data=[e.serialize() for e in project_obj_list])
 

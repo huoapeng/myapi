@@ -27,11 +27,12 @@ class UserMarketView(object):
         self.profileIntegrityPercent = profileIntegrityPercent
         self.phone = phone
         self.email = email
+        self.tag_str_list = tag_str_list
 
     def serialize(self):
         return {
             'userid': self.userid,
-            'user_image_url':url_for('.getTasksByProjectID', _external=True, projectid=self.userImage),
+            'user_image_url':url_for('.userep', _external=True, userid=self.userImage),
             'userName': self.userName,
             'authorisedStatus': self.authorisedStatus,
             # 'authorisedId': self.authorisedId,
