@@ -9,6 +9,7 @@ from myapi.model.user import UserModel
 from myapi.model.enum import user_status
 from myapi.common.util import valid_email, md5, itemStatus
 from myapi.common.decorator import jsonp
+from myapi.view.user import UserMarketView
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('email', type=valid_email, location='json', required=True)
@@ -109,17 +110,16 @@ class GetUserList(Resource):
         tag_str_list = []
         user_obj_list = []
         
+        i = 0
         users = UserModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False).items
         for user in users:
-
-            for tag in project.tags:
+            for tag in user.tags:
                 tag_str_list.append(tag.name)
 
             u = UserMarketView(user.id,
                     user.image,
                     user.nickname,
                     user.authorisedStatus,
-                    user.authorisedId,
                     user.area,
                     0,#wonTaskCount,
                     0,#profileIntegrityPercent,
@@ -128,7 +128,8 @@ class GetUserList(Resource):
                     tag_str_list
                 )
             user_obj_list.append(u)
+            i += 1
 
-        return jsonify(result=[e.serialize() for e in user_obj_list])
+        return jsonify(count=i, result=[e.serialize() for e in user_obj_list])
  
         

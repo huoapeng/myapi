@@ -7,7 +7,7 @@ class UserMarketView(object):
             userImage,
             userName,
             authorisedStatus,
-            authorisedId,
+            # authorisedId,
             area,
             wonTaskCount,
             # goodReputationPercent,
@@ -20,7 +20,7 @@ class UserMarketView(object):
         self.userImage = userImage
         self.userName = userName
         self.authorisedStatus = authorisedStatus
-        self.authorisedId = authorisedId
+        # self.authorisedId = authorisedId
         self.area = area
         self.wonTaskCount = wonTaskCount
         # self.goodReputationPercent = goodReputationPercent
@@ -34,7 +34,7 @@ class UserMarketView(object):
             'user_image_url':url_for('.getTasksByProjectID', _external=True, projectid=self.userImage),
             'userName': self.userName,
             'authorisedStatus': self.authorisedStatus,
-            'authorisedId': self.authorisedId,
+            # 'authorisedId': self.authorisedId,
             'area': self.area,
             'wonTaskCount': self.wonTaskCount,
             'profileIntegrityPercent': self.profileIntegrityPercent,
