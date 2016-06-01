@@ -7,7 +7,7 @@ class VersionModel(db.Model):
     file = db.Column(db.String(500))
     image = db.Column(db.String(500))
     title = db.Column(db.String(500))
-    description = db.Column(db.String(4096))
+    description = db.Column(db.Text)
     publish_date = db.Column(db.DateTime)
     status = db.Column(db.Integer)
 

@@ -20,7 +20,7 @@ from enum import project_status
 
 class NoteMessageModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String(4096))
+    message = db.Column(db.Text)
     publish_date = db.Column(db.DateTime)
 
     note_id = db.Column(db.Integer, db.ForeignKey('note_model.id'))

@@ -9,7 +9,7 @@ class ProjectModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(500))
     status = db.Column(db.Integer)
-    description = db.Column(db.String(4096))
+    description = db.Column(db.Text)
     publish_date = db.Column(db.DateTime)
 
     owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
