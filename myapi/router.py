@@ -11,6 +11,7 @@ from myapi.resources.note import Note, TaskNotes
 from myapi.resources.kind import Kind, KindList, SearchKindsByName
 from myapi.resources.message import NoteMessage, NoteMessageList
 from myapi.resources.profile import Profile
+from myapi.resources.authorityPrivate import AuthorityPrivate
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -23,6 +24,8 @@ api.add_resource(GetUserList, '/userlist/<int:page>')
 api.add_resource(Tag, '/tag', '/tag/<int:tagid>')
 api.add_resource(UserTags, '/<int:userid>/usertags')
 api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects')
+
+api.add_resource(AuthorityPrivate, '/private')
 
 api.add_resource(Project, '/project', '/project/<int:projectid>')
 

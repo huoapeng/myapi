@@ -16,8 +16,8 @@ class UserModel(db.Model):
     description = db.Column(db.String(4096))
     status = db.Column(db.Integer)
     authorisedStatus = db.Column(db.Integer)
-    privateAuthorisedId = db.Column(db.Integer)
-    companyAuthorisedId = db.Column(db.Integer)
+    # privateAuthorisedId = db.Column(db.Integer)
+    # companyAuthorisedId = db.Column(db.Integer)
     registDate = db.Column(db.DateTime)
 
     published_projects = db.relationship('ProjectModel',
@@ -32,6 +32,11 @@ class UserModel(db.Model):
     notes = db.relationship('NoteModel',
         backref=db.backref('owner', lazy='joined'), lazy='joined')
     notemessages = db.relationship('NoteMessageModel',
+        backref=db.backref('owner', lazy='joined'), lazy='joined')
+
+    privateAuthority = db.relationship('PrivateAuthorisedModel', uselist=False,
+        backref=db.backref('owner', lazy='joined'), lazy='joined')
+    companyAuthority = db.relationship('CompanyAuthorisedModel', uselist=False,
         backref=db.backref('owner', lazy='joined'), lazy='joined')
 
     def __init__(self, email, password):

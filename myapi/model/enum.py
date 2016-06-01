@@ -1,6 +1,3 @@
-# class user_actions:
-#     regist = 0
-#     login = 1
 
 class user_status:
     normal = 0
@@ -10,6 +7,19 @@ class user_authorised_status:
     none = 0
     private = 1
     company = 2
+
+class verifyType:
+    auto = 0
+    manual = 1
+
+class approvalStatus:
+    start = 0
+    wrong = 1
+    finish = 2
+
+class approvalResult:
+    success = 0
+    failed = 1
 
 class project_status:
     normal = 0
