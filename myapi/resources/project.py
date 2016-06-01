@@ -70,6 +70,7 @@ class UserPublishedProjects(Resource):
         kind_str_list = []
         project_obj_list = []
 
+        i = 0
         user = UserModel.query.get(userid)
         for project in user.published_projects:
             for kind in project.kinds:
@@ -77,6 +78,7 @@ class UserPublishedProjects(Resource):
 
             v = UserPublishedProjectsView(project.id, project.name, kind_str_list)
             project_obj_list.append(v)
+            i += 1
 
-        return jsonify(result=[e.serialize() for e in project_obj_list])
+        return jsonify(count=i, result=[e.serialize() for e in project_obj_list])
 
