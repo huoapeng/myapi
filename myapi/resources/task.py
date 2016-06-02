@@ -85,17 +85,36 @@ class GetTaskListByProjectID(Resource):
         project = ProjectModel.query.get(projectid)
         return project.tasks
 
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('keyword', type=str, location='args')
+get_parser.add_argument('kind', type=str, location='args')
+get_parser.add_argument('status', type=int, location='args', choices=range(3), default=0)
+
+from sqlalchemy import or_
+
 class GetTaskList(Resource):
     def get(self, page):
+        args = get_parser.parse_args()
         task_obj_list = []
         
-        tasks = TaskModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        tasks = TaskModel.query
+        
+        if args.keyword:
+            tasks = tasks.filter(TaskModel.name.contains(args.keyword))
+        if args.status:
+            tasks = tasks.filter(TaskModel.status == args.status)
+
+        tasks = tasks.paginate(page, app.config['POSTS_PER_PAGE'], False)
         for task in tasks.items:
             project = task.project
             owner = project.owner
             kind_str_list = []
             for kind in project.kinds:
                 kind_str_list.append(kind.name)
+
+            if args.kind:
+                if args.kind not in ','.join(kind_str_list):
+                    continue
 
             t = TaskOfMovieMarketView(task.id,
                     task.name,
