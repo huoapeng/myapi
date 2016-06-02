@@ -67,11 +67,11 @@ class Project(Resource):
 
 class UserPublishedProjects(Resource):
     def get(self, userid, page):
-        kind_str_list = []
         project_obj_list = []
 
         projects = UserModel.query.get(userid).published_projects.paginate(page, app.config['POSTS_PER_PAGE'], False)
         for project in projects.items:
+            kind_str_list = []
             for kind in project.kinds:
                 kind_str_list.append(kind.name)
 

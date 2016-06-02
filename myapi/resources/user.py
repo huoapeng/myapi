@@ -18,7 +18,7 @@ post_parser.add_argument('password', type=str, location='json')
 post_parser.add_argument('phone', type=str, location='json')
 post_parser.add_argument('area', type=str, location='json')
 post_parser.add_argument('description', type=str, location='json')
-# post_parser.add_argument('type', type=int, location='json', required=True, choices=range(2), default=1)
+# post_parser.add_argument('type', type=int, location='args', required=True, choices=range(2), default=1)
 
 user_fields = {
     'id': fields.Integer,
@@ -96,23 +96,30 @@ class ChangePassword(Resource):
             return user
         else:
             return UserModel('','')
-        
-class UserSummary(Resource):
-    def get(self, userid):
-        # user = UserModel.query.get(userid)
-        # return user if user else UserModel('','')
-        return jsonify({
-            # 'detail':url_for(), 
-            'url':url_for('.userep', _external=True, userid=userid),
-            })
+
+
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('keyword', type=str, location='args')
+get_parser.add_argument('tag', type=str, location='args')
+get_parser.add_argument('authorised_status', type=str, location='args', choices=range(2), default=0)
 
 class GetUserList(Resource):
     def get(self, page):
-        tag_str_list = []
+        args = get_parser.parse_args()
+
         user_obj_list = []
+
+        users = UserModel.query
+        # if args.keyword:
+        #     users = users.name.contains(args.keyword)
+        # q = session.query(myClass)
+        # for attr, value in web_dict.items():
+        # q = q.filter(getattr(myClass, attr).like("%%%s%%" % value))
+
         
-        users = UserModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        users = users.paginate(page, app.config['POSTS_PER_PAGE'], False)
         for user in users.items:
+            tag_str_list = []
             for tag in user.tags:
                 tag_str_list.append(tag.name)
 

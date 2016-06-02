@@ -32,7 +32,7 @@ class UserMarketView(object):
     def serialize(self):
         return {
             'userid': self.userid,
-            'user_image_url':url_for('.userep', _external=True, userid=self.userImage),
+            'user_image_url':'',
             'userName': self.userName,
             'authorisedStatus': self.authorisedStatus,
             # 'authorisedId': self.authorisedId,

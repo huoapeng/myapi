@@ -87,13 +87,13 @@ class GetTaskListByProjectID(Resource):
 
 class GetTaskList(Resource):
     def get(self, page):
-        kind_str_list = []
         task_obj_list = []
         
         tasks = TaskModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False)
         for task in tasks.items:
             project = task.project
             owner = project.owner
+            kind_str_list = []
             for kind in project.kinds:
                 kind_str_list.append(kind.name)
 
