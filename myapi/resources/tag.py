@@ -49,4 +49,7 @@ class UserTags(Resource):
         user = UserModel.query.get(userid)
         return user.tags
 
-
+class SearchTagsByName(Resource):
+    @marshal_with(tag_fields)
+    def get(self, keyword):
+        return TagModel.query.filter(TagModel.name.contains(keyword)).all()

@@ -3,7 +3,7 @@ from flask import Blueprint
 from flask.ext.restful import Api
 from myapi.resources.general import general
 from myapi.resources.user import User, ChangePassword, GetUserList
-from myapi.resources.tag import Tag, UserTags
+from myapi.resources.tag import Tag, UserTags, SearchTagsByName
 from myapi.resources.project import Project, UserPublishedProjects
 from myapi.resources.task import Task, GetTaskListByProjectID, GetTaskList
 from myapi.resources.version import Version, TaskVersions
@@ -24,6 +24,7 @@ api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')
 api.add_resource(GetUserList, '/userlist/<int:page>')
 api.add_resource(Tag, '/tag', '/tag/<int:tagid>')
 api.add_resource(UserTags, '/<int:userid>/usertags')
+api.add_resource(SearchTagsByName, '/search/taglist/<string:keyword>')
 api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<int:page>')
 
 api.add_resource(AuthorityPrivate, '/private', '/private/<int:id>')
@@ -48,7 +49,7 @@ api.add_resource(NoteMessageList, '/<int:noteid>/notemessagelist')
 
 api.add_resource(Kind, '/kind', '/kind/<int:kindid>')
 api.add_resource(KindList, '/kindlist')
-api.add_resource(SearchKindsByName, '/search/kindlist/<string:kindname>')
+api.add_resource(SearchKindsByName, '/search/kindlist/<string:keyword>')
 
 # api.add_resource(UserWonTasks, '/<int:userid>/userwontasks')
 

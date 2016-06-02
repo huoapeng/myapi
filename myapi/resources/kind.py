@@ -76,8 +76,8 @@ class KindList(Resource):
 
 class SearchKindsByName(Resource):
     @marshal_with(post_fields)
-    def get(self, kindname):
+    def get(self, keyword):
         return KindModel.query.filter_by(status = kind_status.normal)\
-            .filter(KindModel.name.contains(kindname)).all()
+            .filter(KindModel.name.contains(keyword)).all()
 
 
