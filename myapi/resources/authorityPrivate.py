@@ -15,7 +15,7 @@ post_parser.add_argument('user_id', type=int, location='json', required=True)
 post_parser.add_argument('name', type=str, location='json')
 post_parser.add_argument('identity_id', type=int, location='json')
 post_parser.add_argument('approval_id', type=int, location='json')
-post_parser.add_argument('approval_status', type=int, location='json', choices=range(3), default=1)
+post_parser.add_argument('approval_status', type=int, location='json', choices=range(4), default=1)
 
 class AuthorityPrivate(Resource):
     def get(self, id):

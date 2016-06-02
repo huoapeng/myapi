@@ -13,9 +13,10 @@ class verify_type:
     manual = 1
 
 class approval_status:
-    start = 0
-    deny = 1
-    allow = 2
+    none = 0
+    start = 1
+    deny = 2
+    allow = 3
 
 # class approvalResult:
 #     success = 0

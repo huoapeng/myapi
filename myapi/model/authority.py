@@ -63,6 +63,7 @@ class CompanyAuthorisedModel(db.Model):
         self.bankName = bankName
         self.bankLocation = bankLocation
         self.authorisedDate = datetime.datetime.now()
+        self.approval_status = approval_status.start
 
     def serialize(self):
         return {
