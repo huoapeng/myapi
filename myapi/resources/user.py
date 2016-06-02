@@ -101,27 +101,33 @@ class ChangePassword(Resource):
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('tag', type=str, location='args')
-get_parser.add_argument('authorised_status', type=str, location='args', choices=range(2), default=0)
+get_parser.add_argument('authorised_status', type=int, location='args', choices=range(3), default=0)
 
 class GetUserList(Resource):
     def get(self, page):
         args = get_parser.parse_args()
-
         user_obj_list = []
 
         users = UserModel.query
-        # if args.keyword:
-        #     users = users.name.contains(args.keyword)
+
+        if args.keyword:
+            users = users.filter(UserModel.nickname.contains(args.keyword))
+        if args.authorised_status:
+            users = users.filter(UserModel.authorisedStatus == args.authorised_status)
+
         # q = session.query(myClass)
         # for attr, value in web_dict.items():
         # q = q.filter(getattr(myClass, attr).like("%%%s%%" % value))
 
-        
         users = users.paginate(page, app.config['POSTS_PER_PAGE'], False)
         for user in users.items:
             tag_str_list = []
             for tag in user.tags:
                 tag_str_list.append(tag.name)
+                
+            if args.tag:
+                if args.tag not in ','.join(tag_str_list):
+                    continue
 
             u = UserMarketView(user.id,
                     user.image,
