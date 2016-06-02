@@ -61,7 +61,7 @@ class AuthorityCompany(Resource):
     def delete(self):
         pass
 
-class AuthorityPrivateList(Resource):
+class AuthorityCompanyList(Resource):
     def get(self):
         authorityList = CompanyAuthorisedModel.query.filter_by(approval_status=approval_status.start).all()
         return jsonify(data=[e.serialize() for e in authorityList])

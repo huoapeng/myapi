@@ -12,6 +12,7 @@ from myapi.resources.kind import Kind, KindList, SearchKindsByName
 from myapi.resources.message import NoteMessage, NoteMessageList
 from myapi.resources.profile import Profile
 from myapi.resources.authorityPrivate import AuthorityPrivate, AuthorityPrivateList
+from myapi.resources.authorityCompany import AuthorityCompany, AuthorityCompanyList
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
