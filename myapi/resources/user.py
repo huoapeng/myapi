@@ -101,7 +101,7 @@ class ChangePassword(Resource):
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('tag', type=str, location='args')
-get_parser.add_argument('authorised_status', type=int, location='args', choices=range(3), default=0)
+get_parser.add_argument('authorised_status', type=int, location='args', choices=range(4), default=0)
 
 class GetUserList(Resource):
     def get(self, page):

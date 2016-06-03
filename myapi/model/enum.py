@@ -1,8 +1,9 @@
 
 class authorised_status:
     none = 0
-    private = 1
-    company = 2
+    start = 1
+    private = 2
+    company = 3
 
 class verify_type:
     auto = 0

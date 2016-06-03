@@ -42,6 +42,7 @@ class AuthorityCompany(Resource):
 
         user = UserModel.query.get(args.user_id)
         user.companyAuthority = c
+        user.authorisedStatus = authorised_status.start
         db.session.commit()
 
         return jsonify(c.serialize())
