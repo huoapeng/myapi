@@ -24,7 +24,8 @@ version_fields = {
     'description': fields.String,
     'publish_date': fields.DateTime,
     'status':  itemStatus(attribute='status'),
-    'user_id': fields.Integer
+    'user_id': fields.Integer,
+    'task_id': fields.Integer
 }
 
 class Version(Resource):
@@ -63,5 +64,5 @@ class TaskVersions(Resource):
     def get(self, taskid):
         # versions = VersionModel.query.filter_by(task_id=taskid)
         task = TaskModel.query.get(taskid)
-        return task.versions
+        return task.versions.all()
 

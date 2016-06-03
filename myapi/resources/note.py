@@ -20,7 +20,8 @@ note_fields = {
     'title': fields.String,
     'publish_date': fields.DateTime,
     'status':  itemStatus(attribute='status'),
-    'user_id': fields.Integer
+    'user_id': fields.Integer,
+    'task_id': fields.Integer
 }
 
 class Note(Resource):
@@ -59,4 +60,4 @@ class TaskNotes(Resource):
     def get(self, taskid):
         # notes = NoteModel.query.filter_by(task_id=taskid)
         task = TaskModel.query.get(taskid)
-        return task.notes
+        return task.notes.all()
