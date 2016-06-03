@@ -4,7 +4,7 @@ from flask.ext.restful import Api
 from myapi.resources.general import general
 from myapi.resources.user import User, ChangePassword, GetUserList
 from myapi.resources.tag import Tag, UserTags, SearchTagsByName
-from myapi.resources.project import Project, UserPublishedProjects
+from myapi.resources.project import Project, UserPublishedProjects, UserWonProjects
 from myapi.resources.task import Task, GetTaskListByProjectID, GetTaskList
 from myapi.resources.version import Version, TaskVersions
 from myapi.resources.note import Note, TaskNotes
@@ -27,6 +27,7 @@ api.add_resource(Tag, '/tag', '/tag/<int:tagid>')
 api.add_resource(UserTags, '/<int:userid>/usertags')
 api.add_resource(SearchTagsByName, '/search/taglist/<string:keyword>')
 api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<int:page>')
+api.add_resource(UserWonProjects, '/<int:userid>/userwonprojects/<int:page>')
 
 api.add_resource(AuthorityPrivate, '/private', '/private/<int:id>')
 api.add_resource(AuthorityPrivateList, '/privatelist')

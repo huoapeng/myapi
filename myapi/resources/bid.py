@@ -26,7 +26,7 @@ class Bid(Resource):
         bid = BidModel(args.bidding_price, args.bidding_description)
 
         user = UserModel.query.get(args.user_id)
-        bid.owner = user
+        bid.user = user
 
         task = TaskModel.query.get(args.task_id)
         task.bidders.append(bid)

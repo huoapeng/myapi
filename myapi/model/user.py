@@ -35,7 +35,7 @@ class UserModel(db.Model):
     companyAuthority = db.relationship('CompanyAuthorisedModel', uselist=False,
         backref=db.backref('owner', lazy='joined'), lazy='joined')
 
-    bidTasks = db.relationship('BidModel', backref='user')
+    bidTasks = db.relationship('BidModel', lazy='dynamic')
 
     def __init__(self, email, password):
         self.nickname = email[:email.find(r'@')]

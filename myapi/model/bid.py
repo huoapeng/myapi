@@ -13,8 +13,8 @@ class BidModel(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'), primary_key=True)
     task_id = db.Column(db.Integer, db.ForeignKey('task_model.id'), primary_key=True)
 
-    owner = db.relationship('UserModel')
-    # task = db.relationship('TaskModel')
+    user = db.relationship('UserModel', lazy='joined')
+    task = db.relationship('TaskModel', lazy='joined')
 
     def __init__(self, bidding_price=None, bidding_description=None):
         self.bidding_price = bidding_price

@@ -9,14 +9,16 @@ from myapi.model.project import ProjectModel
 from myapi.model.user import UserModel
 from myapi.model.kind import KindModel
 from myapi.model.enum import project_status
+from myapi.model.bid import BidModel
 from myapi.common.util import itemStatus
 from myapi.view.project import UserPublishedProjectsView
 
-parser = reqparse.RequestParser()
-parser.add_argument('name', type=str, location='json', required=True)
-parser.add_argument('description', type=str, location='json')
-parser.add_argument('owner_id', type=int, location='json', required=True)
-parser.add_argument('kind_id', type=int, location='json', required=True)
+
+post_parser = reqparse.RequestParser()
+post_parser.add_argument('name', type=str, location='json', required=True)
+post_parser.add_argument('description', type=str, location='json')
+post_parser.add_argument('owner_id', type=int, location='json', required=True)
+post_parser.add_argument('kind_id', type=int, location='json', required=True)
 
 project_fields = {
     'id': fields.Integer,
@@ -34,7 +36,7 @@ class Project(Resource):
 
     @marshal_with(project_fields)
     def post(self):
-        args = parser.parse_args()
+        args = post_parser.parse_args()
 
         kind = KindModel.query.get(args.kind_id)
         project = ProjectModel(args.name, args.description)
@@ -48,7 +50,7 @@ class Project(Resource):
 
     @marshal_with(project_fields)
     def put(self):
-        args = parser.parse_args()
+        args = post_parser.parse_args()
         kind = KindModel.query.get(args.kind_id)
         project = ProjectModel.query.get(args.id)
         project.name = args.name
@@ -59,17 +61,26 @@ class Project(Resource):
 
     @marshal_with(project_fields)
     def delete(self):
-        args = parser.parse_args()
+        args = post_parser.parse_args()
         project = ProjectModel.query.get(args.id)
         project.status = project_status.delete
         db.session.commit()
         return project
 
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('status', type=int, location='args', choices=range(3), default=0)
+
 class UserPublishedProjects(Resource):
     def get(self, userid, page):
-        project_obj_list = []
+        args = get_parser.parse_args()
 
-        projects = UserModel.query.get(userid).published_projects.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        projects = UserModel.query.get(userid).published_projects
+
+        if args.status:
+            projects = projects.filter(BidModel.status == args.status)
+        projects = projects.paginate(page, app.config['POSTS_PER_PAGE'], False)
+
+        project_obj_list = []
         for project in projects.items:
             kind_str_list = []
             for kind in project.kinds:
@@ -87,4 +98,36 @@ class UserPublishedProjects(Resource):
             next_num = projects.next_num,
             prev_num = projects.prev_num,
             data=[e.serialize() for e in project_obj_list])
+
+class UserWonProjects(Resource):
+    def get(self, userid, page):
+        args = get_parser.parse_args()
+
+        bidTasks = UserModel.query.get(userid).bidTasks
+        if args.status:
+            print args.status
+            bidTasks = bidTasks.filter(BidModel.status == args.status)
+        bidTasks = bidTasks.paginate(page, app.config['POSTS_PER_PAGE'], False)
+
+        project_obj_list = []
+        for bid in bidTasks.items:
+            project = bid.task.project
+            kind_str_list = []
+            for kind in project.kinds:
+                kind_str_list.append(kind.name)
+
+            v = UserPublishedProjectsView(project.id, project.name, kind_str_list)
+            project_obj_list.append(v)
+
+        return jsonify(total = bidTasks.total,
+            pages = bidTasks.pages,
+            page = bidTasks.page,
+            per_page = bidTasks.per_page,
+            has_next = bidTasks.has_next,
+            has_prev = bidTasks.has_prev,
+            next_num = bidTasks.next_num,
+            prev_num = bidTasks.prev_num,
+            data=[e.serialize() for e in project_obj_list])
+
+
 

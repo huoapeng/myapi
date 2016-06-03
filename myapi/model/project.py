@@ -18,7 +18,7 @@ class ProjectModel(db.Model):
         backref=db.backref('projects', lazy='dynamic'))
 
     tasks = db.relationship('TaskModel',
-        backref=db.backref('project', lazy='joined'), lazy='joined')
+        backref=db.backref('project', lazy='joined'), lazy='dynamic')
 
     def __init__(self, projectName, description=None):
         self.name = projectName
