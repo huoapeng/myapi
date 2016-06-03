@@ -36,7 +36,7 @@ task_fields = {
     'bidder_area_requirement': fields.String,
     'status': itemStatus(attribute='status'),
     'project_id': fields.Integer,
-    'winner_id': fields.Integer
+    # 'winner_id': fields.Integer
 }
 
 class Task(Resource):
@@ -141,8 +141,3 @@ class GetTaskList(Resource):
             prev_num = tasks.prev_num,
             result=[e.serialize() for e in task_obj_list])
 
-class UserWonTasks(Resource):
-    @marshal_with(task_fields)
-    def get(self, userid):
-        user = UserModel.query.get(userid)
-        return user.won_tasks

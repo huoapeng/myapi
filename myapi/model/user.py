@@ -2,8 +2,6 @@ import datetime
 from myapi import db
 from enum import user_status, authorised_status
 from tag import user_tags
-from note import NoteModel
-from message import NoteMessageModel
 
 class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,6 +34,8 @@ class UserModel(db.Model):
         backref=db.backref('owner', lazy='joined'), lazy='joined')
     companyAuthority = db.relationship('CompanyAuthorisedModel', uselist=False,
         backref=db.backref('owner', lazy='joined'), lazy='joined')
+
+    bidTasks = db.relationship('BidModel', backref='user')
 
     def __init__(self, email, password):
         self.nickname = email[:email.find(r'@')]

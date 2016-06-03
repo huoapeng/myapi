@@ -1,11 +1,7 @@
 import datetime
 from myapi import db
 from enum import task_status
-from kind import task_kinds, KindModel
-from bid import bid
-from user import UserModel
-from version import VersionModel
-from note import NoteModel
+from kind import task_kinds
 
 class TaskModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,21 +15,23 @@ class TaskModel(db.Model):
     bidder_area_requirement = db.Column(db.String(100))
     status = db.Column(db.Integer)
 
-    winner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    # winner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
     project_id = db.Column(db.Integer, db.ForeignKey('project_model.id'))
 
     kinds = db.relationship('KindModel', secondary=task_kinds,
         backref=db.backref('tasks', lazy='dynamic'))
 
-    bidders = db.relationship('UserModel', secondary=bid,
-        backref=db.backref('participate_tasks', lazy='dynamic'))
+    # bidders = db.relationship('UserModel', secondary=bid,
+    #     backref=db.backref('participate_tasks', lazy='dynamic'))
 
     versions = db.relationship('VersionModel',
         backref=db.backref('task', lazy='joined'), lazy='joined')
 
     notes = db.relationship('NoteModel',
         backref=db.backref('task', lazy='joined'), lazy='joined')
+
+    bidders = db.relationship('BidModel', backref='task')
 
     def __init__(self, name, timespan=None, requirements=None, bonus=None, description=None, 
         bidder_qualification_requirement=None, bidder_area_requirement=None):

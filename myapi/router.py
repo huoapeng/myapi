@@ -13,6 +13,7 @@ from myapi.resources.message import NoteMessage, NoteMessageList
 from myapi.resources.profile import Profile
 from myapi.resources.authorityPrivate import AuthorityPrivate, AuthorityPrivateList
 from myapi.resources.authorityCompany import AuthorityCompany, AuthorityCompanyList
+from myapi.resources.bid import Bid, BidList
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -32,9 +33,12 @@ api.add_resource(AuthorityPrivateList, '/privatelist')
 api.add_resource(AuthorityCompany, '/company', '/company/<int:id>')
 api.add_resource(AuthorityCompanyList, '/companylist')
 
+api.add_resource(Bid, '/bid', '/<int:userid>/bid/<int:taskid>')
+api.add_resource(BidList, '/<int:taskid>/bidlist')
+
 api.add_resource(Project, '/project', '/project/<int:projectid>')
 
-api.add_resource(Task, '/task', '/task/<int:taskid>')
+api.add_resource(Task, '/task', '/task/<int:taskid>', endpoint='taskep')
 api.add_resource(TaskNotes, '/<int:taskid>/tasknotes')
 api.add_resource(TaskVersions, '/<int:taskid>/taskversions')
 
@@ -50,7 +54,5 @@ api.add_resource(NoteMessageList, '/<int:noteid>/notemessagelist')
 api.add_resource(Kind, '/kind', '/kind/<int:kindid>')
 api.add_resource(KindList, '/kindlist')
 api.add_resource(SearchKindsByName, '/search/kindlist/<string:keyword>')
-
-# api.add_resource(UserWonTasks, '/<int:userid>/userwontasks')
 
 api.add_resource(Profile, '/profile')
