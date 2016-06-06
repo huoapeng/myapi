@@ -32,7 +32,6 @@ class AuthorityPrivate(Resource):
         user.privateAuthority = p
         user.authorisedStatus = authorised_status.start
         db.session.commit()
-
         return jsonify(p.serialize())
 
     def put(self):
