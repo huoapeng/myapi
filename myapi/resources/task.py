@@ -83,7 +83,7 @@ class GetTaskListByProjectID(Resource):
     @marshal_with(task_fields)
     def get(self, projectid):
         project = ProjectModel.query.get(projectid)
-        return project.tasks
+        return project.tasks.all()
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
