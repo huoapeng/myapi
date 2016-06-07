@@ -8,7 +8,7 @@ from myapi import db, app
 from myapi.model.bid import BidModel
 from myapi.model.task import TaskModel
 from myapi.model.user import UserModel
-from myapi.model.enum import bid_status
+from myapi.model.enum import bid_status, task_status
 
 parser = reqparse.RequestParser()
 parser.add_argument('task_id', type=int, location='json', required=True)
@@ -40,6 +40,12 @@ class Bid(Resource):
         args = parser.parse_args()
         bid = BidModel.query.filter_by(user_id=args.user_id).filter_by(task_id=args.task_id).first_or_404()
         bid.status = bid_status.selectBidder
+
+        task = TaskModel.query.get(args.task_id)
+        task.status = task_status.selectBidder
+
+        user = UserModel.query.get(args.user_id)
+        user.wonTasks.append(task)
 
         db.session.commit()
         return jsonify(result='true')

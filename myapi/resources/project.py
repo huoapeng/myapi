@@ -11,7 +11,7 @@ from myapi.model.kind import KindModel
 from myapi.model.enum import project_status
 from myapi.model.bid import BidModel
 from myapi.common.util import itemStatus
-from myapi.view.project import UserPublishedProjectsView
+from myapi.view.project import UserPublishedProjectsView, UserBidProjectsView
 
 
 post_parser = reqparse.RequestParser()
@@ -67,18 +67,10 @@ class Project(Resource):
         db.session.commit()
         return project
 
-get_parser = reqparse.RequestParser()
-get_parser.add_argument('status', type=int, location='args', choices=range(3), default=0)
-
 class UserPublishedProjects(Resource):
     def get(self, userid, page):
-        args = get_parser.parse_args()
-
-        projects = UserModel.query.get(userid).published_projects
-
-        if args.status:
-            projects = projects.filter(BidModel.status == args.status)
-        projects = projects.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        projects = UserModel.query.get(userid).published_projects\
+            .paginate(page, app.config['POSTS_PER_PAGE'], False)
 
         project_obj_list = []
         for project in projects.items:
@@ -101,13 +93,8 @@ class UserPublishedProjects(Resource):
 
 class UserWonProjects(Resource):
     def get(self, userid, page):
-        args = get_parser.parse_args()
-
-        bidTasks = UserModel.query.get(userid).bidTasks
-        if args.status:
-            print args.status
-            bidTasks = bidTasks.filter(BidModel.status == args.status)
-        bidTasks = bidTasks.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        bidTasks = UserModel.query.get(userid).bidTasks\
+            .paginate(page, app.config['POSTS_PER_PAGE'], False)
 
         project_obj_list = []
         for bid in bidTasks.items:
@@ -116,7 +103,7 @@ class UserWonProjects(Resource):
             for kind in project.kinds:
                 kind_str_list.append(kind.name)
 
-            v = UserPublishedProjectsView(project.id, project.name, kind_str_list)
+            v = UserBidProjectsView(userid, project.id, project.name, kind_str_list)
             project_obj_list.append(v)
 
         return jsonify(total = bidTasks.total,

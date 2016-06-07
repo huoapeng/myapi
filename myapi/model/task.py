@@ -15,15 +15,10 @@ class TaskModel(db.Model):
     bidder_area_requirement = db.Column(db.String(100))
     status = db.Column(db.Integer)
 
-    # winner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
-
     project_id = db.Column(db.Integer, db.ForeignKey('project_model.id'))
 
     kinds = db.relationship('KindModel', secondary=task_kinds,
         backref=db.backref('tasks', lazy='dynamic'))
-
-    # bidders = db.relationship('UserModel', secondary=bid,
-    #     backref=db.backref('participate_tasks', lazy='dynamic'))
 
     versions = db.relationship('VersionModel',
         backref=db.backref('task', lazy='joined'), lazy='dynamic')
@@ -31,6 +26,7 @@ class TaskModel(db.Model):
     notes = db.relationship('NoteModel',
         backref=db.backref('task', lazy='joined'), lazy='dynamic')
 
+    winner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     bidders = db.relationship('BidModel', lazy='dynamic')
 
     def __init__(self, name, timespan=None, requirements=None, bonus=None, description=None, 
@@ -43,7 +39,7 @@ class TaskModel(db.Model):
         self.publishDate = datetime.datetime.now()
         self.bidder_qualification_requirement = bidder_qualification_requirement
         self.bidder_area_requirement = bidder_area_requirement
-        self.status = task_status.normal
+        self.status = task_status.bidding
 
     def __repr__(self):
         return '<User %r>' % (self.name)

@@ -5,7 +5,7 @@ from myapi.resources.general import general, image
 from myapi.resources.user import User, ChangePassword, GetUserList
 from myapi.resources.tag import Tag, UserTags, SearchTagsByName
 from myapi.resources.project import Project, UserPublishedProjects, UserWonProjects
-from myapi.resources.task import Task, GetTaskListByProjectID, GetTaskList
+from myapi.resources.task import Task, GetTaskListByProjectID, GetTaskListByBidderID, GetTaskList
 from myapi.resources.version import Version, TaskVersions
 from myapi.resources.note import Note, TaskNotes
 from myapi.resources.kind import Kind, KindList, SearchKindsByName
@@ -46,6 +46,8 @@ api.add_resource(TaskVersions, '/<int:taskid>/taskversions')
 
 api.add_resource(GetTaskList, '/tasklist/<int:page>')
 api.add_resource(GetTaskListByProjectID, '/<int:projectid>/GetTaskListByProjectID', endpoint='getTasksByProjectID')
+api.add_resource(GetTaskListByBidderID, '/<int:projectid>/<int:bidderid>/GetTaskListByBidderID',\
+	endpoint='GetTaskListByBidderID')
 
 api.add_resource(Version, '/version', '/version/<int:versionid>')
 

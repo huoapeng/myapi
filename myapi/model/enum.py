@@ -40,8 +40,9 @@ class project_status:
     delete = 1
 
 class task_status:
-    normal = 0
-    delete = 1
+    bidding = 0
+    selectBidder = 1
+    finish = 2
 
 class version_status:
     normal = 0

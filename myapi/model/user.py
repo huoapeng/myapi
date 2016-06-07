@@ -36,6 +36,8 @@ class UserModel(db.Model):
     companyAuthority = db.relationship('CompanyAuthorisedModel', uselist=False,
         backref=db.backref('owner', lazy='joined'), lazy='joined')
 
+    wonTasks = db.relationship('TaskModel',
+        backref=db.backref('winner', lazy='joined'), lazy='dynamic')
     bidTasks = db.relationship('BidModel', lazy='dynamic')
 
     def __init__(self, email, password):

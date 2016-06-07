@@ -13,16 +13,16 @@ from myapi.model.enum import task_status
 from myapi.common.util import itemStatus
 from myapi.view.task import TaskOfMovieMarketView
 
-parser = reqparse.RequestParser()
-parser.add_argument('name', type=str, location='json', required=True)
-parser.add_argument('timespan', type=str, location='json')
-parser.add_argument('requirements', type=str, location='json')
-parser.add_argument('bonus', type=str, location='json')
-parser.add_argument('description', type=str, location='json')
-parser.add_argument('bidder_qualification_requirement', type=str, location='json')
-parser.add_argument('bidder_area_requirement', type=str, location='json')
-parser.add_argument('project_id', type=int, location='json', required=True)
-parser.add_argument('kind_id', type=int, location='json', required=True)
+post_parser = reqparse.RequestParser()
+post_parser.add_argument('name', type=str, location='json', required=True)
+post_parser.add_argument('timespan', type=str, location='json')
+post_parser.add_argument('requirements', type=str, location='json')
+post_parser.add_argument('bonus', type=str, location='json')
+post_parser.add_argument('description', type=str, location='json')
+post_parser.add_argument('bidder_qualification_requirement', type=str, location='json')
+post_parser.add_argument('bidder_area_requirement', type=str, location='json')
+post_parser.add_argument('project_id', type=int, location='json', required=True)
+post_parser.add_argument('kind_id', type=int, location='json', required=True)
 
 task_fields = {
     'id': fields.Integer,
@@ -34,9 +34,9 @@ task_fields = {
     'publishDate': fields.DateTime,
     'bidder_qualification_requirement': fields.String,
     'bidder_area_requirement': fields.String,
-    'status': itemStatus(attribute='status'),
+    'status': fields.Integer,
     'project_id': fields.Integer,
-    # 'winner_id': fields.Integer
+    'winner_id': fields.Integer
 }
 
 class Task(Resource):
@@ -46,7 +46,7 @@ class Task(Resource):
 
     @marshal_with(task_fields)
     def post(self):
-        args = parser.parse_args()
+        args = post_parser.parse_args()
 
         kind = KindModel.query.get(args.kind_id)
         task = TaskModel(args.name, 
@@ -58,8 +58,6 @@ class Task(Resource):
             args.bidder_area_requirement)
         task.kinds.append(kind)
 
-        # user = UserModel.query.get(1)
-        # task.bidders.append(user)
         db.session.add(task)
 
         project = ProjectModel.query.get(args.project_id)
@@ -73,24 +71,43 @@ class Task(Resource):
 
     @marshal_with(task_fields)
     def delete(self):
-        args = parser.parse_args()
+        args = post_parser.parse_args()
         task = TaskModel.query.get(args.id)
-        task.status = task_status.delete
+        task.status = task_status.finish
         db.session.commit()
         return task
+
+parser = reqparse.RequestParser()
+parser.add_argument('status', type=int, location='args', choices=range(3), default=0)
 
 class GetTaskListByProjectID(Resource):
     @marshal_with(task_fields)
     def get(self, projectid):
-        project = ProjectModel.query.get(projectid)
-        return project.tasks.all()
+        args = parser.parse_args()
+        tasks = ProjectModel.query.get(projectid).tasks
+        if args.status:
+            tasks = tasks.filter(TaskModel.status == args.status)
+        return tasks.all()
+
+class GetTaskListByBidderID(Resource):
+    @marshal_with(task_fields)
+    def get(self, projectid, bidderid):
+        args = parser.parse_args()
+        tasks = ProjectModel.query.get(projectid).tasks
+        if args.status:
+            tasks = tasks.filter(TaskModel.status == args.status)
+
+        result = []
+        for task in tasks:
+            for bidder in task.bidders:
+                if bidderid == bidder.user_id:
+                    result.append(task)
+        return result
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('kind', type=str, location='args')
 get_parser.add_argument('status', type=int, location='args', choices=range(3), default=0)
-
-from sqlalchemy import or_
 
 class GetTaskList(Resource):
     def get(self, page):
