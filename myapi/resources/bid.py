@@ -15,6 +15,7 @@ parser.add_argument('task_id', type=int, location='json', required=True)
 parser.add_argument('user_id', type=int, location='json', required=True)
 parser.add_argument('bidding_price', type=str, location='json')
 parser.add_argument('bidding_description', type=str, location='json')
+parser.add_argument('bidding_timespan', type=str, location='json')
 # parser.add_argument('bidding_status', type=int, location='json', choices=range(3), default=1)
 
 class Bid(Resource):
@@ -24,7 +25,7 @@ class Bid(Resource):
 
     def post(self):
         args = parser.parse_args()
-        bid = BidModel(args.bidding_price, args.bidding_description)
+        bid = BidModel(args.bidding_price, args.bidding_description, args.bidding_timespan)
 
         user = UserModel.query.get(args.user_id)
         bid.user = user
