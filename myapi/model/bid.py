@@ -16,7 +16,7 @@ class BidModel(db.Model):
     user = db.relationship('UserModel', lazy='joined')
     task = db.relationship('TaskModel', lazy='joined')
 
-    def __init__(self, bidding_price=None, bidding_description=None， bidding_timespan=None):
+    def __init__(self, bidding_price=None, bidding_description=None, bidding_timespan=None):
         self.bidding_price = bidding_price
         self.bidding_description = bidding_description
         self.bidding_timespan = bidding_timespan
