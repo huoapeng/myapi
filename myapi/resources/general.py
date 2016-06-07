@@ -24,7 +24,7 @@ class general(Resource):
 
 class image(Resource):
     def get(self, userid, imagetype, filename):
-        if not filename:
+        if filename:
             fpath = os.path.join(app.config['UPLOAD_FOLDER'], path[imagetype](userid))
             return send_from_directory(fpath, filename)
         else:
@@ -56,8 +56,8 @@ class image(Resource):
                 user = UserModel.query.get(args.userid)
                 user.image = os.path.basename(sf)
                 db.session.commit()
-            return os.path.basename(sf)
-        return jsonify(result='pls check file suffix')
+            return jsonify(data=os.path.basename(sf))
+        return 'pls check file suffix'
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
