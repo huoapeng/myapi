@@ -20,28 +20,14 @@ post_parser.add_argument('area', type=str, location='json')
 post_parser.add_argument('description', type=str, location='json')
 # post_parser.add_argument('type', type=int, location='args', required=True, choices=range(2), default=1)
 
-user_fields = {
-    'id': fields.Integer,
-    # 'nickname': fields.FormattedString('nihao , {nickname}!'),
-    'nickname': fields.String,
-    'email': fields.String,
-    'phone': fields.String,
-    'area': fields.String,
-    'description': fields.String,
-    'status': itemStatus(attribute='status'),
-    'authorisedStatus': fields.String,
-    'registDate': fields.DateTime,
-}
-
 class User(Resource):
     @jsonp
-    @marshal_with(user_fields)
     def get(self, userid):
         user = UserModel.query.get(userid)
-        return user if user else UserModel('','')
+        user = user if user else UserModel('','')
+        return jsonify(user.serialize())
     
     @jsonp
-    @marshal_with(user_fields)
     def post(self):
         # from flask import request, jsonify
         # print request.get_json(force=True)
@@ -56,10 +42,10 @@ class User(Resource):
             db.session.add(u)
             db.session.commit()
 
-        return UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.password)).one()
+        user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.password)).one()
+        return jsonify(user.serialize())
 
     @jsonp
-    @marshal_with(user_fields)
     def put(self):
         args = post_parser.parse_args()
         user = UserModel.query.filter_by(email=args.email).one()
@@ -69,34 +55,31 @@ class User(Resource):
             user.area = args.area
             user.description = args.description
             db.session.commit()
-            return user
         else:
-            return UserModel('','')
+            user = UserModel('','')
+        return jsonify(user.serialize())
 
     @jsonp
-    @marshal_with(user_fields)
     def delete(self):
         args = post_parser.parse_args()
         user = UserModel.query.filter_by(email=args.email).one()
         if user:
             user.status = user_status.delete
             db.session.commit()
-            return user
         else:
-            return UserModel('','')
+            user = UserModel('','')
+        return jsonify(user.serialize())
 
 class ChangePassword(Resource):
-    @marshal_with(user_fields)
     def post(self):
         args = post_parser.parse_args()
         user = UserModel.query.filter_by(email=args.email).one()
         if user :
             user.password = md5(args.password)
             db.session.commit()
-            return user
         else:
-            return UserModel('','')
-
+            user = UserModel('','')
+        return jsonify(user.serialize())
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')

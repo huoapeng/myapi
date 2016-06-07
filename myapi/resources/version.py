@@ -2,41 +2,29 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
+from flask import jsonify
+from flask.ext.restful import Resource, fields, reqparse
 from myapi import db
 from myapi.model.version import VersionModel
 from myapi.model.user import UserModel
 from myapi.model.task import TaskModel
 from myapi.model.enum import version_status
-from myapi.common.util import itemStatus
 
 parser = reqparse.RequestParser()
 parser.add_argument('title', type=str, location='json', required=True)
 parser.add_argument('description', type=str, location='json')
+parser.add_argument('image', type=str, location='json')
 parser.add_argument('task_id', type=int, location='json', required=True)
 parser.add_argument('user_id', type=int, location='json', required=True)
 
-version_fields = {
-    'id': fields.Integer,
-    'file': fields.String,
-    'image': fields.String,
-    'title': fields.String,
-    'description': fields.String,
-    'publish_date': fields.DateTime,
-    'status':  itemStatus(attribute='status'),
-    'user_id': fields.Integer,
-    'task_id': fields.Integer
-}
-
 class Version(Resource):
-    @marshal_with(version_fields)
     def get(self, versionid):
-        return VersionModel.query.get(versionid)
+        version = VersionModel.query.get(versionid)
+        return jsonify(version.serialize())
 
-    @marshal_with(version_fields)
     def post(self):
         args = parser.parse_args()
-        version = VersionModel(args.title, args.description)
+        version = VersionModel(args.title, args.description, args.image)
         db.session.add(version)
 
         task = TaskModel.query.get(args.task_id)
@@ -45,24 +33,20 @@ class Version(Resource):
         user = UserModel.query.get(args.user_id)
         user.versions.append(version)
         db.session.commit()
-        return version
+        return jsonify(version.serialize())
 
-    def put(self):
-        
+    def put(self):      
         pass
 
-    @marshal_with(version_fields)
     def delete(self):
         args = parser.parse_args()
         version = VersionModel.query.get(args.id)
         version.status = version_status.delete
         db.session.commit()
-        return version
+        return jsonify(version.serialize())
 
 class TaskVersions(Resource):
-    @marshal_with(version_fields)
     def get(self, taskid):
-        # versions = VersionModel.query.filter_by(task_id=taskid)
         task = TaskModel.query.get(taskid)
-        return task.versions.all()
+        return jsonify(data=[e.serialize() for e in task.versions])
 

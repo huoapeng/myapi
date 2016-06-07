@@ -1,4 +1,5 @@
 import datetime
+from flask import url_for
 from myapi import db
 from enum import user_status, authorised_status
 from tag import user_tags
@@ -47,3 +48,18 @@ class UserModel(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'nickname': self.nickname,
+            'email': self.email,
+            'phone': self.phone,
+            'area': self.area,
+            'image': url_for('.imageep', _external=True, userid=self.id, imagetype=0, filename=self.image) \
+                if self.image else self.image,
+            'description': self.description,
+            'status': self.status,
+            'authorisedStatus': self.authorisedStatus,
+            'registDate': self.registDate
+        }

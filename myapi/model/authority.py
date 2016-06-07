@@ -16,9 +16,11 @@ class PrivateAuthorisedModel(db.Model):
 
     owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
-    def __init__(self, name, identityID):
+    def __init__(self, name, identityID, identityFrontImage, identityBackImage):
         self.name = name
         self.identityID = identityID
+        self.identityFrontImage = identityFrontImage
+        self.identityBackImage = identityBackImage
         self.authorisedDate = datetime.datetime.now()
         self.approval_status = approval_status.start
 
@@ -27,8 +29,12 @@ class PrivateAuthorisedModel(db.Model):
             'id': self.id,
             'name': self.name,
             'identityID': self.identityID,
-            'identityFrontImage': '',
-            'identityBackImage': '',
+            'identityFrontImage': url_for('.imageep', _external=True, \
+                userid=self.owner_id, imagetype=2, filename=self.identityFrontImage)\
+                if self.identityFrontImage else self.identityFrontImage,
+            'identityBackImage': url_for('.imageep', _external=True, \
+                userid=self.owner_id, imagetype=3, filename=self.identityBackImage)\
+                if self.identityBackImage else self.identityBackImage,
             'authorisedDate': self.authorisedDate,
             'approvalStatus': self.approval_status,
             'approvalDate': self.approvalDate,
@@ -54,10 +60,13 @@ class CompanyAuthorisedModel(db.Model):
 
     owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
-    def __init__(self, name, businessScope, businessLicenseID, verifyType, bankAccount, bankName, bankLocation):
+    def __init__(self, name, businessScope, businessLicenseID, verifyType, bankAccount, bankName, bankLocation,
+            businessLicenseImage, contactImage):
         self.name = name
         self.businessScope = businessScope
         self.businessLicenseID = businessLicenseID
+        self.businessLicenseImage = businessLicenseImage
+        self.contactImage = contactImage
         self.verifyType = verifyType
         self.bankAccount = bankAccount
         self.bankName = bankName
@@ -71,8 +80,12 @@ class CompanyAuthorisedModel(db.Model):
             'name': self.name,
             'businessScope': self.businessScope,
             'businessLicenseID':self.businessLicenseID,
-            'businessLicenseImage': '',
-            'contactImage': '',
+            'businessLicenseImage': url_for('.imageep', _external=True, \
+                userid=self.owner_id, imagetype=4, filename=self.businessLicenseImage)\
+                if self.businessLicenseImage else self.businessLicenseImage,
+            'contactImage': url_for('.imageep', _external=True, \
+                userid=self.owner_id, imagetype=5, filename=self.contactImage)\
+                if self.contactImage else self.contactImage,
             'verifyType': self.verifyType,
             'bankAccount': self.bankAccount,
             'bankName': self.bankName,

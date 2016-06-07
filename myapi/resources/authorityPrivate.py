@@ -14,6 +14,8 @@ post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, location='json', required=True)
 post_parser.add_argument('name', type=str, location='json')
 post_parser.add_argument('identity_id', type=int, location='json')
+post_parser.add_argument('identityFrontImage', type=str, location='json')
+post_parser.add_argument('identityBackImage', type=str, location='json')
 post_parser.add_argument('approval_id', type=int, location='json')
 post_parser.add_argument('approval_status', type=int, location='json', choices=range(3), default=1)
 
@@ -25,7 +27,7 @@ class AuthorityPrivate(Resource):
     def post(self):
         args = post_parser.parse_args()
 
-        p = PrivateAuthorisedModel(args.name, args.identity_id)
+        p = PrivateAuthorisedModel(args.name, args.identity_id, args.identityFrontImage, args.identityBackImage)
         db.session.add(p)
 
         user = UserModel.query.get(args.user_id)

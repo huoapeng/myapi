@@ -15,6 +15,8 @@ post_parser.add_argument('user_id', type=int, location='json', required=True)
 post_parser.add_argument('name', type=str, location='json')
 post_parser.add_argument('businessScope', type=str, location='json')
 post_parser.add_argument('businessLicenseID', type=str, location='json')
+post_parser.add_argument('businessLicenseImage', type=str, location='json')
+post_parser.add_argument('contactImage', type=str, location='json')
 post_parser.add_argument('verifyType', type=int, location='json')
 post_parser.add_argument('bankAccount', type=str, location='json')
 post_parser.add_argument('bankName', type=str, location='json')
@@ -33,6 +35,8 @@ class AuthorityCompany(Resource):
         c = CompanyAuthorisedModel(args.name, 
                 args.businessScope,
                 args.businessLicenseID,
+                args.businessLicenseImage,
+                args.contactImage,
                 args.verifyType,
                 args.bankAccount,
                 args.bankName,
