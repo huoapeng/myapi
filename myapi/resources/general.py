@@ -34,7 +34,7 @@ class image(Resource):
         file = request.files['file']
         if file and allowed_file(file.filename):
             get_parser = reqparse.RequestParser()
-            get_parser.add_argument('type', type=int, location='args', choices=range(5), default=0, required=True)
+            get_parser.add_argument('type', type=int, location='args', choices=range(6), default=0, required=True)
             get_parser.add_argument('userid', type=int, location='args', required=True)
             # get_parser.add_argument('picture', type=FileStorage, location='files', required=True)
 
