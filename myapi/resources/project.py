@@ -96,15 +96,17 @@ class UserWonProjects(Resource):
         bidTasks = UserModel.query.get(userid).bidTasks\
             .paginate(page, app.config['POSTS_PER_PAGE'], False)
 
-        project_obj_list = []
+        project_obj_dict = {}
         for bid in bidTasks.items:
             project = bid.task.project
-            kind_str_list = []
-            for kind in project.kinds:
-                kind_str_list.append(kind.name)
 
-            v = UserBidProjectsView(userid, project.id, project.name, kind_str_list)
-            project_obj_list.append(v)
+            if project.id not in project_obj_dict: 
+                kind_str_list = []
+                for kind in project.kinds:
+                    kind_str_list.append(kind.name)
+
+                v = UserBidProjectsView(userid, project.id, project.name, kind_str_list)
+                project_obj_dict[project.id] = v
 
         return jsonify(total = bidTasks.total,
             pages = bidTasks.pages,
@@ -114,7 +116,7 @@ class UserWonProjects(Resource):
             has_prev = bidTasks.has_prev,
             next_num = bidTasks.next_num,
             prev_num = bidTasks.prev_num,
-            data=[e.serialize() for e in project_obj_list])
+            data=[e.serialize() for e in project_obj_dict.values()])
 
 
 
