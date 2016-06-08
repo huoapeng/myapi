@@ -109,6 +109,8 @@ get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('kind', type=str, location='args')
 get_parser.add_argument('status', type=int, location='args', choices=range(3), default=0)
+get_parser.add_argument('orderby', type=int, location='args', choices=range(2), default=0)
+get_parser.add_argument('desc', type=int, location='args', choices=range(2), default=0)
 
 class GetTaskList(Resource):
     def get(self, page):
@@ -121,6 +123,17 @@ class GetTaskList(Resource):
             tasks = tasks.filter(TaskModel.name.contains(args.keyword))
         if args.status:
             tasks = tasks.filter(TaskModel.status == args.status)
+            
+        if args.orderby == 0:
+            if args.desc:
+                tasks = tasks.order_by(TaskModel.publishDate.desc())
+            else:
+                tasks = tasks.order_by(TaskModel.publishDate.asc())
+        if args.orderby == 1:
+            if args.desc:
+                tasks = tasks.order_by(TaskModel.bonus.desc())
+            else:
+                tasks = tasks.order_by(TaskModel.bonus.asc())
 
         tasks = tasks.paginate(page, app.config['POSTS_PER_PAGE'], False)
         for task in tasks.items:
