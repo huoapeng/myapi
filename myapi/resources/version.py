@@ -48,5 +48,8 @@ class Version(Resource):
 class TaskVersions(Resource):
     def get(self, taskid):
         task = TaskModel.query.get(taskid)
-        return jsonify(data=[e.serialize() for e in task.versions])
+        if task:
+            return jsonify(data=[e.serialize() for e in task.versions.order_by(VersionModel.publish_date.desc())])
+        else:
+            return jsonify(data=[])
 
