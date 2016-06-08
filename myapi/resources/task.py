@@ -14,6 +14,7 @@ from myapi.common.util import itemStatus
 from myapi.view.task import TaskOfMovieMarketView
 
 post_parser = reqparse.RequestParser()
+post_parser.add_argument('id', type=int, location='json')
 post_parser.add_argument('name', type=str, location='json', required=True)
 post_parser.add_argument('timespan', type=str, location='json')
 post_parser.add_argument('requirements', type=str, location='json')
