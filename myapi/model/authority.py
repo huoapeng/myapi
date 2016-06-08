@@ -60,8 +60,8 @@ class CompanyAuthorisedModel(db.Model):
 
     owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
-    def __init__(self, name, businessScope, businessLicenseID, verifyType, bankAccount, bankName, bankLocation,
-            businessLicenseImage, contactImage):
+    def __init__(self, name, businessScope, businessLicenseID, businessLicenseImage, contactImage, 
+        verifyType, bankAccount, bankName, bankLocation):
         self.name = name
         self.businessScope = businessScope
         self.businessLicenseID = businessLicenseID
