@@ -63,7 +63,8 @@ class TaskNotes(Resource):
         if task:
             obj_list = []
             for note in task.notes:
-                nv = NoteView(note.owner.id, 
+                nv = NoteView(note.id,
+                    note.owner.id, 
                     note.owner.nickname, 
                     note.owner.image,
                     note.title,
