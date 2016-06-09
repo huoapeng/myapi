@@ -24,12 +24,12 @@ class UserModel(db.Model):
         backref=db.backref('users', lazy='dynamic'))
 
     versions = db.relationship('VersionModel',
-        backref=db.backref('owner', lazy='joined'), lazy='joined')
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
     notes = db.relationship('NoteModel',
-        backref=db.backref('owner', lazy='joined'), lazy='joined')
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
     notemessages = db.relationship('NoteMessageModel',
-        backref=db.backref('owner', lazy='joined'), lazy='joined')
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
     privateAuthority = db.relationship('PrivateAuthorisedModel', uselist=False,
         backref=db.backref('owner', lazy='joined'), lazy='joined')
