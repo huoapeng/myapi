@@ -12,7 +12,7 @@ class NoteModel(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
     messages = db.relationship('NoteMessageModel', order_by="NoteMessageModel.publish_date",
-        backref=db.backref('note', lazy='joined'), lazy='joined')
+        backref=db.backref('note', lazy='joined'), lazy='dynamic')
 
     def __init__(self, title):
         self.title = title

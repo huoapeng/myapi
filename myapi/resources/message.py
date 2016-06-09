@@ -2,11 +2,13 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.note import NoteModel
 from myapi.model.message import NoteMessageModel
 from myapi.model.user import UserModel
+from myapi.view.message import NoteMessageView
 
 parser = reqparse.RequestParser()
 parser.add_argument('message', type=str, location='json', required=True)
@@ -46,11 +48,23 @@ class NoteMessage(Resource):
         pass
 
 class NoteMessageList(Resource):
-    @marshal_with(result_field)
     def get(self, noteid):
-        note = NoteModel.query.get(noteid)
-        return note.messages
+        # db.session.query(NoteModel, UserModel).\
+        #     filter(NoteModel.user_id == UserModel.id).\
+        #     filter(NoteModel.id == noteid).one()
 
+        note = NoteModel.query.get(noteid)
+        obj_list = []
+        for message in note.messages:
+            nmv = NoteMessageView(message.owner.id, 
+                message.owner.nickname, 
+                message.owner.image, 
+                message.message,
+                message.publish_date
+            )
+
+            obj_list.append(nmv)
+        return jsonify(data=[e.serialize() for e in obj_list])
 # class VersionMessage(Resource):
 #     def get(self):
 #         pass
