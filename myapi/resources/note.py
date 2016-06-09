@@ -2,6 +2,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.note import NoteModel
@@ -9,6 +10,7 @@ from myapi.model.user import UserModel
 from myapi.model.task import TaskModel
 from myapi.model.enum import note_status
 from myapi.common.util import itemStatus
+from myapi.view.note import NoteView
 
 parser = reqparse.RequestParser()
 parser.add_argument('title', type=str, location='json', required=True)
@@ -56,8 +58,18 @@ class Note(Resource):
         return note
 
 class TaskNotes(Resource):
-    @marshal_with(note_fields)
     def get(self, taskid):
-        # notes = NoteModel.query.filter_by(task_id=taskid)
         task = TaskModel.query.get(taskid)
-        return task.notes.all()
+        if task:
+            obj_list = []
+            for note in task.notes:
+                nv = NoteView(note.owner.id, 
+                    note.owner.nickname, 
+                    note.owner.image,
+                    note.title,
+                    note.publish_date)
+                obj_list.append(nv)
+
+            return jsonify(data=[e.serialize() for e in obj_list])
+        else:
+            return jsonify(data=[])
