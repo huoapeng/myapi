@@ -1,57 +1,57 @@
 
 class authorised_status:
-    none = 0
-    start = 1
-    private = 2
-    company = 3
+    none = 1
+    start = 2
+    private = 3
+    company = 4
 
 class verify_type:
-    auto = 0
-    manual = 1
+    auto = 1
+    manual = 2
 
 class approval_status:
-    start = 0
-    deny = 1
-    allow = 2
+    start = 1
+    deny = 2
+    allow = 3
 
 class bid_status:
-    start = 0
-    selectBidder = 1
-    finish = 2
+    start = 1
+    selectBidder = 2
+    finish = 3
 
 class image_type:
-    profile = 0
-    version = 1
-    authorityPrivateFront = 2
-    authorityPrivateBack = 3
-    companyLience = 4
-    companyContactCard = 5
+    profile = 1
+    version = 2
+    authorityPrivateFront = 3
+    authorityPrivateBack = 4
+    companyLience = 5
+    companyContactCard = 6
 
 class user_status:
-    normal = 0
-    delete = 1
+    normal = 1
+    delete = 2
 
 class kind_status:
-    normal = 0
-    delete = 1
+    normal = 1
+    delete = 2
 
 class project_status:
-    normal = 0
-    delete = 1
+    normal = 1
+    delete = 2
 
 class task_status:
-    bidding = 0
-    selectBidder = 1
-    finish = 2
+    bidding = 1
+    selectBidder = 2
+    finish = 3
 
 class version_status:
-    normal = 0
-    delete = 1
+    normal = 1
+    delete = 2
         
 class note_status:
-    normal = 0
-    delete = 1
+    normal = 1
+    delete = 2
 
 class message_type:
-    version = 0
-    note = 1
+    version = 1
+    note = 2

@@ -79,7 +79,7 @@ class Task(Resource):
         return task
 
 parser = reqparse.RequestParser()
-parser.add_argument('status', type=int, location='args', choices=range(3), default=0)
+parser.add_argument('status', type=int, location='args', choices=range(4), default=1)
 
 class GetTaskListByProjectID(Resource):
     @marshal_with(task_fields)
@@ -108,9 +108,9 @@ class GetTaskListByBidderID(Resource):
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('kind', type=str, location='args')
-get_parser.add_argument('status', type=int, location='args', choices=range(3), default=0)
-get_parser.add_argument('orderby', type=int, location='args', choices=range(2), default=0)
-get_parser.add_argument('desc', type=int, location='args', choices=range(2), default=0)
+get_parser.add_argument('status', type=int, location='args', choices=range(4), default=1)
+get_parser.add_argument('orderby', type=int, location='args', choices=range(3), default=1)
+get_parser.add_argument('desc', type=int, location='args', choices=range(3), default=1)
 
 class GetTaskList(Resource):
     def get(self, page):

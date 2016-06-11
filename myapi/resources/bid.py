@@ -16,7 +16,6 @@ parser.add_argument('user_id', type=int, location='json', required=True)
 parser.add_argument('bidding_price', type=str, location='json')
 parser.add_argument('bidding_description', type=str, location='json')
 parser.add_argument('bidding_timespan', type=str, location='json')
-# parser.add_argument('bidding_status', type=int, location='json', choices=range(3), default=1)
 
 class Bid(Resource):
     def get(self, userid, taskid):

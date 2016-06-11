@@ -18,7 +18,6 @@ post_parser.add_argument('password', type=str, location='json')
 post_parser.add_argument('phone', type=str, location='json')
 post_parser.add_argument('area', type=str, location='json')
 post_parser.add_argument('description', type=str, location='json')
-# post_parser.add_argument('type', type=int, location='args', required=True, choices=range(2), default=1)
 
 class User(Resource):
     @jsonp
@@ -84,7 +83,7 @@ class ChangePassword(Resource):
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('tag', type=str, location='args')
-get_parser.add_argument('authorised_status', type=int, location='args', choices=range(4), default=0)
+get_parser.add_argument('authorised_status', type=int, location='args', choices=range(5), default=1)
 
 class GetUserList(Resource):
     def get(self, page):
