@@ -6,7 +6,6 @@ from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db, app
 from myapi.model.task import TaskModel
-from myapi.model.user import UserModel
 from myapi.model.kind import KindModel
 from myapi.model.project import ProjectModel
 from myapi.model.enum import task_status
@@ -124,13 +123,13 @@ class GetTaskList(Resource):
         if args.status:
             tasks = tasks.filter(TaskModel.status == args.status)
             
-        if args.orderby == 0:
-            if args.desc:
+        if args.orderby == 1:
+            if args.desc == 1:
                 tasks = tasks.order_by(TaskModel.publishDate.desc())
             else:
                 tasks = tasks.order_by(TaskModel.publishDate.asc())
-        if args.orderby == 1:
-            if args.desc:
+        if args.orderby == 2:
+            if args.desc == 1:
                 tasks = tasks.order_by(TaskModel.bonus.desc())
             else:
                 tasks = tasks.order_by(TaskModel.bonus.asc())
@@ -140,7 +139,7 @@ class GetTaskList(Resource):
             project = task.project
             owner = project.owner
             kind_str_list = []
-            for kind in project.kinds:
+            for kind in task.kinds:
                 kind_str_list.append(kind.name)
 
             if args.kind:

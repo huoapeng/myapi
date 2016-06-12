@@ -28,11 +28,6 @@ class User(Resource):
     
     @jsonp
     def post(self):
-        # from flask import request, jsonify
-        # print request.get_json(force=True)
-        # json_data = request.get_json(force=True)
-        # un = json_data['email']
-        # return {'hello world':un}
         args = post_parser.parse_args()
 
         user = UserModel.query.filter_by(email=args.email).first()
