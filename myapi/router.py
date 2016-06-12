@@ -44,7 +44,7 @@ api.add_resource(Task, '/task', '/task/<int:taskid>', endpoint='taskep')
 api.add_resource(TaskNotes, '/<int:taskid>/tasknotes')
 api.add_resource(TaskVersions, '/<int:taskid>/taskversions')
 
-api.add_resource(GetTaskList, '/tasklist/<int:page>')
+api.add_resource(GetTaskList, '<int:kindid>/tasklist/<int:page>')
 api.add_resource(GetTaskListByProjectID, '/<int:projectid>/GetTaskListByProjectID', \
     endpoint='getTasksByProjectID')
 api.add_resource(GetTaskListByBidderID, '/<int:projectid>/<int:bidderid>/GetTaskListByBidderID', \
