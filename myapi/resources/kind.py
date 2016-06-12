@@ -61,19 +61,6 @@ class KindList(Resource):
     def get(self):
         return KindModel.query.filter_by(status = kind_status.normal).all()
 
-    @jsonp
-    @marshal_with(post_fields)
-    def post(self):
-        args = parser.parse_args()
-        kind = KindModel(args.name)
-        db.session.add(kind)
-        db.session.commit()
-
-        kind = KindModel.query.filter_by(name=args.name).filter_by(parent_id=None).first()
-        kind.parent_id = kind.id
-        db.session.commit()
-        return kind
-
 class SearchKindsByName(Resource):
     @marshal_with(post_fields)
     def get(self, keyword):
