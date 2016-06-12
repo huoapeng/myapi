@@ -16,7 +16,7 @@ post_parser.add_argument('email', type=valid_email, location='json', required=Tr
 post_parser.add_argument('nickname', type=str, location='json')
 post_parser.add_argument('password', type=str, location='json')
 post_parser.add_argument('phone', type=str, location='json')
-post_parser.add_argument('area', type=str, location='json')
+post_parser.add_argument('location', type=str, location='json')
 post_parser.add_argument('description', type=str, location='json')
 
 class User(Resource):
@@ -46,7 +46,7 @@ class User(Resource):
         if user :
             user.nickname = args.nickname
             user.phone = args.phone
-            user.area = args.area
+            user.location = args.location
             user.description = args.description
             db.session.commit()
         else:
@@ -110,7 +110,7 @@ class GetUserList(Resource):
                     user.image,
                     user.nickname,
                     user.authorisedStatus,
-                    user.area,
+                    user.location,
                     0,#wonTaskCount,
                     0,#profileIntegrityPercent,
                     user.phone,

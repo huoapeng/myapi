@@ -8,7 +8,7 @@ class UserMarketView(object):
             userName,
             authorisedStatus,
             # authorisedId,
-            area,
+            location,
             wonTaskCount,
             # goodReputationPercent,
             profileIntegrityPercent,
@@ -21,7 +21,7 @@ class UserMarketView(object):
         self.userName = userName
         self.authorisedStatus = authorisedStatus
         # self.authorisedId = authorisedId
-        self.area = area
+        self.location = location
         self.wonTaskCount = wonTaskCount
         # self.goodReputationPercent = goodReputationPercent
         self.profileIntegrityPercent = profileIntegrityPercent
@@ -36,7 +36,7 @@ class UserMarketView(object):
                 _external=True) if self.userImage else self.userImage,
             'userName': self.userName,
             'authorisedStatus': self.authorisedStatus,
-            'area': self.area,
+            'location': self.location,
             'wonTaskCount': self.wonTaskCount,
             'profileIntegrityPercent': self.profileIntegrityPercent,
             'phone': self.phone,

@@ -10,7 +10,7 @@ class UserModel(db.Model):
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(200))
     phone = db.Column(db.String(50))
-    area = db.Column(db.String(200))
+    location = db.Column(db.String(200))
     image = db.Column(db.String(500))
     description = db.Column(db.Text)
     status = db.Column(db.Integer)
@@ -57,7 +57,7 @@ class UserModel(db.Model):
             'nickname': self.nickname,
             'email': self.email,
             'phone': self.phone,
-            'area': self.area,
+            'location': self.location,
             'image': url_for('.imageep', _external=True, userid=self.id, imagetype=1, filename=self.image) \
                 if self.image else self.image,
             'description': self.description,

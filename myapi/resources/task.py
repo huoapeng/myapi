@@ -160,7 +160,7 @@ class GetTaskList(Resource):
                     owner.nickname,
                     task.publishDate,
                     task.bonus,
-                    owner.area,
+                    owner.location,
                     task.bidder_area_requirement,
                     task.bidder_qualification_requirement,
                     kind_str_list

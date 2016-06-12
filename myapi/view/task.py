@@ -10,7 +10,7 @@ class TaskOfMovieMarketView(object):
             userName,
             publishDate,
             bonus,
-            area,
+            location,
             bidder_area_requirement,
             bidder_qualification_requirement,
             kind_str_list,
@@ -23,7 +23,7 @@ class TaskOfMovieMarketView(object):
         self.userName = userName
         self.publishDate = publishDate
         self.bonus = bonus
-        self.area = area
+        self.location = location
         self.bidder_area_requirement = bidder_area_requirement
         self.bidder_qualification_requirement = bidder_qualification_requirement
         self.kind_str_list = kind_str_list
@@ -45,7 +45,7 @@ class TaskOfMovieMarketView(object):
             'userName': self.userName,
             'publishDate': self.publishDate,
             'bonus': self.bonus,
-            'area': self.area,
+            'location': self.location,
             'bidder_area_requirement': self.bidder_area_requirement,
             'bidder_qualification_requirement': self.bidder_qualification_requirement,
             'taskKinds': ','.join(self.kind_str_list)
