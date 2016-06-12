@@ -16,7 +16,7 @@ class NoteMessageView():
         return {
             'userid': self.user_id,
             'userName': self.user_name,
-            'userImage': url_for('.imageep', userid=self.user_id, imagetype=0, filename=self.user_image, \
+            'userImage': url_for('.imageep', userid=self.user_id, imagetype=1, filename=self.user_image, \
                 _external=True) if self.user_image else self.user_image,
             'message': self.message,
             'publishDate': self.publish_date

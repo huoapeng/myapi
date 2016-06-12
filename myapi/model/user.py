@@ -58,7 +58,7 @@ class UserModel(db.Model):
             'email': self.email,
             'phone': self.phone,
             'area': self.area,
-            'image': url_for('.imageep', _external=True, userid=self.id, imagetype=0, filename=self.image) \
+            'image': url_for('.imageep', _external=True, userid=self.id, imagetype=1, filename=self.image) \
                 if self.image else self.image,
             'description': self.description,
             'status': self.status,

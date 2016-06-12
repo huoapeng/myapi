@@ -36,7 +36,6 @@ class image(Resource):
             get_parser = reqparse.RequestParser()
             get_parser.add_argument('type', type=int, location='args', choices=range(7), default=0, required=True)
             get_parser.add_argument('userid', type=int, location='args', required=True)
-            # get_parser.add_argument('picture', type=FileStorage, location='files', required=True)
 
             args = get_parser.parse_args()
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], path[args.type](args.userid))
@@ -57,6 +56,12 @@ class image(Resource):
                 user.image = os.path.basename(sf)
                 db.session.commit()
             return jsonify(data=os.path.basename(sf))
+            # return jsonify(data = url_for('.imageep', 
+            #     userid=args.userid, 
+            #     imagetype=args.type, 
+            #     filename=os.path.basename(sf), 
+            #     _external=True)
+            # )
         return 'pls check file suffix'
 
 def allowed_file(filename):

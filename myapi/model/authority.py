@@ -30,10 +30,10 @@ class PrivateAuthorisedModel(db.Model):
             'name': self.name,
             'identityID': self.identityID,
             'identityFrontImage': url_for('.imageep', _external=True, \
-                userid=self.owner_id, imagetype=2, filename=self.identityFrontImage)\
+                userid=self.owner_id, imagetype=3, filename=self.identityFrontImage)\
                 if self.identityFrontImage else self.identityFrontImage,
             'identityBackImage': url_for('.imageep', _external=True, \
-                userid=self.owner_id, imagetype=3, filename=self.identityBackImage)\
+                userid=self.owner_id, imagetype=4, filename=self.identityBackImage)\
                 if self.identityBackImage else self.identityBackImage,
             'authorisedDate': self.authorisedDate,
             'approvalStatus': self.approval_status,
@@ -81,10 +81,10 @@ class CompanyAuthorisedModel(db.Model):
             'businessScope': self.businessScope,
             'businessLicenseID':self.businessLicenseID,
             'businessLicenseImage': url_for('.imageep', _external=True, \
-                userid=self.owner_id, imagetype=4, filename=self.businessLicenseImage)\
+                userid=self.owner_id, imagetype=5, filename=self.businessLicenseImage)\
                 if self.businessLicenseImage else self.businessLicenseImage,
             'contactImage': url_for('.imageep', _external=True, \
-                userid=self.owner_id, imagetype=5, filename=self.contactImage)\
+                userid=self.owner_id, imagetype=6, filename=self.contactImage)\
                 if self.contactImage else self.contactImage,
             'verifyType': self.verifyType,
             'bankAccount': self.bankAccount,
