@@ -22,7 +22,7 @@ post_parser.add_argument('description', type=str, location='json')
 post_parser.add_argument('bidder_qualification_requirement', type=str, location='json')
 post_parser.add_argument('bidder_area_requirement', type=str, location='json')
 post_parser.add_argument('project_id', type=int, location='json')
-post_parser.add_argument('kind_id', type=int, location='json')
+post_parser.add_argument('kind_ids', type=str, location='json')
 
 task_fields = {
     'id': fields.Integer,
@@ -48,7 +48,6 @@ class Task(Resource):
     def post(self):
         args = post_parser.parse_args()
 
-        kind = KindModel.query.get(args.kind_id)
         task = TaskModel(args.name, 
             args.timespan,
             args.requirements,
@@ -56,7 +55,9 @@ class Task(Resource):
             args.description,
             args.bidder_qualification_requirement,
             args.bidder_area_requirement)
-        task.kinds.append(kind)
+        for kind_id in args.kind_ids.split(','):
+            kind = KindModel.query.get(kind_id)
+            task.kinds.append(kind)
 
         db.session.add(task)
 
@@ -148,9 +149,9 @@ class GetTaskList(Resource):
             for kind in task.kinds:
                 kind_str_list.append(kind.name)
 
-            # if args.kind:
-            #     if args.kind not in ','.join(kind_str_list):
-            #         continue
+            if args.kind:
+                if args.kind not in ','.join(kind_str_list):
+                    continue
 
             t = TaskOfMovieMarketView(task.id,
                     task.name,
