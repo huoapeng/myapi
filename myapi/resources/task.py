@@ -113,14 +113,14 @@ get_parser.add_argument('desc', type=int, location='args', choices=range(3), def
 
 from sqlalchemy import or_
 class GetTaskList(Resource):
-    def get(self, kindid, page):
+    def get(self, kindname, page):
         args = get_parser.parse_args()
         task_obj_list = []
         
         tasks = TaskModel.query.filter( \
             or_( \
-                TaskModel.kinds.any(KindModel.id == kindid), \
-                TaskModel.kinds.any(KindModel.parent_id == kindid) \
+                TaskModel.kinds.any(KindModel.name == kindname), \
+                TaskModel.kinds.any(KindModel.parent.name == kindname) \
                 ) \
             )
 

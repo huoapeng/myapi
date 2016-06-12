@@ -14,8 +14,12 @@ task_kinds = db.Table('task_kinds',
 class KindModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
-    parent_id = db.Column(db.Integer)
     status = db.Column(db.Integer)
+
+    parent_id = db.Column(db.Integer, db.ForeignKey('kind_model.id'))
+
+    parent = db.relationship('KindModel', remote_side=[id], 
+        backref=db.backref('kids', lazy='dynamic'), lazy='joined')
 
     def __init__(self, name, parent_id=None):
     	self.name = name
