@@ -31,7 +31,12 @@ class Kind(Resource):
     @marshal_with(post_fields)
     def post(self):
         args = parser.parse_args()
-        kind = KindModel(args.name, args.parent_id)
+        kind = KindModel(args.name)
+      
+        if args.parent_id:
+            parent = KindModel.query.get(args.parent_id)
+            kind.parent = parent
+
         db.session.add(kind)
         db.session.commit()
         return kind

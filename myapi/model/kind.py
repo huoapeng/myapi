@@ -21,7 +21,6 @@ class KindModel(db.Model):
     parent = db.relationship('KindModel', remote_side=[id], 
         backref=db.backref('kids', lazy='dynamic'), lazy='joined')
 
-    def __init__(self, name, parent_id=None):
+    def __init__(self, name):
     	self.name = name
-    	self.parent_id = parent_id
         self.status = kind_status.normal
