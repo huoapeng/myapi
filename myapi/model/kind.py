@@ -1,10 +1,10 @@
 from myapi import db
 from enum import kind_status
 
-project_kinds = db.Table('project_kinds',
-    db.Column('kind_id', db.Integer, db.ForeignKey('kind_model.id'), primary_key=True),
-    db.Column('project_id', db.Integer, db.ForeignKey('project_model.id'), primary_key=True)
-)
+# project_kinds = db.Table('project_kinds',
+#     db.Column('kind_id', db.Integer, db.ForeignKey('kind_model.id'), primary_key=True),
+#     db.Column('project_id', db.Integer, db.ForeignKey('project_model.id'), primary_key=True)
+# )
 
 task_kinds = db.Table('task_kinds',
     db.Column('kind_id', db.Integer, db.ForeignKey('kind_model.id'), primary_key=True),

@@ -1,9 +1,6 @@
 import datetime
 from myapi import db
 from enum import project_status
-from kind import project_kinds
-from task import TaskModel
-from kind import KindModel
 
 class ProjectModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,9 +10,6 @@ class ProjectModel(db.Model):
     publish_date = db.Column(db.DateTime)
 
     owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
-
-    kinds = db.relationship('KindModel', secondary=project_kinds,
-        backref=db.backref('projects', lazy='dynamic'))
 
     tasks = db.relationship('TaskModel',
         backref=db.backref('project', lazy='joined'), lazy='dynamic')

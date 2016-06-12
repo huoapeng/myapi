@@ -18,14 +18,13 @@ post_parser = reqparse.RequestParser()
 post_parser.add_argument('name', type=str, location='json', required=True)
 post_parser.add_argument('description', type=str, location='json')
 post_parser.add_argument('owner_id', type=int, location='json', required=True)
-post_parser.add_argument('kind_id', type=int, location='json', required=True)
 
 project_fields = {
     'id': fields.Integer,
     'name': fields.String,
     'description': fields.String,
     'publish_date': fields.DateTime,
-    'status': itemStatus(attribute='status'),
+    'status': fields.Integer,
     'owner_id': fields.Integer
 }
 
@@ -38,24 +37,11 @@ class Project(Resource):
     def post(self):
         args = post_parser.parse_args()
 
-        kind = KindModel.query.get(args.kind_id)
         project = ProjectModel(args.name, args.description)
-        project.kinds.append(kind)
         db.session.add(project)
 
         user = UserModel.query.get(args.owner_id)
         user.published_projects.append(project)
-        db.session.commit()
-        return project
-
-    @marshal_with(project_fields)
-    def put(self):
-        args = post_parser.parse_args()
-        kind = KindModel.query.get(args.kind_id)
-        project = ProjectModel.query.get(args.id)
-        project.name = args.name
-        project.description = args.description
-        project.kind = kind
         db.session.commit()
         return project
 
@@ -74,11 +60,7 @@ class UserPublishedProjects(Resource):
 
         project_obj_list = []
         for project in projects.items:
-            kind_str_list = []
-            for kind in project.kinds:
-                kind_str_list.append(kind.name)
-
-            v = UserPublishedProjectsView(project.id, project.name, kind_str_list)
+            v = UserPublishedProjectsView(project.id, project.name)
             project_obj_list.append(v)
 
         return jsonify(total = projects.total,
@@ -101,11 +83,7 @@ class UserWonProjects(Resource):
             project = bid.task.project
 
             if project.id not in project_obj_dict: 
-                kind_str_list = []
-                for kind in project.kinds:
-                    kind_str_list.append(kind.name)
-
-                v = UserBidProjectsView(userid, project.id, project.name, kind_str_list)
+                v = UserBidProjectsView(userid, project.id, project.name)
                 project_obj_dict[project.id] = v
 
         return jsonify(total = bidTasks.total,
