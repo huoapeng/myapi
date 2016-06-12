@@ -21,7 +21,7 @@ def md5(str):
 from flask.ext.restful import fields
 class itemStatus(fields.Raw):
     def format(self, value):
-        return "Normal" if value == 0 else "Delete"
+        return "Normal" if value == 1 else "Delete"
 
 def abort_if_todo_doesnt_exist(todo_id):
     if todo_id not in TODOS:
