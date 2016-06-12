@@ -22,7 +22,7 @@ post_parser.add_argument('bankAccount', type=str, location='json')
 post_parser.add_argument('bankName', type=str, location='json')
 post_parser.add_argument('bankLocation', type=str, location='json')
 post_parser.add_argument('approval_id', type=int, location='json')
-post_parser.add_argument('approval_status', type=int, location='json', choices=range(4), default=1)
+post_parser.add_argument('approval_status', type=int, location='json', choices=range(4), default=0)
 
 class AuthorityCompany(Resource):
     def get(self, id):
