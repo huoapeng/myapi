@@ -107,21 +107,21 @@ class GetTaskListByBidderID(Resource):
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
-# get_parser.add_argument('kind', type=int, location='args', required=True)
+# get_parser.add_argument('kind', type=int, location='args')
 get_parser.add_argument('status', type=int, location='args', choices=range(4), default=0)
 get_parser.add_argument('orderby', type=int, location='args', choices=range(3), default=0)
 get_parser.add_argument('desc', type=int, location='args', choices=range(3), default=0)
 
 from sqlalchemy import or_
 class GetTaskList(Resource):
-    def get(self, kindname, page):
+    def get(self, kindid, page):
         args = get_parser.parse_args()
         task_obj_list = []
-        
+        print
         tasks = TaskModel.query.filter( \
             or_( \
-                TaskModel.kinds.any(KindModel.name == kindname), \
-                TaskModel.kinds.any(KindModel.parent.name == kindname) \
+                TaskModel.kinds.any(KindModel.id == kindid), \
+                TaskModel.kinds.any(KindModel.parent_id == kindid) \
                 ) \
             )
 
@@ -148,10 +148,6 @@ class GetTaskList(Resource):
             kind_str_list = []
             for kind in task.kinds:
                 kind_str_list.append(kind.name)
-
-            if args.kind:
-                if args.kind not in ','.join(kind_str_list):
-                    continue
 
             t = TaskOfMovieMarketView(task.id,
                     task.name,
