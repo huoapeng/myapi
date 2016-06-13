@@ -45,7 +45,8 @@ class AuthorityPrivate(Resource):
 
         user = UserModel.query.get(args.user_id)
         user.privateAuthority = p
-        user.authorisedStatus = authorised_status.private
+        user.authorisedStatus = authorised_status.none \
+            if args.approval_status != approval_status.allow else authorised_status.private
         db.session.commit()
         return jsonify(p.serialize())
 
