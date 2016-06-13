@@ -20,7 +20,6 @@ post_parser.add_argument('location', type=str, location='json')
 post_parser.add_argument('description', type=str, location='json')
 
 class User(Resource):
-    @jsonp
     def get(self, userid):
         user = UserModel.query.get(userid)
         user = user if user else UserModel('','')

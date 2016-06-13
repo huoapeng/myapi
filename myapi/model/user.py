@@ -63,5 +63,6 @@ class UserModel(db.Model):
             'description': self.description,
             'status': self.status,
             'authorisedStatus': self.authorisedStatus,
-            'registDate': self.registDate
+            'registDate': self.registDate.isoformat(),
+            'tags': url_for('.userTags', _external=True, userid=self.id)
         }
