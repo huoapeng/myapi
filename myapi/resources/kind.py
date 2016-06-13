@@ -32,7 +32,7 @@ class Kind(Resource):
     def post(self):
         args = parser.parse_args()
         kind = KindModel(args.name)
-      
+
         if args.parent_id:
             parent = KindModel.query.get(args.parent_id)
             kind.parent = parent

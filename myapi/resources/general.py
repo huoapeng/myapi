@@ -11,11 +11,18 @@ from werkzeug.utils import secure_filename
 from myapi import db, app
 from myapi.model.enum import image_type
 from myapi.model.user import UserModel
+from myapi.model.kind import KindModel
 
 class general(Resource):
     def get(self, method = None):
         if method == 'create_all':
             db.create_all()
+            
+            kind = KindModel('影视大厅')
+            db.session.add(kind)
+            kind = KindModel('VR/AR大厅')
+            db.session.add(kind)
+            db.session.commit()
         elif method == 'drop_all':
             db.drop_all()
         else:
