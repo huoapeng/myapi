@@ -46,7 +46,7 @@ api.add_resource(TaskNotes, '/<int:taskid>/tasknotes')
 api.add_resource(TaskVersions, '/<int:taskid>/taskversions')
 
 api.add_resource(GetVRTaskList, '/vrtasklist')
-api.add_resource(GetMoiveTaskList, '/moivetasklist')
+api.add_resource(GetMoiveTaskList, '/movietasklist')
 api.add_resource(GetTaskList, '/<int:kindid>/tasklist/<int:page>', endpoint='tasklistep')
 api.add_resource(GetTaskListByProjectID, '/<int:projectid>/GetTaskListByProjectID', \
     endpoint='getTasksByProjectID')

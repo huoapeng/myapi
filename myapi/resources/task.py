@@ -116,35 +116,26 @@ get_parser.add_argument('desc', type=int, location='args', choices=range(3), def
 from flask import redirect, url_for
 class GetVRTaskList(Resource):
     def get(self):
-        kindid = KindModel.query.filter_by(name = 'VR/AR大厅').first().id
-        if kindid:
-            return redirect(url_for('.tasklistep', _external=True, kindid=kindid, page=1))
-        else:
-            return jsonify(total = 0,
-                pages = 0,
-                page = 0,
-                per_page = 0,
-                has_next = 0,
-                has_prev = 0,
-                next_num = 0,
-                prev_num = 0,
-                result=[])
+        return marketRouter('VR/AR大厅')
 
 class GetMoiveTaskList(Resource):
     def get(self):
-        kindid = KindModel.query.filter_by(name = '影视大厅').first().id
-        if kindid:
-            return redirect(url_for('.tasklistep', _external=True, kindid=kindid, page=1))
-        else:
-            return jsonify(total = 0,
-                pages = 0,
-                page = 0,
-                per_page = 0,
-                has_next = 0,
-                has_prev = 0,
-                next_num = 0,
-                prev_num = 0,
-                result=[])
+        return marketRouter('影视大厅')
+
+def marketRouter(name):
+    kind = KindModel.query.filter_by(name = name).first()
+    if kind and kind.id:
+        return redirect(url_for('.tasklistep', _external=True, kindid=kind.id, page=1))
+    else:
+        return jsonify(total = 0,
+            pages = 0,
+            page = 0,
+            per_page = 0,
+            has_next = 0,
+            has_prev = 0,
+            next_num = 0,
+            prev_num = 0,
+            result=[])
 
 from sqlalchemy import or_
 class GetTaskList(Resource):
