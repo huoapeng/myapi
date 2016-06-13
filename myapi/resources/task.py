@@ -1,3 +1,4 @@
+#coding=utf-8
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -111,6 +112,39 @@ get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('status', type=int, location='args', choices=range(4), default=0)
 get_parser.add_argument('orderby', type=int, location='args', choices=range(3), default=0)
 get_parser.add_argument('desc', type=int, location='args', choices=range(3), default=0)
+
+from flask import redirect, url_for
+class GetVRTaskList(Resource):
+    def get(self):
+        kindid = KindModel.query.filter_by(name = 'VR/AR大厅').first().id
+        if kindid:
+            return redirect(url_for('.tasklistep', _external=True, kindid=kindid, page=1))
+        else:
+            return jsonify(total = 0,
+                pages = 0,
+                page = 0,
+                per_page = 0,
+                has_next = 0,
+                has_prev = 0,
+                next_num = 0,
+                prev_num = 0,
+                result=[])
+
+class GetMoiveTaskList(Resource):
+    def get(self):
+        kindid = KindModel.query.filter_by(name = '影视大厅').first().id
+        if kindid:
+            return redirect(url_for('.tasklistep', _external=True, kindid=kindid, page=1))
+        else:
+            return jsonify(total = 0,
+                pages = 0,
+                page = 0,
+                per_page = 0,
+                has_next = 0,
+                has_prev = 0,
+                next_num = 0,
+                prev_num = 0,
+                result=[])
 
 from sqlalchemy import or_
 class GetTaskList(Resource):
