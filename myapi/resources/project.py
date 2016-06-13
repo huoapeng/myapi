@@ -19,21 +19,11 @@ post_parser.add_argument('name', type=str, location='json', required=True)
 post_parser.add_argument('description', type=str, location='json')
 post_parser.add_argument('owner_id', type=int, location='json', required=True)
 
-project_fields = {
-    'id': fields.Integer,
-    'name': fields.String,
-    'description': fields.String,
-    'publish_date': fields.DateTime,
-    'status': fields.Integer,
-    'owner_id': fields.Integer
-}
-
 class Project(Resource):
-    @marshal_with(project_fields)
     def get(self, projectid):
-        return ProjectModel.query.get(projectid)
+        project = ProjectModel.query.get(projectid)
+        return project.serialize()
 
-    @marshal_with(project_fields)
     def post(self):
         args = post_parser.parse_args()
 
@@ -43,15 +33,14 @@ class Project(Resource):
         user = UserModel.query.get(args.owner_id)
         user.published_projects.append(project)
         db.session.commit()
-        return project
+        return project.serialize()
 
-    @marshal_with(project_fields)
     def delete(self):
         args = post_parser.parse_args()
         project = ProjectModel.query.get(args.id)
         project.status = project_status.delete
         db.session.commit()
-        return project
+        return project.serialize()
 
 class UserPublishedProjects(Resource):
     def get(self, userid, page):

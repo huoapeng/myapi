@@ -1,4 +1,5 @@
 import datetime
+from flask import url_for
 from myapi import db
 from enum import project_status
 
@@ -22,3 +23,14 @@ class ProjectModel(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.name)
+
+    def serialize(self):
+        return {
+            'owner_id': self.owner_id,
+            'projectId': self.id,
+            'projectName': self.name,
+            'description': self.description,
+            'publish_date': self.publish_date.isoformat(),
+            'tasks_url':url_for('.getTasksByProjectID', _external=True, projectid=self.id),
+            'owner':url_for('.userep', _external=True, userid=self.owner_id)
+        }
