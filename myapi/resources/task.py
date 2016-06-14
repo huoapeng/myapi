@@ -11,7 +11,7 @@ from myapi.model.kind import KindModel
 from myapi.model.project import ProjectModel
 from myapi.model.enum import task_status
 from myapi.common.util import itemStatus
-from myapi.view.task import TaskOfMovieMarketView
+from myapi.view.task import TaskDetailView
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('id', type=int, location='json')
@@ -21,7 +21,7 @@ post_parser.add_argument('requirements', type=str, location='json')
 post_parser.add_argument('bonus', type=str, location='json')
 post_parser.add_argument('description', type=str, location='json')
 post_parser.add_argument('bidder_qualification_requirement', type=str, location='json')
-post_parser.add_argument('bidder_area_requirement', type=str, location='json')
+post_parser.add_argument('bidder_location_requirement', type=str, location='json')
 post_parser.add_argument('project_id', type=int, location='json')
 post_parser.add_argument('kind_ids', type=str, location='json')
 
@@ -34,7 +34,7 @@ task_fields = {
     'description': fields.String,
     'publishDate': fields.DateTime,
     'bidder_qualification_requirement': fields.String,
-    'bidder_area_requirement': fields.String,
+    'bidder_location_requirement': fields.String,
     'status': fields.Integer,
     'project_id': fields.Integer,
     'winner_id': fields.Integer
@@ -55,7 +55,7 @@ class Task(Resource):
             args.bonus,
             args.description,
             args.bidder_qualification_requirement,
-            args.bidder_area_requirement)
+            args.bidder_location_requirement)
         for kind_id in args.kind_ids.split(','):
             kind = KindModel.query.get(kind_id)
             task.kinds.append(kind)
@@ -81,6 +81,35 @@ class Task(Resource):
 
 parser = reqparse.RequestParser()
 parser.add_argument('status', type=int, location='args', choices=range(4), default=0)
+
+class GetTaskDetail(Resource):
+    def get(self, taskid):
+        task = TaskModel.query.get(taskid)
+        project = task.project
+        owner = project.owner
+        kind_str_list = []
+        for kind in task.kinds:
+            kind_str_list.append(kind.name)
+
+        taskview = TaskDetailView(task.id,
+                task.name,
+                project.id,
+                project.name,
+                owner.id,
+                owner.nickname,
+                owner.location,
+                task.timespan,
+                task.requirements,
+                task.bonus,
+                task.description,
+                task.publishDate,
+                task.bidder_qualification_requirement,
+                task.bidder_location_requirement,
+                task.status,
+                kind_str_list
+            )
+
+        return jsonify(taskview.serialize())
 
 class GetTaskListByProjectID(Resource):
     @marshal_with(task_fields)
@@ -108,7 +137,6 @@ class GetTaskListByBidderID(Resource):
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
-# get_parser.add_argument('kind', type=int, location='args')
 get_parser.add_argument('status', type=int, location='args', choices=range(4), default=0)
 get_parser.add_argument('orderby', type=int, location='args', choices=range(3), default=0)
 get_parser.add_argument('desc', type=int, location='args', choices=range(3), default=0)
@@ -174,20 +202,24 @@ class GetTaskList(Resource):
             for kind in task.kinds:
                 kind_str_list.append(kind.name)
 
-            t = TaskOfMovieMarketView(task.id,
+            taskview = TaskDetailView(task.id,
                     task.name,
                     project.id,
                     project.name,
                     owner.id,
                     owner.nickname,
-                    task.publishDate,
-                    task.bonus,
                     owner.location,
-                    task.bidder_area_requirement,
+                    task.timespan,
+                    task.requirements,
+                    task.bonus,
+                    task.description,
+                    task.publishDate,
                     task.bidder_qualification_requirement,
+                    task.bidder_location_requirement,
+                    task.status,
                     kind_str_list
                 )
-            task_obj_list.append(t)
+            task_obj_list.append(taskview)
 
         return jsonify(total = tasks.total,
             pages = tasks.pages,

@@ -6,7 +6,7 @@ from myapi.resources.user import User, ChangePassword, GetUserList
 from myapi.resources.tag import Tag, UserTags, SearchTagsByName
 from myapi.resources.project import Project, UserPublishedProjects, UserWonProjects
 from myapi.resources.task import Task, GetTaskListByProjectID, GetTaskListByBidderID, \
-	GetTaskList, GetVRTaskList, GetMoiveTaskList
+	GetTaskList, GetVRTaskList, GetMoiveTaskList, GetTaskDetail
 from myapi.resources.version import Version, TaskVersions
 from myapi.resources.note import Note, TaskNotes
 from myapi.resources.kind import Kind, KindList, SearchKindsByName
@@ -39,7 +39,7 @@ api.add_resource(AuthorityCompanyList, '/companylist')
 api.add_resource(Bid, '/bid', '/<int:userid>/bid/<int:taskid>')
 api.add_resource(BidList, '/<int:taskid>/bidlist')
 
-api.add_resource(Project, '/project', '/project/<int:projectid>')
+api.add_resource(Project, '/project', '/project/<int:projectid>', endpoint='projectep')
 
 api.add_resource(Task, '/task', '/task/<int:taskid>', endpoint='taskep')
 api.add_resource(TaskNotes, '/<int:taskid>/tasknotes')
@@ -47,6 +47,7 @@ api.add_resource(TaskVersions, '/<int:taskid>/taskversions')
 
 api.add_resource(GetVRTaskList, '/vrtasklist')
 api.add_resource(GetMoiveTaskList, '/movietasklist')
+api.add_resource(GetTaskDetail, '/taskdetail/<int:taskid>', endpoint='taskdetailep')
 api.add_resource(GetTaskList, '/<int:kindid>/tasklist/<int:page>', endpoint='tasklistep')
 api.add_resource(GetTaskListByProjectID, '/<int:projectid>/GetTaskListByProjectID', \
     endpoint='getTasksByProjectID')
