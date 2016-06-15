@@ -6,6 +6,7 @@ from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db, app
 from myapi.model.user import UserModel
+from myapi.model.tag import TagModel
 from myapi.model.enum import user_status
 from myapi.common.util import valid_email, md5, itemStatus
 from myapi.common.decorator import jsonp
@@ -98,7 +99,7 @@ class GetUserList(Resource):
         args = get_parser.parse_args()
         user_obj_list = []
 
-        users = UserModel.query
+        users = UserModel.query.filter(UserModel.tags.any(TagModel.name == args.tag))
 
         if args.keyword:
             users = users.filter(UserModel.nickname.contains(args.keyword))
@@ -114,10 +115,6 @@ class GetUserList(Resource):
             tag_str_list = []
             for tag in user.tags:
                 tag_str_list.append(tag.name)
-                
-            if args.tag:
-                if args.tag not in ','.join(tag_str_list):
-                    continue
 
             u = UserMarketView(user.id,
                     user.image,

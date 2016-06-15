@@ -2,10 +2,12 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.tag import TagModel
 from myapi.model.user import UserModel
+from sqlalchemy import func
 
 parser = reqparse.RequestParser()
 parser.add_argument('id', type=int, location='json')
@@ -48,6 +50,12 @@ class UserTags(Resource):
     def get(self, userid):
         user = UserModel.query.get(userid)
         return user.tags
+
+class TagList(Resource):
+    def get(self, limit):
+        tags = db.session.query(TagModel.name, func.count(TagModel.name)).\
+            group_by(TagModel.name).limit(limit)            
+        return jsonify(data=[e for e in tags])
 
 class SearchTagsByName(Resource):
     @marshal_with(tag_fields)
