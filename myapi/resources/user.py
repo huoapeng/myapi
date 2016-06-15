@@ -99,7 +99,10 @@ class GetUserList(Resource):
         args = get_parser.parse_args()
         user_obj_list = []
 
-        users = UserModel.query.filter(UserModel.tags.any(TagModel.name == args.tag))
+        users = UserModel.query
+
+        if args.tag:
+            users = users.filter(UserModel.tags.any(TagModel.name == args.tag))
 
         if args.keyword:
             users = users.filter(UserModel.nickname.contains(args.keyword))
