@@ -54,7 +54,7 @@ class UserTags(Resource):
 class TagList(Resource):
     def get(self, limit):
         tags = db.session.query(TagModel.name, func.count(TagModel.name)).\
-            group_by(TagModel.name).limit(limit)            
+            group_by(TagModel.name).order_by(func.count(TagModel.name).desc()).limit(limit)
         return jsonify(data=[e for e in tags])
 
 class SearchTagsByName(Resource):
