@@ -13,7 +13,7 @@ from myapi.model.enum import verify_type, approval_status, authorised_status
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, location='json', required=True)
 post_parser.add_argument('name', type=str, location='json')
-post_parser.add_argument('identity_id', type=int, location='json')
+post_parser.add_argument('identity_id', type=str, location='json')
 post_parser.add_argument('identityFrontImage', type=str, location='json')
 post_parser.add_argument('identityBackImage', type=str, location='json')
 post_parser.add_argument('approval_id', type=int, location='json')
