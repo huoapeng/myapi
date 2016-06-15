@@ -55,3 +55,8 @@ class note_status:
 class message_type:
     version = 1
     note = 2
+    work = 3
+
+class work_status:
+    normal = 1
+    delete = 2

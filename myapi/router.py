@@ -15,6 +15,7 @@ from myapi.resources.profile import Profile
 from myapi.resources.authorityPrivate import AuthorityPrivate, AuthorityPrivateList
 from myapi.resources.authorityCompany import AuthorityCompany, AuthorityCompanyList
 from myapi.resources.bid import Bid, BidList
+from myapi.resources.work import Work, UserWorks
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -27,6 +28,7 @@ api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')
 api.add_resource(GetUserList, '/userlist/<int:page>')
 api.add_resource(Tag, '/tag', '/tag/<int:tagid>')
 api.add_resource(UserTags, '/<int:userid>/usertags', endpoint='userTags')
+api.add_resource(UserWorks, '/<int:userid>/userworks/<int:page>', endpoint='userWorks')
 api.add_resource(SearchTagsByName, '/search/taglist/<string:keyword>')
 api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<int:page>')
 api.add_resource(UserWonProjects, '/<int:userid>/userwonprojects/<int:page>')
@@ -59,6 +61,8 @@ api.add_resource(Version, '/version', '/version/<int:versionid>')
 api.add_resource(Note, '/note', '/note/<int:noteid>')
 api.add_resource(NoteMessage, '/notemessage')
 api.add_resource(NoteMessageList, '/<int:noteid>/notemessagelist')
+
+api.add_resource(Work, '/work', '/work/<int:workid>')
 
 api.add_resource(Kind, '/kind', '/kind/<int:kindid>')
 api.add_resource(KindList, '/kindlist')

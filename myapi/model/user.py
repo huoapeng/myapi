@@ -40,6 +40,9 @@ class UserModel(db.Model):
         backref=db.backref('winner', lazy='joined'), lazy='dynamic')
     bidTasks = db.relationship('BidModel', lazy='dynamic')
 
+    works = db.relationship('WorkModel',
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+
     def __init__(self, email, password):
         self.nickname = email[:email.find(r'@')]
         self.email = email
@@ -64,5 +67,7 @@ class UserModel(db.Model):
             'status': self.status,
             'authorisedStatus': self.authorisedStatus,
             'registDate': self.registDate.isoformat(),
-            'tags': url_for('.userTags', _external=True, userid=self.id)
+            'tags': url_for('.userTags', _external=True, userid=self.id),
+            'works': url_for('.userWorks', _external=True, userid=self.id, page=1)
         }
+
