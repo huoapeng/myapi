@@ -2,7 +2,7 @@
 from flask import Blueprint
 from flask.ext.restful import Api
 from myapi.resources.general import general, image
-from myapi.resources.user import User, ChangePassword, GetUserList
+from myapi.resources.user import User, ChangePassword, GetUserList, GetuserDetailList
 from myapi.resources.tag import Tag, UserTags, SearchTagsByName
 from myapi.resources.project import Project, UserPublishedProjects, UserWonProjects
 from myapi.resources.task import Task, GetTaskListByProjectID, GetTaskListByBidderID, \
@@ -26,12 +26,13 @@ api.add_resource(ChangePassword, '/changepwd')
 
 api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')
 api.add_resource(GetUserList, '/userlist/<int:page>')
+api.add_resource(GetuserDetailList, '/userdetaillist/<int:page>')
 api.add_resource(Tag, '/tag', '/tag/<int:tagid>')
 api.add_resource(UserTags, '/<int:userid>/usertags', endpoint='userTags')
 api.add_resource(UserWorks, '/<int:userid>/userworks/<int:page>', endpoint='userWorks')
 api.add_resource(SearchTagsByName, '/search/taglist/<string:keyword>')
-api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<int:page>')
-api.add_resource(UserWonProjects, '/<int:userid>/userwonprojects/<int:page>')
+api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<int:page>', endpoint='publishedProjects')
+api.add_resource(UserWonProjects, '/<int:userid>/userwonprojects/<int:page>', endpoint='wonProjects')
 
 api.add_resource(AuthorityPrivate, '/private', '/private/<int:id>')
 api.add_resource(AuthorityPrivateList, '/privatelist')

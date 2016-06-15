@@ -68,6 +68,8 @@ class UserModel(db.Model):
             'authorisedStatus': self.authorisedStatus,
             'registDate': self.registDate.isoformat(),
             'tags': url_for('.userTags', _external=True, userid=self.id),
-            'works': url_for('.userWorks', _external=True, userid=self.id, page=1)
+            'works': url_for('.userWorks', _external=True, userid=self.id, page=1),
+            'publishedProjects': url_for('.publishedProjects', _external=True, userid=self.id, page=1),
+            'wonProjects': url_for('.wonProjects', _external=True, userid=self.id, page=1)
         }
 

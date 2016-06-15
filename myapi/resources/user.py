@@ -74,6 +74,20 @@ class ChangePassword(Resource):
             user = UserModel('','')
         return jsonify(user.serialize())
 
+class GetuserDetailList(Resource):
+    def get(self, page):
+        users = UserModel.query.filter_by(status = user_status.normal)\
+            .paginate(page, app.config['POSTS_PER_PAGE'], False)
+        return jsonify(total = users.total,
+            pages = users.pages,
+            page = users.page,
+            per_page = users.per_page,
+            has_next = users.has_next,
+            has_prev = users.has_prev,
+            next_num = users.next_num,
+            prev_num = users.prev_num,
+            data=[e.serialize() for e in users.items])
+
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('tag', type=str, location='args')
