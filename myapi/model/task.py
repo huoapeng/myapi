@@ -6,7 +6,7 @@ from kind import task_kinds
 class TaskModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-    timespan = db.Column(db.Integer)
+    timespan = db.Column(db.String(200))
     requirements = db.Column(db.Text)
     bonus = db.Column(db.Integer)
     description = db.Column(db.Text)

@@ -28,7 +28,7 @@ post_parser.add_argument('kind_ids', type=str, location='json')
 task_fields = {
     'id': fields.Integer,
     'name': fields.String,
-    'timespan': fields.Integer,
+    'timespan': fields.String,
     'requirements': fields.String,
     'bonus': fields.Integer,
     'description': fields.String,
