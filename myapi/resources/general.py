@@ -41,7 +41,7 @@ class image(Resource):
         file = request.files['file']
         if file and allowed_file(file.filename):
             get_parser = reqparse.RequestParser()
-            get_parser.add_argument('type', type=int, location='args', choices=range(7), default=0, required=True)
+            get_parser.add_argument('type', type=int, location='args', choices=range(8), default=0, required=True)
             get_parser.add_argument('userid', type=int, location='args', required=True)
 
             args = get_parser.parse_args()
@@ -82,4 +82,5 @@ path = {
     image_type.authorityPrivateBack : lambda userid: '{}/authorityPrivateBack/'.format(userid),
     image_type.companyLience : lambda userid: '{}/companyLience/'.format(userid),
     image_type.companyContactCard : lambda userid: '{}/companyContactCard/'.format(userid),
+    image_type.work : lambda userid: '{}/work/'.format(userid),
 }

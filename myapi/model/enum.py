@@ -26,6 +26,7 @@ class image_type:
     authorityPrivateBack = 4
     companyLience = 5
     companyContactCard = 6
+    work = 7
 
 class user_status:
     normal = 1
