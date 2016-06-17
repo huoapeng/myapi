@@ -21,7 +21,7 @@ api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
 api.add_resource(general, '/general/<string:method>')
-api.add_resource(image, '/image', '/image/<int:userid>/<int:imagetype>.<string:filename>', endpoint='imageep')
+api.add_resource(image, '/image')
 api.add_resource(ChangePassword, '/changepwd')
 
 api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')

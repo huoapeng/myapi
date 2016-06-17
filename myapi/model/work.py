@@ -31,7 +31,7 @@ class WorkModel(db.Model):
             'userid': self.owner_id,
             'workid': self.id,
             'title': self.title,
-            'image': url_for('.imageep', _external=True, userid=self.owner_id, imagetype=1, filename=self.image) \
+            'image': getImageUrl(userid=self.owner_id, imageType=7, imageName=self.image) \
                 if self.image else self.image,
             'description': self.description,
             'status': self.status,

@@ -15,8 +15,8 @@ class NoteView():
             'noteid': self.note_id,
             'userid': self.user_id,
             'userName': self.user_name,
-            'userImage': url_for('.imageep', userid=self.user_id, imagetype=1, filename=self.user_image, \
-                _external=True) if self.user_image else self.user_image,
+            'userImage': getImageUrl(userid=self.user_id, imageType=1, imageName=self.image) \
+                if self.user_image else self.user_image,
             'title': self.title,
             'publishDate': self.publish_date.isoformat()
         }

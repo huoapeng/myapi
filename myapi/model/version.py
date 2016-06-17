@@ -28,7 +28,7 @@ class VersionModel(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'image': url_for('.imageep', _external=True, userid=self.user_id, imagetype=2, filename=self.image)\
+            'image': getImageUrl(userid=self.user_id, imageType=2, imageName=self.image) \
                 if self.image else self.image,
             'title': self.title,
             'description': self.description,

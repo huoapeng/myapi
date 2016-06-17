@@ -52,12 +52,6 @@ class image(Resource):
 
             file.save(sf)
             return jsonify(data=os.path.basename(sf))
-            # return jsonify(data = url_for('.imageep', 
-            #     userid=args.userid, 
-            #     imagetype=args.type, 
-            #     filename=os.path.basename(sf), 
-            #     _external=True)
-            # )
         return 'pls check file suffix'
 
 class general(Resource):

@@ -29,11 +29,9 @@ class PrivateAuthorisedModel(db.Model):
             'id': self.id,
             'name': self.name,
             'identityID': self.identityID,
-            'identityFrontImage': url_for('.imageep', _external=True, \
-                userid=self.owner_id, imagetype=3, filename=self.identityFrontImage)\
+            'identityFrontImage': getImageUrl(userid=self.owner_id, imageType=3, imageName=self.identityFrontImage) \
                 if self.identityFrontImage else self.identityFrontImage,
-            'identityBackImage': url_for('.imageep', _external=True, \
-                userid=self.owner_id, imagetype=4, filename=self.identityBackImage)\
+            'identityBackImage': getImageUrl(userid=self.owner_id, imageType=4, imageName=self.identityBackImage \
                 if self.identityBackImage else self.identityBackImage,
             'authorisedDate': self.authorisedDate,
             'approvalStatus': self.approval_status,
@@ -80,11 +78,10 @@ class CompanyAuthorisedModel(db.Model):
             'name': self.name,
             'businessScope': self.businessScope,
             'businessLicenseID':self.businessLicenseID,
-            'businessLicenseImage': url_for('.imageep', _external=True, \
-                userid=self.owner_id, imagetype=5, filename=self.businessLicenseImage)\
+            'businessLicenseImage': getImageUrl(userid=self.owner_id, imageType=5, \
+                imageName=self.businessLicenseImage \
                 if self.businessLicenseImage else self.businessLicenseImage,
-            'contactImage': url_for('.imageep', _external=True, \
-                userid=self.owner_id, imagetype=6, filename=self.contactImage)\
+            'contactImage': getImageUrl(userid=self.owner_id, imageType=6, imageName=self.contactImage \
                 if self.contactImage else self.contactImage,
             'verifyType': self.verifyType,
             'bankAccount': self.bankAccount,
