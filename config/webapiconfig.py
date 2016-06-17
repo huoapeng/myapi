@@ -1,4 +1,6 @@
 DEBUG = False
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 POSTS_PER_PAGE = 10
-UPLOAD_FOLDER = '/usr/share/nginx/html/static/Uploads'
+ROOT_PATH = '/usr/share/nginx/html/'
+UPLOAD_FOLDER = 'static/Uploads/'
+SERVER_NAME = '139.196.183.6'
