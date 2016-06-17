@@ -2,6 +2,7 @@ import datetime
 from flask import url_for
 from myapi import db
 from myapi.model.enum import work_status
+from myapi.common.image import getImageUrl
 
 class WorkModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)

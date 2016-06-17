@@ -2,6 +2,7 @@ import datetime
 from flask import url_for
 from myapi import db
 from enum import version_status
+from myapi.common.image import getImageUrl
 
 class VersionModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)

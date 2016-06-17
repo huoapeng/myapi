@@ -1,4 +1,5 @@
 from flask import url_for
+from myapi.common.image import getImageUrl
 
 class NoteMessageView():
 
