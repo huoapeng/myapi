@@ -3,6 +3,7 @@ from flask import url_for
 from myapi import db
 from enum import user_status, authorised_status
 from tag import user_tags
+from myapi.common.image import getImageUrl
 
 class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -61,7 +62,7 @@ class UserModel(db.Model):
             'email': self.email,
             'phone': self.phone,
             'location': self.location,
-            'image': url_for('.imageep', _external=True, userid=self.id, imagetype=1, filename=self.image) \
+            'image': getImageUrl(userid=self.id, imageType=1, imageName=self.image) \
                 if self.image else self.image,
             'description': self.description,
             'status': self.status,
