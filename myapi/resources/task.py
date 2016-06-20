@@ -30,7 +30,7 @@ task_fields = {
     'name': fields.String,
     'timespan': fields.String,
     'requirements': fields.String,
-    'bonus': fields.Integer,
+    'bonus': fields.String,
     'description': fields.String,
     'publishDate': fields.DateTime,
     'bidder_qualification_requirement': fields.String,

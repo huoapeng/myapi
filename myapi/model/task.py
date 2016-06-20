@@ -8,7 +8,7 @@ class TaskModel(db.Model):
     name = db.Column(db.String(100))
     timespan = db.Column(db.String(200))
     requirements = db.Column(db.Text)
-    bonus = db.Column(db.Integer)
+    bonus = db.Column(db.String(200))
     description = db.Column(db.Text)
     publishDate = db.Column(db.DateTime)
     bidder_qualification_requirement = db.Column(db.String(100))
