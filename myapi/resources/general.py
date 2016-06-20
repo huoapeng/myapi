@@ -59,11 +59,17 @@ class general(Resource):
         if method == 'create_all':
             db.create_all()
             
-            kind = KindModel('影视大厅')
-            db.session.add(kind)
-            kind = KindModel('VR/AR大厅')
-            db.session.add(kind)
-            db.session.commit()
+            kind1 = KindModel.query.filter_by(name = '影视大厅').first()
+            if not kind1:
+                kind1 = KindModel('影视大厅')
+                db.session.add(kind1)
+                db.session.commit()
+
+            kind2 = KindModel.query.filter_by(name = 'VR/AR大厅').first()
+            if not kind2:
+                kind2 = KindModel('VR/AR大厅')
+                db.session.add(kind2)
+                db.session.commit()
         elif method == 'drop_all':
             db.drop_all()
         else:
