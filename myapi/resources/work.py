@@ -13,7 +13,9 @@ parser = reqparse.RequestParser()
 parser.add_argument('id', type=int, location='json')
 parser.add_argument('title', type=str, location='json')
 parser.add_argument('image', type=str, location='json')
+parser.add_argument('file', type=str, location='json')
 parser.add_argument('description', type=str, location='json')
+parser.add_argument('copyright', type=int, location='json')
 parser.add_argument('userid', type=int, location='json')
 
 class Work(Resource):
@@ -26,7 +28,7 @@ class Work(Resource):
 
     def post(self):
         args = parser.parse_args()
-        work = WorkModel(args.title, args.image, args.description)
+        work = WorkModel(args.title, args.image, args.file, args.description, args.copyright)
         db.session.add(work)
 
         user = UserModel.query.get(args.userid)

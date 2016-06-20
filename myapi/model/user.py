@@ -21,7 +21,7 @@ class UserModel(db.Model):
     published_projects = db.relationship('ProjectModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
     
-    tags = db.relationship('TagModel', secondary=user_tags,
+    tags = db.relationship('UserTagModel', secondary=user_tags,
         backref=db.backref('users', lazy='dynamic'))
 
     versions = db.relationship('VersionModel',

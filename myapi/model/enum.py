@@ -61,3 +61,14 @@ class message_type:
 class work_status:
     normal = 1
     delete = 2
+
+class copyright_type:
+    none = 1
+    attribution = 2
+    attribution_non_commercial = 3
+    attribution_no_derivative = 4
+    attribution_share_alike = 5
+    attribution_non_commercial_no_derivative = 6
+    attribution_non_commercial_share_alike = 7
+
+
