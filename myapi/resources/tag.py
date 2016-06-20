@@ -75,8 +75,8 @@ class WorkTag(Resource):
         tag = WorkTagModel(args.name)
         db.session.add(tag)
 
-        user = WorkTagModel.query.get(args.work_id)
-        user.tags.append(tag)
+        work = WorkModel.query.get(args.work_id)
+        work.tags.append(tag)
         db.session.commit()
         return tag
 
