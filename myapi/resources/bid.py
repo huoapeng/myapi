@@ -19,8 +19,8 @@ parser.add_argument('bidding_timespan', type=str, location='json')
 
 class Bid(Resource):
     def get(self, userid, taskid):
-        e = BidModel.query.filter_by(user_id=userid).filter_by(task_id=taskid).first_or_404()
-        return jsonify(data=e.serialize())
+        e = BidModel.query.filter_by(user_id=userid).filter_by(task_id=taskid).first()
+        return jsonify(data=e.serialize() if e else '')
 
     def post(self):
         args = parser.parse_args()
