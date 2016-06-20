@@ -46,7 +46,7 @@ class Work(Resource):
 
 class UserWorks(Resource):
     def get(self, userid, page):
-        works = WorkModel.query.filter_by(owner_id = userid)
+        works = WorkModel.query.filter_by(status = work_status.normal).filter_by(owner_id = userid)
         works = works.paginate(page, app.config['POSTS_PER_PAGE'], False)
         return jsonify(total = works.total,
             pages = works.pages,
