@@ -3,16 +3,15 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-import os, random
+import os
 from flask import request, url_for, jsonify, send_from_directory
 from flask.ext.restful import Resource, reqparse
-from werkzeug.utils import secure_filename
 # from werkzeug.datastructures import FileStorage
 from myapi import db, app
 from myapi.model.enum import file_type
 from myapi.model.user import UserModel
 from myapi.model.kind import KindModel
-from myapi.common.image import resize, filePath, allowedFile
+from myapi.common.image import resize, allowedFile, getServerPath
 
 class image(Resource):
     def get(self, userid, imagetype, filename):
@@ -24,31 +23,25 @@ class image(Resource):
 
     def post(self):
         file = request.files['file']
-        if file and allowedFile(file.filename):
-            get_parser = reqparse.RequestParser()
-            get_parser.add_argument('type', type=int, location='args', choices=range(8), default=0, required=True)
-            get_parser.add_argument('userid', type=int, location='args', required=True)
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('type', type=int, location='args', choices=range(1, 9), required=True)
+        get_parser.add_argument('userid', type=int, location='args', required=True)
+        get_parser.add_argument('thumbnail', type=int, location='args', default=0)
+        args = get_parser.parse_args()
 
-            args = get_parser.parse_args()
-            serverPath = os.path.join(app.config['ROOT_PATH'], \
-                app.config['UPLOAD_FOLDER'], filePath[args.type](args.userid))
-            if not os.path.exists(serverPath):
-                # os.mkdir(serverPath)
-                os.makedirs(serverPath)
-
-            fname = secure_filename(file.filename)
-            sf = os.path.join(serverPath, fname)
-            
-            while os.path.exists(sf):
-                randomString = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcbaABCDEFGHIJKLMNOPQRSTUVWXYZ',10))
-                sf = sf.replace(fname, randomString + fname)
+        if file and allowedFile(file.filename, args.type):
+            sf = getServerPath(file.filename, args.type, args.userid)
 
             if args.type == file_type.profile:
                 user = UserModel.query.get(args.userid)
                 user.image = os.path.basename(sf)
                 db.session.commit()
-
                 file = resize(file, 100, 80)
+
+            if args.thumbnail:
+                thumbnailfile = resize(file, 223, 99999)
+                tsf = getServerPath(file.filename, file_type.workThumbnail, args.userid)
+                thumbnailfile.save(tsf)
 
             file.save(sf)
             return jsonify(data=os.path.basename(sf))
@@ -57,24 +50,13 @@ class image(Resource):
 class CompressFile(Resource):
     def post(self):
         file = request.files['file']
-        if file and allowedFile(file.filename, 123):
-            get_parser = reqparse.RequestParser()
-            get_parser.add_argument('type', type=int, location='args', choices=range(8,9), required=True)
-            get_parser.add_argument('userid', type=int, location='args', required=True)
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('type', type=int, location='args', choices=range(51, 52), required=True)
+        get_parser.add_argument('userid', type=int, location='args', required=True)
+        args = get_parser.parse_args()
 
-            args = get_parser.parse_args()
-            serverPath = os.path.join(app.config['ROOT_PATH'], \
-                app.config['UPLOAD_FOLDER'], filePath[args.type](args.userid))
-            if not os.path.exists(serverPath):
-                os.makedirs(serverPath)
-
-            fname = secure_filename(file.filename)
-            sf = os.path.join(serverPath, fname)
-            
-            while os.path.exists(sf):
-                randomString = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcbaABCDEFGHIJKLMNOPQRSTUVWXYZ',10))
-                sf = sf.replace(fname, randomString + fname)
-
+        if file and allowedFile(file.filename, args.type):
+            sf = getServerPath(file.filename, args.type, args.userid)
             file.save(sf)
             return jsonify(data=os.path.basename(sf))
         return 'pls check file suffix'

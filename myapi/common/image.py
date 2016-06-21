@@ -9,6 +9,9 @@ tested with Python27 and Python33 by vegaseat 18mar2013
 from PIL import Image#, ImageTk
 from myapi.model.enum import file_type
 from myapi import app
+import os, random
+from werkzeug.utils import secure_filename
+
 # try:
 #   # Python2
 #   import Tkinter as tk
@@ -48,16 +51,31 @@ filePath = {
     file_type.companyLience : lambda userid: '{}/companyLience/'.format(userid),
     file_type.companyContactCard : lambda userid: '{}/companyContactCard/'.format(userid),
     file_type.work : lambda userid: '{}/work/'.format(userid),
+    file_type.workThumbnail : lambda userid: '{}/workThumbnail'.format(userid),
     file_type.workFile : lambda userid: '{}/workfile/'.format(userid)
 }
 
-def allowedFile(fileName, fileType = None):
+def allowedFile(fileName, fileType):
     ALLOWED_IMAGE_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
     ALLOWED_FILE_EXTENSIONS = set(['zip', 'rar'])
-    if fileType:
+    if fileType > 50:
         return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_FILE_EXTENSIONS
     else:
         return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_IMAGE_EXTENSIONS
+
+def getServerPath(filename, fileType, userid):
+    serverPath = os.path.join(app.config['ROOT_PATH'], \
+        app.config['UPLOAD_FOLDER'], filePath[fileType](userid))
+    if not os.path.exists(serverPath):
+        os.makedirs(serverPath)
+
+    fname = secure_filename(filename)
+    sf = os.path.join(serverPath, fname)
+    
+    while os.path.exists(sf):
+        randomString = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcbaABCDEFGHIJKLMNOPQRSTUVWXYZ',10))
+        sf = sf.replace(fname, randomString + fname)
+    return sf
 
 # root = tk.Tk()
 # # size of image display box you want
