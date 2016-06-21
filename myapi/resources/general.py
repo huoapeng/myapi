@@ -38,13 +38,15 @@ class image(Resource):
                 db.session.commit()
                 file = resize(file, 100, 80)
 
+            file.save(sf)
+
             if args.thumbnail:
                 thumbnailfile = resize(file, 223, 99999)
                 tsf = getServerPath(file.filename, file_type.workThumbnail, args.userid)
                 thumbnailfile.save(tsf)
-
-            file.save(sf)
-            return jsonify(image=os.path.basename(sf), thumbnail=os.path.basename(tsf))
+                return jsonify(image=os.path.basename(sf), thumbnail=os.path.basename(tsf))
+            else:
+                return jsonify(data=os.path.basename(sf))
         return 'pls check file suffix'
 
 class CompressFile(Resource):
