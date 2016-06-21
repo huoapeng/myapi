@@ -2,7 +2,7 @@ import datetime
 from flask import url_for
 from myapi import db
 from enum import verify_type, approval_status
-from myapi.common.image import getImageUrl
+from myapi.common.image import getFileUrl
 
 class PrivateAuthorisedModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,9 +30,9 @@ class PrivateAuthorisedModel(db.Model):
             'id': self.id,
             'name': self.name,
             'identityID': self.identityID,
-            'identityFrontImage': getImageUrl(userid=self.owner_id, imageType=3, \
-                imageName=self.identityFrontImage) if self.identityFrontImage else self.identityFrontImage,
-            'identityBackImage': getImageUrl(userid=self.owner_id, imageType=4, imageName=self.identityBackImage) \
+            'identityFrontImage': getFileUrl(self.owner_id, 3, self.identityFrontImage) \
+                if self.identityFrontImage else self.identityFrontImage,
+            'identityBackImage': getFileUrl(self.owner_id, 4, self.identityBackImage) \
                 if self.identityBackImage else self.identityBackImage,
             'authorisedDate': self.authorisedDate,
             'approvalStatus': self.approval_status,
@@ -79,10 +79,9 @@ class CompanyAuthorisedModel(db.Model):
             'name': self.name,
             'businessScope': self.businessScope,
             'businessLicenseID':self.businessLicenseID,
-            'businessLicenseImage': getImageUrl(userid=self.owner_id, imageType=5, \
-                imageName=self.businessLicenseImage) \
+            'businessLicenseImage': getFileUrl(self.owner_id, 5, self.businessLicenseImage) \
                 if self.businessLicenseImage else self.businessLicenseImage,
-            'contactImage': getImageUrl(userid=self.owner_id, imageType=6, imageName=self.contactImage) \
+            'contactImage': getFileUrl(self.owner_id, 6, self.contactImage) \
                 if self.contactImage else self.contactImage,
             'verifyType': self.verifyType,
             'bankAccount': self.bankAccount,

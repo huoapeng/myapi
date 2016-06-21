@@ -19,7 +19,7 @@ class bid_status:
     selectBidder = 2
     finish = 3
 
-class image_type:
+class file_type:
     profile = 1
     version = 2
     authorityPrivateFront = 3
@@ -27,6 +27,7 @@ class image_type:
     companyLience = 5
     companyContactCard = 6
     work = 7
+    workFile = 8
 
 class user_status:
     normal = 1

@@ -7,7 +7,7 @@ tested with Python27 and Python33 by vegaseat 18mar2013
 '''
 # import io
 from PIL import Image#, ImageTk
-from myapi.model.enum import image_type
+from myapi.model.enum import file_type
 from myapi import app
 # try:
 #   # Python2
@@ -18,41 +18,46 @@ from myapi import app
 #   import tkinter as tk
 #   from urllib.request import urlopen
 def resize(pil_image, w_box, h_box):
-  '''
-  resize a pil_image object so it will fit into
-  a box of size w_box times h_box, but retain aspect ratio
-  '''
-  pil_image = Image.open(pil_image)
-  w, h = pil_image.size
-  f1 = 1.0 * w_box / w # 1.0 forces float division in Python2
-  f2 = 1.0 * h_box / h
-  factor = min([f1, f2])
-  #print(f1, f2, factor) # test
-  # use best down-sizing filter
-  width = int(w * factor)
-  height = int(h * factor)
-  return pil_image.resize((width, height), Image.ANTIALIAS)
+    '''
+    resize a pil_image object so it will fit into
+    a box of size w_box times h_box, but retain aspect ratio
+    '''
+    pil_image = Image.open(pil_image)
+    w, h = pil_image.size
+    f1 = 1.0 * w_box / w # 1.0 forces float division in Python2
+    f2 = 1.0 * h_box / h
+    factor = min([f1, f2])
+    #print(f1, f2, factor) # test
+    # use best down-sizing filter
+    width = int(w * factor)
+    height = int(h * factor)
+    return pil_image.resize((width, height), Image.ANTIALIAS)
 
-def getImageUrl(userid, imageType, imageName):
-  return 'http://{}/{}{}{}'.format(\
-    app.config['SERVER_NAME'], \
-    app.config['UPLOAD_FOLDER'], \
-    imagePath[imageType](userid), \
-    imageName)
+def getFileUrl(userid, fileType, fileName):
+    return 'http://{}/{}{}{}'.format(\
+        app.config['SERVER_NAME'], \
+        app.config['UPLOAD_FOLDER'], \
+        filePath[fileType](userid), \
+        fileName)
 
-imagePath = {
-    image_type.profile : lambda userid: '{}/profile/'.format(userid),
-    image_type.version : lambda userid: '{}/version/'.format(userid),
-    image_type.authorityPrivateFront : lambda userid: '{}/authorityPrivateFront/'.format(userid),
-    image_type.authorityPrivateBack : lambda userid: '{}/authorityPrivateBack/'.format(userid),
-    image_type.companyLience : lambda userid: '{}/companyLience/'.format(userid),
-    image_type.companyContactCard : lambda userid: '{}/companyContactCard/'.format(userid),
-    image_type.work : lambda userid: '{}/work/'.format(userid),
+filePath = {
+    file_type.profile : lambda userid: '{}/profile/'.format(userid),
+    file_type.version : lambda userid: '{}/version/'.format(userid),
+    file_type.authorityPrivateFront : lambda userid: '{}/authorityPrivateFront/'.format(userid),
+    file_type.authorityPrivateBack : lambda userid: '{}/authorityPrivateBack/'.format(userid),
+    file_type.companyLience : lambda userid: '{}/companyLience/'.format(userid),
+    file_type.companyContactCard : lambda userid: '{}/companyContactCard/'.format(userid),
+    file_type.work : lambda userid: '{}/work/'.format(userid),
+    file_type.workFile : lambda userid: '{}/workfile/'.format(userid)
 }
 
-def allowedFile(filename):
-    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
-    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+def allowedFile(fileName, fileType = None):
+    ALLOWED_IMAGE_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
+    ALLOWED_FILE_EXTENSIONS = set(['zip', 'rar'])
+    if fileType:
+        return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_FILE_EXTENSIONS
+    else:
+        return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_IMAGE_EXTENSIONS
 
 # root = tk.Tk()
 # # size of image display box you want

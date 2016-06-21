@@ -1,7 +1,7 @@
 
 from flask import Blueprint
 from flask.ext.restful import Api
-from myapi.resources.general import general, image
+from myapi.resources.general import general, image, CompressFile
 from myapi.resources.user import User, ChangePassword, GetUserList, GetuserDetailList
 from myapi.resources.tag import UserTag, UserTags, SearchUserTagsByName, UserTagList, \
 	WorkTag, WorkTags, SearchWorkTagsByName, WorkTagList
@@ -23,6 +23,7 @@ api = Api(api_bp)
 
 api.add_resource(general, '/general/<string:method>')
 api.add_resource(image, '/image')
+api.add_resource(CompressFile, '/compressfile')
 api.add_resource(ChangePassword, '/changepwd')
 
 api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')

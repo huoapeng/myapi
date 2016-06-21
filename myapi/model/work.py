@@ -3,7 +3,7 @@ from flask import url_for
 from myapi import db
 from myapi.model.tag import work_tags
 from myapi.model.enum import work_status
-from myapi.common.image import getImageUrl
+from myapi.common.image import getFileUrl
 
 class WorkModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,9 +40,8 @@ class WorkModel(db.Model):
             'userid': self.owner_id,
             'workid': self.id,
             'title': self.title,
-            'image': getImageUrl(userid=self.owner_id, imageType=7, imageName=self.image) \
-                if self.image else self.image,
-            'file': '',
+            'image': getFileUrl(self.owner_id, 7, self.image) if self.image else self.image,
+            'file': getFileUrl(self.owner_id, 8, self.file) if self.file else self.file,
             'description': self.description,
             'copyright': self.copyright,
             'status': self.status,
