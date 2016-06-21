@@ -8,6 +8,7 @@ from myapi import db, app
 from myapi.model.work import WorkModel
 from myapi.model.user import UserModel
 from myapi.model.enum import work_status
+from myapi.model.tag import WorkTagModel
 
 parser = reqparse.RequestParser()
 parser.add_argument('id', type=int, location='json')
@@ -18,6 +19,7 @@ parser.add_argument('file', type=str, location='json')
 parser.add_argument('description', type=str, location='json')
 parser.add_argument('copyright', type=int, location='json')
 parser.add_argument('userid', type=int, location='json')
+parser.add_argument('tags', type=str, location='json')
 
 class Work(Resource):
     def get(self, workid):
@@ -31,6 +33,10 @@ class Work(Resource):
         args = parser.parse_args()
         work = WorkModel(args.title, args.thumbnail, args.image, args.file, args.description, args.copyright)
         db.session.add(work)
+
+        for tagid in args.tags.split(','):
+            tag = WorkTagModel.query.get(tagid)
+            work.tags.append(tag)
 
         user = UserModel.query.get(args.userid)
         user.works.append(work)
