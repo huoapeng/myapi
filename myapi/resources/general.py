@@ -24,7 +24,7 @@ class image(Resource):
     def post(self):
         file = request.files['file']
         get_parser = reqparse.RequestParser()
-        get_parser.add_argument('type', type=int, location='args', choices=range(1, 9), required=True)
+        get_parser.add_argument('type', type=int, location='args', choices=range(1, 8), required=True)
         get_parser.add_argument('userid', type=int, location='args', required=True)
         get_parser.add_argument('thumbnail', type=int, location='args', default=0)
         args = get_parser.parse_args()
@@ -44,7 +44,7 @@ class image(Resource):
                 thumbnailfile.save(tsf)
 
             file.save(sf)
-            return jsonify(data=os.path.basename(sf))
+            return jsonify(image=os.path.basename(sf), thumbnail=os.path.basename(tsf))
         return 'pls check file suffix'
 
 class CompressFile(Resource):

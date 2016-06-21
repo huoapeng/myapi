@@ -170,7 +170,7 @@ class GetTaskList(Resource):
     def get(self, kindid, page):
         args = get_parser.parse_args()
         task_obj_list = []
-        print
+        
         tasks = TaskModel.query.filter( \
             or_( \
                 TaskModel.kinds.any(KindModel.id == kindid), \

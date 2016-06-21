@@ -27,7 +27,8 @@ class file_type:
     companyLience = 5
     companyContactCard = 6
     work = 7
-    workFile = 8
+    workThumbnail = 8
+    workFile = 51
 
 class user_status:
     normal = 1
