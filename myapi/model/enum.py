@@ -28,6 +28,7 @@ class file_type:
     companyContactCard = 6
     work = 7
     workThumbnail = 8
+    recommend = 9
     workFile = 51
 
 class user_status:

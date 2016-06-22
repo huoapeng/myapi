@@ -17,6 +17,7 @@ from myapi.resources.authorityPrivate import AuthorityPrivate, AuthorityPrivateL
 from myapi.resources.authorityCompany import AuthorityCompany, AuthorityCompanyList
 from myapi.resources.bid import Bid, BidList
 from myapi.resources.work import Work, UserWorks
+from myapi.resources.recommend import RecommendType, RecommendTypeList, RecommendItem, RecommendItemList
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -80,3 +81,12 @@ api.add_resource(KindList, '/kindlist')
 api.add_resource(SearchKindsByName, '/search/kindlist/<string:keyword>')
 
 api.add_resource(Profile, '/profile')
+
+api.add_resource(RecommendType, '/recommendtype', '/recommendtype/<int:id>')
+api.add_resource(RecommendTypeList, '/recommendtypelist')
+api.add_resource(RecommendItem, '/recommenditem', '/recommenditem/<int:id>')
+api.add_resource(RecommendItemList, '/<int:typeid>/recommenditemlist', endpoint='recommenditemep')
+
+
+
+

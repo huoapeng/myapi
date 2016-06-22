@@ -52,6 +52,7 @@ filePath = {
     file_type.companyContactCard : lambda userid: '{}/companyContactCard/'.format(userid),
     file_type.work : lambda userid: '{}/work/'.format(userid),
     file_type.workThumbnail : lambda userid: '{}/workThumbnail/'.format(userid),
+    file_type.recommend : lambda userid: '{}/recommend/'.format(userid),
     file_type.workFile : lambda userid: '{}/workfile/'.format(userid)
 }
 
