@@ -18,7 +18,7 @@ class RecommendTypeModel(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'wonProjects': url_for('.recommenditemep', _external=True, typeid=self.id)
+            'items': url_for('.recommenditemep', _external=True, typeid=self.id)
         }
 
 class RecommendItemModel(db.Model):

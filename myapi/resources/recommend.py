@@ -71,11 +71,11 @@ class RecommendItem(Resource):
     def put(self):
         args = post_parser.parse_args()
         item = RecommendItemModel.query.get(args.itemid)
-        orderid = item.orderid
+        item.orderid = args.orderid
 
-        target = RecommendItemModel.query.get(args.targetitemid)
-        item.orderid = target.orderid
-        target.orderid = orderid
+        # target = RecommendItemModel.query.get(args.targetitemid)
+        # item.orderid = target.orderid
+        # target.orderid = orderid
 
         db.session.commit()
         return jsonify(result='true')
@@ -91,5 +91,8 @@ class RecommendItem(Resource):
 class RecommendItemList(Resource):
     def get(self, typeid):
         kind = RecommendTypeModel.query.get(typeid)
-        return jsonify(data=[item.serialize() for item in kind.items])
+        if kind and kind.items:
+            return jsonify(data=[item.serialize() for item in kind.items])
+        else:
+            return jsonify(data='')
 
