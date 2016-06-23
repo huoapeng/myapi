@@ -71,6 +71,10 @@ class RecommendItem(Resource):
     def put(self):
         args = post_parser.parse_args()
         item = RecommendItemModel.query.get(args.itemid)
+        item.title = args.title
+        item.description = args.description
+        item.image = args.image
+        item.url = args.url
         item.orderid = args.orderid
 
         # target = RecommendItemModel.query.get(args.targetitemid)
