@@ -43,8 +43,7 @@ class RecommendItemModel(db.Model):
             'id': self.id,
             'title': self.title,
             'description': self.description,
-            'image': getFileUrl('{}_recommend'.format(self.typeid), file_type.recommend, self.image) \
-                if self.image else self.image,
+            'image': getFileUrl(self.typeid, file_type.recommend, self.image) if self.image else self.image,
             'url':self.url,
             'orderid': self.orderid
         }
