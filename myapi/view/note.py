@@ -3,20 +3,20 @@ from myapi.common.image import getFileUrl
 
 class NoteView():
 
-    def __init__(self, note_id, user_id, user_name, user_image, title, publish_date):
+    def __init__(self, note_id, owner_id, owner_name, owner_image, title, publish_date):
         self.note_id = note_id
-        self.user_id = user_id
-        self.user_name = user_name
-        self.user_image = user_image
+        self.owner_id = owner_id
+        self.owner_name = owner_name
+        self.owner_image = owner_image
         self.title = title
         self.publish_date = publish_date
 
     def serialize(self):
         return {
             'noteid': self.note_id,
-            'userid': self.user_id,
-            'userName': self.user_name,
-            'userImage': getFileUrl(self.user_id, 1, self.image) if self.user_image else self.user_image,
+            'userid': self.owner_id,
+            'userName': self.owner_name,
+            'userImage': getFileUrl(self.owner_id, 1, self.owner_image) if self.owner_image else self.owner_image,
             'title': self.title,
             'publishDate': self.publish_date.isoformat()
         }

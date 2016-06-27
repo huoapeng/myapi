@@ -59,18 +59,15 @@ class Note(Resource):
 
 class TaskNotes(Resource):
     def get(self, taskid):
-        task = TaskModel.query.get(taskid)
-        if task:
-            obj_list = []
-            for note in task.notes:
-                nv = NoteView(note.id,
-                    note.owner.id, 
-                    note.owner.nickname, 
-                    note.owner.image,
-                    note.title,
-                    note.publish_date)
-                obj_list.append(nv)
+        notes = NoteModel.query.filter_by(task_id=taskid).all()
+        obj_list = []
+        for note in notes:
+            nv = NoteView(note.id,
+                note.owner.id, 
+                note.owner.nickname, 
+                note.owner.image,
+                note.title,
+                note.publish_date)
+            obj_list.append(nv)
+        return jsonify(data=[e.serialize() for e in obj_list])
 
-            return jsonify(data=[e.serialize() for e in obj_list])
-        else:
-            return jsonify(data=[])
