@@ -1,5 +1,5 @@
 from flask import url_for
-from myapi.common.image import getFileUrl
+from myapi.common.image import getUserImage
 
 class NoteMessageView():
 
@@ -14,7 +14,7 @@ class NoteMessageView():
         return {
             'userid': self.owner_id,
             'userName': self.owner_name,
-            'userImage': getFileUrl(self.owner_id, 1, self.owner_image) if self.owner_image else self.owner_image,
+            'userImage': getUserImage(self.owner_id, self.owner_image),
             'message': self.message,
             'publishDate': self.publish_date
         }

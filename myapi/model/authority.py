@@ -3,6 +3,7 @@ from flask import url_for
 from myapi import db
 from enum import verify_type, approval_status
 from myapi.common.image import getFileUrl
+from myapi.model.enum import file_type
 
 class PrivateAuthorisedModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,10 +31,9 @@ class PrivateAuthorisedModel(db.Model):
             'id': self.id,
             'name': self.name,
             'identityID': self.identityID,
-            'identityFrontImage': getFileUrl(self.owner_id, 3, self.identityFrontImage) \
-                if self.identityFrontImage else self.identityFrontImage,
-            'identityBackImage': getFileUrl(self.owner_id, 4, self.identityBackImage) \
-                if self.identityBackImage else self.identityBackImage,
+            'identityFrontImage': getFileUrl(self.owner_id, file_type.authorityPrivateFront, 
+                self.identityFrontImage),
+            'identityBackImage': getFileUrl(self.owner_id, file_type.authorityPrivateBack, self.identityBackImage),
             'authorisedDate': self.authorisedDate,
             'approvalStatus': self.approval_status,
             'approvalDate': self.approvalDate,
@@ -79,10 +79,8 @@ class CompanyAuthorisedModel(db.Model):
             'name': self.name,
             'businessScope': self.businessScope,
             'businessLicenseID':self.businessLicenseID,
-            'businessLicenseImage': getFileUrl(self.owner_id, 5, self.businessLicenseImage) \
-                if self.businessLicenseImage else self.businessLicenseImage,
-            'contactImage': getFileUrl(self.owner_id, 6, self.contactImage) \
-                if self.contactImage else self.contactImage,
+            'businessLicenseImage': getFileUrl(self.owner_id, file_type.companyLience, self.businessLicenseImage),
+            'contactImage': getFileUrl(self.owner_id, file_type.companyContactCard, self.contactImage),
             'verifyType': self.verifyType,
             'bankAccount': self.bankAccount,
             'bankName': self.bankName,

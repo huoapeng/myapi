@@ -3,6 +3,7 @@ from flask import url_for
 from myapi import db
 from enum import version_status
 from myapi.common.image import getFileUrl
+from myapi.model.enum import file_type
 
 class VersionModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,7 +30,7 @@ class VersionModel(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'image': getFileUrl(self.user_id, 2, self.image) if self.image else self.image,
+            'image': getFileUrl(self.user_id, file_type.version, self.image),
             'title': self.title,
             'description': self.description,
             'publish_date': self.publish_date,

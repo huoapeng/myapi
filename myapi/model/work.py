@@ -2,7 +2,7 @@ import datetime
 from flask import url_for
 from myapi import db
 from myapi.model.tag import work_tags
-from myapi.model.enum import work_status
+from myapi.model.enum import work_status, file_type
 from myapi.common.image import getFileUrl
 
 class WorkModel(db.Model):
@@ -42,9 +42,9 @@ class WorkModel(db.Model):
             'userid': self.owner_id,
             'workid': self.id,
             'title': self.title,
-            'thumbnail': getFileUrl(self.owner_id, 8, self.thumbnail) if self.thumbnail else self.thumbnail,
-            'image': getFileUrl(self.owner_id, 7, self.image) if self.image else self.image,
-            'file': getFileUrl(self.owner_id, 51, self.file) if self.file else self.file,
+            'thumbnail': getFileUrl(self.owner_id, file_type.workThumbnail, self.thumbnail),
+            'image': getFileUrl(self.owner_id, file_type.work, self.image),
+            'file': getFileUrl(self.owner_id, file_type.workFile, self.file),
             'description': self.description,
             'copyright': self.copyright,
             'status': self.status,

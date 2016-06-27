@@ -1,5 +1,5 @@
 from flask import url_for
-from myapi.common.image import getFileUrl
+from myapi.common.image import getUserImage
 
 class UserMarketView(object):
 
@@ -33,7 +33,7 @@ class UserMarketView(object):
     def serialize(self):
         return {
             'userid': self.userid,
-            'user_image_url': getFileUrl(self.userid, 1, self.userImage) if self.userImage else self.userImage,
+            'user_image_url': getUserImage(self.userid, self.userImage),
             'userName': self.userName,
             'authorisedStatus': self.authorisedStatus,
             'location': self.location,

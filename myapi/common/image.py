@@ -36,24 +36,30 @@ def resize(pil_image, w_box, h_box):
     height = int(h * factor)
     return pil_image.resize((width, height), Image.ANTIALIAS)
 
-def getFileUrl(userid, fileType, fileName):
-    return 'http://{}/{}{}{}'.format(\
-        app.config['SERVER_NAME'], \
-        app.config['UPLOAD_FOLDER'], \
-        filePath[fileType](userid), \
-        fileName)
+def getFileUrl(folderName, fileType, fileName):
+    if filename:
+        return 'http://{}/{}{}{}'.format(\
+            app.config['SERVER_NAME'], \
+            app.config['UPLOAD_FOLDER'], \
+            filePath[fileType](folderName), \
+            fileName)
+    else:
+        return ''
+
+def getUserImage(folderName, filename):
+        return getFileUrl(folderName, file_type.profile, fileName)
 
 filePath = {
-    file_type.profile : lambda userid: '{}/profile/'.format(userid),
-    file_type.version : lambda userid: '{}/version/'.format(userid),
-    file_type.authorityPrivateFront : lambda userid: '{}/authorityPrivateFront/'.format(userid),
-    file_type.authorityPrivateBack : lambda userid: '{}/authorityPrivateBack/'.format(userid),
-    file_type.companyLience : lambda userid: '{}/companyLience/'.format(userid),
-    file_type.companyContactCard : lambda userid: '{}/companyContactCard/'.format(userid),
-    file_type.work : lambda userid: '{}/work/'.format(userid),
-    file_type.workThumbnail : lambda userid: '{}/workThumbnail/'.format(userid),
-    file_type.recommend : lambda userid: 'recommend/{}_recommend/'.format(userid),
-    file_type.workFile : lambda userid: '{}/workfile/'.format(userid)
+    file_type.profile : lambda folderName: '{}/profile/'.format(folderName),
+    file_type.version : lambda folderName: '{}/version/'.format(folderName),
+    file_type.authorityPrivateFront : lambda folderName: '{}/authorityPrivateFront/'.format(folderName),
+    file_type.authorityPrivateBack : lambda folderName: '{}/authorityPrivateBack/'.format(folderName),
+    file_type.companyLience : lambda folderName: '{}/companyLience/'.format(folderName),
+    file_type.companyContactCard : lambda folderName: '{}/companyContactCard/'.format(folderName),
+    file_type.work : lambda folderName: '{}/work/'.format(folderName),
+    file_type.workThumbnail : lambda folderName: '{}/workThumbnail/'.format(folderName),
+    file_type.recommend : lambda folderName: 'recommend/{}_recommend/'.format(folderName),
+    file_type.workFile : lambda folderName: '{}/workfile/'.format(folderName)
 }
 
 def allowedFile(fileName, fileType):
