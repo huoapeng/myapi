@@ -49,25 +49,18 @@ class NoteMessage(Resource):
 
 class NoteMessageList(Resource):
     def get(self, noteid):
-        # db.session.query(NoteModel, UserModel).\
-        #     filter(NoteModel.user_id == UserModel.id).\
-        #     filter(NoteModel.id == noteid).one()
+        messages = NoteMessageModel.query.filter_by(note_id=noteid).all()
+        obj_list = []
+        for message in messages:
+            nmv = NoteMessageView(message.owner.id, 
+                message.owner.nickname, 
+                message.owner.image, 
+                message.message,
+                message.publish_date
+            )
+            obj_list.append(nmv)
+        return jsonify(data=[e.serialize() for e in obj_list])
 
-        note = NoteModel.query.get(noteid)
-        if note:
-            obj_list = []
-            for message in note.messages:
-                nmv = NoteMessageView(message.owner.id, 
-                    message.owner.nickname, 
-                    message.owner.image, 
-                    message.message,
-                    message.publish_date
-                )
-
-                obj_list.append(nmv)
-            return jsonify(data=[e.serialize() for e in obj_list])
-        else:
-            return jsonify(data=[])
 # class VersionMessage(Resource):
 #     def get(self):
 #         pass
