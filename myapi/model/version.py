@@ -30,7 +30,7 @@ class VersionModel(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'image': getFileUrl(self.user_id, file_type.version, self.image),
+            'image': getFileUrl(file_type.version, self.user_id, self.image),
             'title': self.title,
             'description': self.description,
             'publish_date': self.publish_date,

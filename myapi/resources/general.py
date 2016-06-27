@@ -29,8 +29,8 @@ class image(Resource):
         get_parser.add_argument('thumbnail', type=int, location='args', default=0)
         args = get_parser.parse_args()
 
-        if file and allowedFile(file.filename, args.type):
-            sf = getServerPath(file.filename, args.type, args.userid)
+        if file and allowedFile(args.type, file.filename):
+            sf = getServerPath(args.type, args.userid, file.filename)
 
             if args.type == file_type.profile:
                 user = UserModel.query.get(args.userid)
@@ -42,7 +42,7 @@ class image(Resource):
 
             if args.thumbnail:
                 thumbnailfile = resize(file, 223, 99999)
-                tsf = getServerPath(file.filename, file_type.workThumbnail, args.userid)
+                tsf = getServerPath(file_type.workThumbnail, args.userid, file.filename)
                 thumbnailfile.save(tsf)
                 return jsonify(image=os.path.basename(sf), thumbnail=os.path.basename(tsf))
             else:
@@ -57,7 +57,7 @@ class CompressFile(Resource):
         get_parser.add_argument('userid', type=int, location='args', required=True)
         args = get_parser.parse_args()
 
-        if file and allowedFile(file.filename, args.type):
+        if file and allowedFile(args.type, file.filename):
             sf = getServerPath(file.filename, args.type, args.userid)
             file.save(sf)
             return jsonify(data=os.path.basename(sf))

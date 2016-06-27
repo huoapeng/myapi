@@ -36,7 +36,7 @@ def resize(pil_image, w_box, h_box):
     height = int(h * factor)
     return pil_image.resize((width, height), Image.ANTIALIAS)
 
-def getFileUrl(folderName, fileType, fileName):
+def getFileUrl(fileType, folderName, fileName):
     if filename:
         return 'http://{}/{}{}{}'.format(\
             app.config['SERVER_NAME'], \
@@ -47,13 +47,13 @@ def getFileUrl(folderName, fileType, fileName):
         return ''
 
 def getUserImage(folderName, filename):
-        return getFileUrl(folderName, file_type.profile, fileName)
+        return getFileUrl(file_type.profile, folderName, fileName)
 
 filePath = {
     file_type.profile : lambda folderName: '{}/profile/'.format(folderName),
     file_type.version : lambda folderName: '{}/version/'.format(folderName),
-    file_type.authorityPrivateFront : lambda folderName: '{}/authorityPrivateFront/'.format(folderName),
-    file_type.authorityPrivateBack : lambda folderName: '{}/authorityPrivateBack/'.format(folderName),
+    file_type.privateFront : lambda folderName: '{}/privateFront/'.format(folderName),
+    file_type.privateBack : lambda folderName: '{}/privateBack/'.format(folderName),
     file_type.companyLience : lambda folderName: '{}/companyLience/'.format(folderName),
     file_type.companyContactCard : lambda folderName: '{}/companyContactCard/'.format(folderName),
     file_type.work : lambda folderName: '{}/work/'.format(folderName),
@@ -62,7 +62,7 @@ filePath = {
     file_type.workFile : lambda folderName: '{}/workfile/'.format(folderName)
 }
 
-def allowedFile(fileName, fileType):
+def allowedFile(fileType, fileName):
     ALLOWED_IMAGE_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
     ALLOWED_FILE_EXTENSIONS = set(['zip', 'rar'])
     if fileType > 50:
@@ -70,9 +70,9 @@ def allowedFile(fileName, fileType):
     else:
         return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_IMAGE_EXTENSIONS
 
-def getServerPath(filename, fileType, userid):
+def getServerPath(fileType, folderName, filename):
     serverPath = os.path.join(app.config['ROOT_PATH'], \
-        app.config['UPLOAD_FOLDER'], filePath[fileType](userid))
+        app.config['UPLOAD_FOLDER'], filePath[fileType](folderName))
     if not os.path.exists(serverPath):
         os.makedirs(serverPath)
 

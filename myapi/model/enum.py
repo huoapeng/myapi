@@ -22,8 +22,8 @@ class bid_status:
 class file_type:
     profile = 1
     version = 2
-    authorityPrivateFront = 3
-    authorityPrivateBack = 4
+    privateFront = 3
+    privateBack = 4
     companyLience = 5
     companyContactCard = 6
     work = 7
