@@ -44,10 +44,14 @@ class UserModel(db.Model):
     works = db.relationship('WorkModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, nickname=None, phone=None, location=None, description=None):
         self.nickname = email[:email.find(r'@')]
         self.email = email
         self.password = password
+        self.nickname = nickname
+        self.phone = phone
+        self.location = location
+        self.description = description
         self.registDate = datetime.datetime.now()
         self.status = user_status.normal
         self.authorisedStatus = authorised_status.none

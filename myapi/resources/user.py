@@ -23,16 +23,19 @@ post_parser.add_argument('description', type=str, location='json')
 class User(Resource):
     def get(self, userid):
         user = UserModel.query.get(userid)
-        user = user if user else UserModel('','')
-        return jsonify(user.serialize())
-    
+        if user:
+            return jsonify(user.serialize())
+        else:
+            return jsonify(result='can`t find user by userid')
+
     @jsonp
     def post(self):
         args = post_parser.parse_args()
 
         user = UserModel.query.filter_by(email=args.email).first()
         if user is None:
-            u = UserModel(args.email, md5(args.password))
+            u = UserModel(args.email, md5(args.password), \
+                args.nickname, args.phone, args.location, args.description)
             db.session.add(u)
             db.session.commit()
 
@@ -43,15 +46,16 @@ class User(Resource):
     def put(self):
         args = post_parser.parse_args()
         user = UserModel.query.filter_by(email=args.email).one()
-        if user :
+        if user:
             user.nickname = args.nickname
             user.phone = args.phone
             user.location = args.location
             user.description = args.description
-            db.session.commit()
+            db.session.commit()    
+            return jsonify(user.serialize())
         else:
-            user = UserModel('','')
-        return jsonify(user.serialize())
+            return jsonify(result='can`t find user by email')
+
 
     @jsonp
     def delete(self):
@@ -60,20 +64,21 @@ class User(Resource):
         if user:
             user.status = user_status.delete
             db.session.commit()
+            return jsonify(user.serialize())
         else:
-            user = UserModel('','')
-        return jsonify(user.serialize())
+            return jsonify(result='can`t find user by email')
+
 
 class ChangePassword(Resource):
     def post(self):
         args = post_parser.parse_args()
         user = UserModel.query.filter_by(email=args.email).one()
-        if user :
+        if user:
             user.password = md5(args.password)
             db.session.commit()
+            return jsonify(user.serialize())
         else:
-            user = UserModel('','')
-        return jsonify(user.serialize())
+            return jsonify(result='can`t find user by email')
 
 class GetuserDetailList(Resource):
     def get(self, page):
