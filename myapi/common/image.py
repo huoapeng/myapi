@@ -37,7 +37,7 @@ def resize(pil_image, w_box, h_box):
     return pil_image.resize((width, height), Image.ANTIALIAS)
 
 def getFileUrl(fileType, folderName, fileName):
-    if filename:
+    if fileName:
         return 'http://{}/{}{}{}'.format(\
             app.config['SERVER_NAME'], \
             app.config['UPLOAD_FOLDER'], \
@@ -46,7 +46,7 @@ def getFileUrl(fileType, folderName, fileName):
     else:
         return ''
 
-def getUserImage(folderName, filename):
+def getUserImage(folderName, fileName):
         return getFileUrl(file_type.profile, folderName, fileName)
 
 filePath = {
