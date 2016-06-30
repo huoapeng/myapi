@@ -18,6 +18,7 @@ from myapi.resources.authorityCompany import AuthorityCompany, AuthorityCompanyL
 from myapi.resources.bid import Bid, BidList
 from myapi.resources.work import Work, UserWorks
 from myapi.resources.recommend import RecommendType, RecommendTypeList, RecommendItem, RecommendItemList
+from myapi.resources.smtp import sendEmail
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
@@ -81,6 +82,7 @@ api.add_resource(KindList, '/kindlist')
 api.add_resource(SearchKindsByName, '/search/kindlist/<string:keyword>')
 
 api.add_resource(Profile, '/profile')
+api.add_resource(sendEmail, '/sendemail')
 
 api.add_resource(RecommendType, '/recommendtype', '/recommendtype/<int:id>')
 api.add_resource(RecommendTypeList, '/recommendtypelist')

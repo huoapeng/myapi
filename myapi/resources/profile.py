@@ -1,3 +1,4 @@
+#coding=utf-8
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -32,9 +33,13 @@ class ProjectView():
         self.projectKinds = projectKinds
 
 data = {}
+
+from myapi.resources.smtp import send
+
 class Profile(Resource):
     # @marshal_with(user_fields)
     def get(self):
+        return jsonify(result = send(["huoapeng@hippoanimation.com","huoapeng@animen.com.cn"], 'retrieve_password'))
         str_list = []
 
         project = ProjectModel.query.get(1)
