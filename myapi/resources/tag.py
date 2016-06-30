@@ -32,8 +32,9 @@ class UserTag(Resource):
         tag = UserTagModel(args.name)
         db.session.add(tag)
 
-        user = UserModel.query.get(args.user_id)
-        user.tags.append(tag)
+        if args.user_id:
+            user = UserModel.query.get(args.user_id)
+            user.tags.append(tag)
         db.session.commit()
         return tag
 
