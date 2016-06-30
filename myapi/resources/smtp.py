@@ -34,7 +34,7 @@ def send(recivers, folderName):
 
     with open(filePath+'/subject.txt', 'rt') as f:
         data = f.read()
-        msgRoot['Subject'] = Header(data, 'utf-8')  
+        msgRoot['Subject'] = data#Header(data,'utf-8')  
 
     # msgRoot['To'] = ";".join(recivers)
     # msgRoot.preamble = 'This is a multi-part message in MIME format.'
