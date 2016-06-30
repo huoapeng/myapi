@@ -39,7 +39,7 @@ def resize(pil_image, w_box, h_box):
 def getFileUrl(fileType, folderName, fileName):
     if fileName:
         return 'http://{}/{}{}{}'.format(\
-            app.config['SERVER_NAME'], \
+            app.config['IP_ADDRESS'], \
             app.config['UPLOAD_FOLDER'], \
             filePath[fileType](folderName), \
             fileName)
