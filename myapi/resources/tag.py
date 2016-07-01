@@ -1,6 +1,6 @@
 from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
-from myapi import db
+from myapi import db, app
 from myapi.model.tag import UserTagModel, WorkTagModel
 from myapi.model.user import UserModel
 from myapi.model.work import WorkModel
@@ -51,10 +51,21 @@ class UserTags(Resource):
         return user.tags
 
 class UserTagList(Resource):
-    def get(self, limit):
-        tags = db.session.query(UserTagModel.name, func.count(UserTagModel.name)).\
-            group_by(UserTagModel.name).order_by(func.count(UserTagModel.name).desc()).limit(limit)
-        return jsonify(data=[e for e in tags])
+    def get(self, page):
+        # tags = db.session.query(UserTagModel.name, func.count(UserTagModel.name)).\
+        #     group_by(UserTagModel.name).order_by(func.count(UserTagModel.name).desc()).limit(limit)
+        # return jsonify(data=[e for e in tags])
+        tags = UserTagModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        return jsonify(total = tags.total,
+            pages = tags.pages,
+            page = tags.page,
+            per_page = tags.per_page,
+            has_next = tags.has_next,
+            has_prev = tags.has_prev,
+            next_num = tags.next_num,
+            prev_num = tags.prev_num,
+            data=[e.serialize() for e in tags.items])
+ 
 
 class SearchUserTagsByName(Resource):
     @marshal_with(tag_fields)
