@@ -1,8 +1,4 @@
 #coding=utf-8
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 import os
 from flask import request, url_for, jsonify, send_from_directory
 from flask.ext.restful import Resource, reqparse

@@ -1,3 +1,7 @@
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 from flask.ext.sqlalchemy import SQLAlchemy
 from json_app import make_json_app
 

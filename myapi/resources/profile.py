@@ -1,8 +1,4 @@
 #coding=utf-8
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 from flask import jsonify, url_for
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db

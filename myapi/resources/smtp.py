@@ -1,8 +1,4 @@
-#coding=utf-8 
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
+#coding=utf-8
 import os
 import smtplib
 from email.Header import Header
