@@ -2,7 +2,7 @@ import datetime
 from flask import url_for
 from myapi import db
 from enum import verify_type, approval_status
-from myapi.common.image import getFileUrl
+from myapi.common.image import getUploadFileUrl
 from myapi.model.enum import file_type
 
 class PrivateAuthorisedModel(db.Model):
@@ -31,8 +31,8 @@ class PrivateAuthorisedModel(db.Model):
             'id': self.id,
             'name': self.name,
             'identityID': self.identityID,
-            'identityFrontImage': getFileUrl(file_type.privateFront, self.owner_id,  self.identityFrontImage),
-            'identityBackImage': getFileUrl(file_type.privateBack, self.owner_id, self.identityBackImage),
+            'identityFrontImage': getUploadFileUrl(file_type.privateFront, self.owner_id,  self.identityFrontImage),
+            'identityBackImage': getUploadFileUrl(file_type.privateBack, self.owner_id, self.identityBackImage),
             'authorisedDate': self.authorisedDate,
             'approvalStatus': self.approval_status,
             'approvalDate': self.approvalDate,
@@ -45,7 +45,7 @@ class CompanyAuthorisedModel(db.Model):
     name = db.Column(db.String(500))
     businessScope = db.Column(db.Text)
     businessLicenseID = db.Column(db.String(500))
-    businessLicenseImage = db.Column(db.String(500))
+    businessLicenseIMG = db.Column(db.String(500))
     contactImage = db.Column(db.String(500))
     verifyType = db.Column(db.Integer)
     bankAccount = db.Column(db.String(100))
@@ -58,12 +58,12 @@ class CompanyAuthorisedModel(db.Model):
 
     owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
-    def __init__(self, name, businessScope, businessLicenseID, businessLicenseImage, contactImage, 
+    def __init__(self, name, businessScope, businessLicenseID, businessLicenseIMG, contactImage, 
         verifyType, bankAccount, bankName, bankLocation):
         self.name = name
         self.businessScope = businessScope
         self.businessLicenseID = businessLicenseID
-        self.businessLicenseImage = businessLicenseImage
+        self.businessLicenseIMG = businessLicenseIMG
         self.contactImage = contactImage
         self.verifyType = verifyType
         self.bankAccount = bankAccount
@@ -78,8 +78,8 @@ class CompanyAuthorisedModel(db.Model):
             'name': self.name,
             'businessScope': self.businessScope,
             'businessLicenseID':self.businessLicenseID,
-            'businessLicenseImage': getFileUrl(file_type.companyLience, self.owner_id, self.businessLicenseImage),
-            'contactImage': getFileUrl(file_type.companyContactCard, self.owner_id, self.contactImage),
+            'businessLicenseImage': getUploadFileUrl(file_type.companyLience, self.owner_id, self.businessLicenseIMG),
+            'contactImage': getUploadFileUrl(file_type.companyContactCard, self.owner_id, self.contactImage),
             'verifyType': self.verifyType,
             'bankAccount': self.bankAccount,
             'bankName': self.bankName,

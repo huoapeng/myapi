@@ -52,7 +52,6 @@ class User(Resource):
         else:
             return jsonify(result='can`t find user by email')
 
-
     @jsonp
     def delete(self):
         args = post_parser.parse_args()
@@ -63,7 +62,6 @@ class User(Resource):
             return jsonify(user.serialize())
         else:
             return jsonify(result='can`t find user by email')
-
 
 class ChangePassword(Resource):
     def post(self):
