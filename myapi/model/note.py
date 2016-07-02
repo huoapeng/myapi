@@ -21,3 +21,13 @@ class NoteModel(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.title)
+
+    def serialize(self):
+        return {
+            'noteid': self.id,
+            'userid': self.owner.id,
+            'userName': self.owner.nickname,
+            'userImage': self.owner.getImage(),
+            'title': self.title,
+            'publishDate': self.publish_date.isoformat()
+        }

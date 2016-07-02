@@ -1,9 +1,9 @@
-import datetime
+import datetime, random
 from flask import url_for
 from myapi import db
 from enum import user_status, authorised_status
 from tag import user_tags
-from myapi.common.image import getUserImage
+from myapi.common.image import getUploadFileUrl, getDefaultImageUrl
 
 class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,7 +12,8 @@ class UserModel(db.Model):
     password = db.Column(db.String(200))
     phone = db.Column(db.String(50))
     location = db.Column(db.String(200))
-    image = db.Column(db.String(500))
+    image = db.Column(db.String(200))
+    defaultImage = db.Column(db.String(200))
     description = db.Column(db.Text)
     status = db.Column(db.Integer)
     authorisedStatus = db.Column(db.Integer)
@@ -49,6 +50,7 @@ class UserModel(db.Model):
             self.nickname = nickname
         else:
             self.nickname = email[:email.find(r'@')]
+        self.defaultImage = '{}.jpg'.format(random.randint(1,4))
         self.email = email
         self.password = password
         self.phone = phone
@@ -68,7 +70,7 @@ class UserModel(db.Model):
             'email': self.email,
             'phone': self.phone,
             'location': self.location,
-            'image': getUserImage(self.id, self.image),
+            'image': self.getImage(),
             'description': self.description,
             'status': self.status,
             'authorisedStatus': self.authorisedStatus,
@@ -78,4 +80,11 @@ class UserModel(db.Model):
             'publishedProjects': url_for('.publishedProjects', _external=True, userid=self.id, page=1),
             'wonProjects': url_for('.wonProjects', _external=True, userid=self.id, page=1)
         }
+
+    def getImage(self):
+        if self.image:
+            return getUploadFileUrl(file_type.profile, self.id, self.image)
+        else:
+            return getDefaultImageUrl(self.defaultImage)
+
 

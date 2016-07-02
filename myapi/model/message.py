@@ -32,3 +32,11 @@ class NoteMessageModel(db.Model):
     def __repr__(self):
         return '<User %r>' % (self.message)
 
+    def serialize(self):
+        return {
+            'userid': self.owner.id,
+            'userName': self.owner.nickname,
+            'userImage': self.owner.getImage(),
+            'message': self.message,
+            'publishDate': self.publish_date
+        }

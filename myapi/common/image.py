@@ -46,15 +46,11 @@ def getUploadFileUrl(fileType, folderName, fileName):
     else:
         return ''
 
-def getDefaultFileUrl(fileType, folderName, fileName):
-    return 'http://{}/{}{}{}'.format(\
+def getDefaultImageUrl(fileName):
+    return 'http://{}/{}{}'.format(\
         app.config['IP_ADDRESS'], \
-        app.config['DEFAULT_FOLDER'], \
-        filePath[fileType](folderName), \
+        app.config['DEFAULT_IMAGE_FOLDER'], \
         fileName)
-
-def getUserImage(folderName, fileName):
-        return getUploadFileUrl(file_type.profile, folderName, fileName)
 
 filePath = {
     file_type.profile : lambda folderName: 'user/{}/profile/'.format(folderName),

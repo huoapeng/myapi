@@ -111,24 +111,13 @@ class GetUserList(Resource):
         # q = session.query(myClass)
         # for attr, value in web_dict.items():
         # q = q.filter(getattr(myClass, attr).like("%%%s%%" % value))
-
         users = users.paginate(page, app.config['POSTS_PER_PAGE'], False)
         for user in users.items:
             tag_str_list = []
             for tag in user.tags:
                 tag_str_list.append(tag.name)
 
-            u = UserMarketView(user.id,
-                    user.image,
-                    user.nickname,
-                    user.authorisedStatus,
-                    user.location,
-                    0,#wonTaskCount,
-                    0,#profileIntegrityPercent,
-                    user.phone,
-                    user.email,
-                    tag_str_list
-                )
+            u = UserMarketView(user, tag_str_list)
             user_obj_list.append(u)
 
         return jsonify(total = users.total,

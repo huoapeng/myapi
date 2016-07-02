@@ -6,7 +6,6 @@ from myapi.model.user import UserModel
 from myapi.model.task import TaskModel
 from myapi.model.enum import note_status
 from myapi.common.util import itemStatus
-from myapi.view.note import NoteView
 
 parser = reqparse.RequestParser()
 parser.add_argument('title', type=str, location='json', required=True)
@@ -42,7 +41,6 @@ class Note(Resource):
         return note
 
     def put(self):
-        
         pass
 
     @marshal_with(note_fields)
@@ -56,14 +54,5 @@ class Note(Resource):
 class TaskNotes(Resource):
     def get(self, taskid):
         notes = NoteModel.query.filter_by(task_id=taskid).all()
-        obj_list = []
-        for note in notes:
-            nv = NoteView(note.id,
-                note.owner.id, 
-                note.owner.nickname, 
-                note.owner.image,
-                note.title,
-                note.publish_date)
-            obj_list.append(nv)
-        return jsonify(data=[e.serialize() for e in obj_list])
+        return jsonify(data=[e.serialize() for e in notes])
 
