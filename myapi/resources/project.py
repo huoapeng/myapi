@@ -27,7 +27,7 @@ class Project(Resource):
         db.session.add(project)
 
         user = UserModel.query.get(args.owner_id)
-        user.published_projects.append(project)
+        user.publishedProjects.append(project)
         db.session.commit()
         return project.serialize()
 
