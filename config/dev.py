@@ -1,3 +1,4 @@
+SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/mydatabase?charset=utf8'
 DEBUG = True
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 ROOT_PATH = '/Users/huoapeng/myproject/REST/'
