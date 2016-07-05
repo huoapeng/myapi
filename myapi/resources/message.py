@@ -4,7 +4,6 @@ from myapi import db
 from myapi.model.note import NoteModel
 from myapi.model.message import NoteMessageModel
 from myapi.model.user import UserModel
-from myapi.view.message import NoteMessageView
 
 parser = reqparse.RequestParser()
 parser.add_argument('message', type=str, location='json', required=True)
