@@ -1,7 +1,7 @@
 import datetime, random
 from flask import url_for
 from myapi import db
-from enum import user_status, authorised_status
+from enum import user_status
 from tag import user_tags
 from myapi.common.image import getUploadFileUrl, getDefaultImageUrl
 
@@ -16,12 +16,12 @@ class UserModel(db.Model):
     defaultImage = db.Column(db.String(200))
     description = db.Column(db.Text)
     status = db.Column(db.Integer)
-    authorisedStatus = db.Column(db.Integer)
+    authenticationType = db.Column(db.Integer)
     registDate = db.Column(db.DateTime)
 
-    published_projects = db.relationship('ProjectModel',
+    publishedProjects = db.relationship('ProjectModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-    
+
     tags = db.relationship('UserTagModel', secondary=user_tags,
         backref=db.backref('users', lazy='dynamic'))
 
@@ -33,10 +33,8 @@ class UserModel(db.Model):
     notemessages = db.relationship('NoteMessageModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
-    privateAuthority = db.relationship('PrivateAuthorisedModel', uselist=False,
-        backref=db.backref('owner', lazy='joined'), lazy='joined')
-    companyAuthority = db.relationship('CompanyAuthorisedModel', uselist=False,
-        backref=db.backref('owner', lazy='joined'), lazy='joined')
+    authentications = db.relationship('ApprovalModel',
+        backref=db.backref('user', lazy='joined'), lazy='dynamic')
 
     wonTasks = db.relationship('TaskModel',
         backref=db.backref('winner', lazy='joined'), lazy='dynamic')
@@ -50,7 +48,7 @@ class UserModel(db.Model):
             self.nickname = nickname
         else:
             self.nickname = email[:email.find(r'@')]
-        self.defaultImage = '{}.jpg'.format(random.randint(1,4))
+        self.defaultImage = '{}.jpg'.format(random.randint(1, app.config['DEFAULT_IMAGE_COUNT']))
         self.email = email
         self.password = password
         self.phone = phone
@@ -58,7 +56,7 @@ class UserModel(db.Model):
         self.description = description
         self.registDate = datetime.datetime.now()
         self.status = user_status.normal
-        self.authorisedStatus = authorised_status.none
+        self.authorisedStatus = authenticate_status.none
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)

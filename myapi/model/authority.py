@@ -1,92 +1,125 @@
 import datetime
 from flask import url_for
 from myapi import db
-from enum import verify_type, approval_status
+from enum import verify_type, authentication_type
 from myapi.common.image import getUploadFileUrl
 from myapi.model.enum import file_type
 
-class PrivateAuthorisedModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(500))
-    identityID = db.Column(db.String(50))
-    identityFrontImage = db.Column(db.String(500))
-    identityBackImage = db.Column(db.String(500))
-    authorisedDate = db.Column(db.DateTime)
-
-    approval_status = db.Column(db.Integer)
+class ApprovalModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    authenticationType = db.Column(db.Integer)
+    approvalStatus = db.Column(db.Integer)
     approvalDate = db.Column(db.DateTime)
+    userid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    adminid = db.Column(db.Integer)
 
-    owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    privateAuthenticate = db.relationship('PrivateAuthenticateModel',
+        backref=db.backref('approval', lazy='joined'), lazy='dynamic')
+
+    companyAuthenticate = db.relationship('CompanyAuthenticateModel',
+        backref=db.backref('approval', lazy='joined'), lazy='dynamic')
+
+    bankAuthenticate = db.relationship('BankModel',
+        backref=db.backref('approval', lazy='joined'), lazy='dynamic')
+
+    def __init__(self, approvalStatus, userid, adminid):
+        self.approvalStatus = approvalStatus
+        self.approvalDate = datetime.datetime.now()
+        self.userid = userid
+        self.adminid = adminid
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'approvalStatus': self.approvalStatus,
+            'approvalDate': self.approvalDate,
+            'userid': self.userid,
+            'user': url_for('.userep', _external=True, userid=self.userid),
+            'adminid': self.adminid,
+            'admin': url_for('.userep', _external=True, userid=self.adminid)
+        }
+
+class PrivateAuthenticateModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.String(100))
+    authenticateDate = db.Column(db.DateTime)
+    identityID = db.Column(db.String(50), nullable=False)
+    identityFrontImage = db.Column(db.String(100), nullable=False)
+    identityBackImage = db.Column(db.String(100), nullable=False)
+
+    approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
 
     def __init__(self, name, identityID, identityFrontImage, identityBackImage):
         self.name = name
+        self.authenticateDate = datetime.datetime.now()
         self.identityID = identityID
         self.identityFrontImage = identityFrontImage
         self.identityBackImage = identityBackImage
-        self.authorisedDate = datetime.datetime.now()
-        self.approval_status = approval_status.start
 
     def serialize(self):
         return {
             'id': self.id,
             'name': self.name,
+            'authenticateDate': self.authenticateDate,
             'identityID': self.identityID,
             'identityFrontImage': getUploadFileUrl(file_type.privateFront, self.owner_id,  self.identityFrontImage),
             'identityBackImage': getUploadFileUrl(file_type.privateBack, self.owner_id, self.identityBackImage),
-            'authorisedDate': self.authorisedDate,
-            'approvalStatus': self.approval_status,
-            'approvalDate': self.approvalDate,
-            'ownerID': self.owner_id,
-            'owner': url_for('.userep', _external=True, userid=self.owner_id),
         }
 
-class CompanyAuthorisedModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(500))
+class CompanyAuthenticateModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.String(100))
+    authenticateDate = db.Column(db.DateTime)
     businessScope = db.Column(db.Text)
-    businessLicenseID = db.Column(db.String(500))
-    businessLicenseIMG = db.Column(db.String(500))
+    licenseID = db.Column(db.String(500))
+    licenseImage = db.Column(db.String(500))
     contactImage = db.Column(db.String(500))
     verifyType = db.Column(db.Integer)
-    bankAccount = db.Column(db.String(100))
-    bankName = db.Column(db.String(500))
-    bankLocation = db.Column(db.String(200))
-    authorisedDate = db.Column(db.DateTime)
 
-    approval_status = db.Column(db.Integer)
-    approvalDate = db.Column(db.DateTime)
+    approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
 
-    owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
-
-    def __init__(self, name, businessScope, businessLicenseID, businessLicenseIMG, contactImage, 
-        verifyType, bankAccount, bankName, bankLocation):
+    def __init__(self, name, businessScope, licenseID, licenseImage, contactImage, verifyType):
         self.name = name
+        self.authorisedDate = datetime.datetime.now()
         self.businessScope = businessScope
-        self.businessLicenseID = businessLicenseID
-        self.businessLicenseIMG = businessLicenseIMG
+        self.licenseID = licenseID
+        self.licenseImage = licenseImage
         self.contactImage = contactImage
         self.verifyType = verifyType
-        self.bankAccount = bankAccount
-        self.bankName = bankName
-        self.bankLocation = bankLocation
-        self.authorisedDate = datetime.datetime.now()
-        self.approval_status = approval_status.start
 
     def serialize(self):
         return {
             'id': self.id,
             'name': self.name,
-            'businessScope': self.businessScope,
-            'businessLicenseID':self.businessLicenseID,
-            'businessLicenseImage': getUploadFileUrl(file_type.companyLience, self.owner_id, self.businessLicenseIMG),
-            'contactImage': getUploadFileUrl(file_type.companyContactCard, self.owner_id, self.contactImage),
-            'verifyType': self.verifyType,
-            'bankAccount': self.bankAccount,
-            'bankName': self.bankName,
-            'bankLocation': self.bankLocation,
             'authorisedDate': self.authorisedDate,
-            'approvalStatus': self.approval_status,
-            'approvalDate': self.approvalDate,
-            'ownerID': self.owner_id,
-            'owner': url_for('.userep', _external=True, userid=self.owner_id),
+            'businessScope': self.businessScope,
+            'licenseID':self.licenseID,
+            'licenseImage': getUploadFileUrl(file_type.companyLience, self.owner_id, self.licenseImage),
+            'contactImage': getUploadFileUrl(file_type.companyContactCard, self.owner_id, self.contactImage),
+            'verifyType': self.verifyType
         }
+
+class BankModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    authenticateDate = db.Column(db.DateTime)
+    bankAccount = db.Column(db.String(100))
+    bankName = db.Column(db.String(500))
+    bankLocation = db.Column(db.String(200))
+
+    approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
+
+    def __init__(self, bankAccount, bankName, bankLocation):
+        self.authenticateDate = datetime.datetime.now()
+        self.bankAccount = bankAccount
+        self.bankName = bankName
+        self.bankLocation = bankLocation
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'authenticateDate': self.authenticateDate,
+            'bankAccount': self.bankAccount,
+            'bankName': bankName,
+            'bankLocation': bankLocation
+        }
+        

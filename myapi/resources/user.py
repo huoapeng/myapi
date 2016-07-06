@@ -91,7 +91,7 @@ class GetuserDetailList(Resource):
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('tag', type=str, location='args')
-get_parser.add_argument('authorised_status', type=int, location='args', choices=range(5), default=0)
+get_parser.add_argument('authenticate_status', type=int, location='args', choices=range(5), default=0)
 
 class GetUserList(Resource):
     def get(self, page):
@@ -105,8 +105,8 @@ class GetUserList(Resource):
 
         if args.keyword:
             users = users.filter(UserModel.nickname.contains(args.keyword))
-        if args.authorised_status:
-            users = users.filter(UserModel.authorisedStatus == args.authorised_status)
+        if args.authenticate_status:
+            users = users.filter(UserModel.authorisedStatus == args.authenticate_status)
 
         # q = session.query(myClass)
         # for attr, value in web_dict.items():

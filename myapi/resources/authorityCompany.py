@@ -3,8 +3,8 @@ from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db, app
 from myapi.model.user import UserModel
-from myapi.model.authority import CompanyAuthorisedModel
-from myapi.model.enum import verify_type, approval_status, authorised_status
+from myapi.model.authority import CompanyAuthenticateModel
+from myapi.model.enum import verify_type, approval_result, authenticate_status
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, location='json', required=True)
@@ -18,17 +18,17 @@ post_parser.add_argument('bankAccount', type=str, location='json')
 post_parser.add_argument('bankName', type=str, location='json')
 post_parser.add_argument('bankLocation', type=str, location='json')
 post_parser.add_argument('approval_id', type=int, location='json')
-post_parser.add_argument('approval_status', type=int, location='json', choices=range(4), default=0)
+post_parser.add_argument('approval_result', type=int, location='json', choices=range(4), default=0)
 
 class AuthorityCompany(Resource):
     def get(self, id):
-        authority = CompanyAuthorisedModel.query.get(id)
+        authority = CompanyAuthenticateModel.query.get(id)
         return jsonify(authority.serialize())
 
     def post(self):
         args = post_parser.parse_args()
 
-        c = CompanyAuthorisedModel(args.name, 
+        c = CompanyAuthenticateModel(args.name, 
                 args.businessScope,
                 args.businessLicenseID,
                 args.businessLicenseImage,
@@ -42,7 +42,7 @@ class AuthorityCompany(Resource):
 
         user = UserModel.query.get(args.user_id)
         user.companyAuthority = c
-        user.authorisedStatus = authorised_status.start
+        user.authorisedStatus = authenticate_status.start
         db.session.commit()
 
         return jsonify(c.serialize())
@@ -50,14 +50,14 @@ class AuthorityCompany(Resource):
     def put(self):
         args = post_parser.parse_args()
 
-        c = CompanyAuthorisedModel.query.get(args.approval_id)
-        c.approval_status = args.approval_status
+        c = CompanyAuthenticateModel.query.get(args.approval_id)
+        c.approval_result = args.approval_result
         c.approvalDate = datetime.datetime.now()
 
         user = UserModel.query.get(args.user_id)
         user.companyAuthority = c
-        user.authorisedStatus = authorised_status.none \
-            if args.approval_status != approval_status.allow else authorised_status.company
+        user.authorisedStatus = authenticate_status.none \
+            if args.approval_result != approval_result.allow else authenticate_status.company
         db.session.commit()
         return jsonify(c.serialize())
 
@@ -66,7 +66,7 @@ class AuthorityCompany(Resource):
 
 class AuthorityCompanyList(Resource):
     def get(self):
-        authorityList = CompanyAuthorisedModel.query.filter_by(approval_status=approval_status.start).all()
+        authorityList = CompanyAuthenticateModel.query.filter_by(approval_result=approval_result.start).all()
         return jsonify(data=[e.serialize() for e in authorityList])
 
 

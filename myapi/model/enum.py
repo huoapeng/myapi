@@ -1,18 +1,22 @@
 
-class authorised_status:
+class authenticate_status:
     none = 1
     start = 2
-    private = 3
-    company = 4
+
+class authentication_type:
+    private = 1
+    private_bank = 2
+    private_alipay = 4
+    company = 8
+    company_business = 16
 
 class verify_type:
     auto = 1
     manual = 2
 
-class approval_status:
-    start = 1
-    deny = 2
-    allow = 3
+class approval_result:
+    deny = 1
+    allow = 2
 
 class bid_status:
     start = 1
