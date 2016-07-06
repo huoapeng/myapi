@@ -1,6 +1,6 @@
 import datetime, random
 from flask import url_for
-from myapi import db
+from myapi import db, app
 from enum import user_status
 from tag import user_tags
 from myapi.common.image import getUploadFileUrl, getDefaultImageUrl
@@ -56,7 +56,7 @@ class UserModel(db.Model):
         self.description = description
         self.registDate = datetime.datetime.now()
         self.status = user_status.normal
-        self.authorisedStatus = authenticate_status.none
+        self.authenticationType = 0
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)
@@ -71,7 +71,7 @@ class UserModel(db.Model):
             'image': self.getImage(),
             'description': self.description,
             'status': self.status,
-            'authorisedStatus': self.authorisedStatus,
+            'authenticationType': self.authenticationType,
             'registDate': self.registDate.isoformat(),
             'tags': url_for('.userTags', _external=True, userid=self.id),
             'works': url_for('.userWorks', _external=True, userid=self.id, page=1),

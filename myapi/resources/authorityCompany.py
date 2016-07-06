@@ -1,10 +1,10 @@
 import datetime
 from flask import jsonify
-from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
-from myapi import db, app
+from flask.ext.restful import Resource, reqparse
+from myapi import db
 from myapi.model.user import UserModel
 from myapi.model.authority import CompanyAuthenticateModel
-from myapi.model.enum import verify_type, approval_result, authenticate_status
+from myapi.model.enum import verify_type, approval_result
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, location='json', required=True)
@@ -42,7 +42,7 @@ class AuthorityCompany(Resource):
 
         user = UserModel.query.get(args.user_id)
         user.companyAuthority = c
-        user.authorisedStatus = authenticate_status.start
+        # user.authorisedStatus = authenticate_status.start
         db.session.commit()
 
         return jsonify(c.serialize())
@@ -56,8 +56,8 @@ class AuthorityCompany(Resource):
 
         user = UserModel.query.get(args.user_id)
         user.companyAuthority = c
-        user.authorisedStatus = authenticate_status.none \
-            if args.approval_result != approval_result.allow else authenticate_status.company
+        # user.authorisedStatus = authenticate_status.none \
+        #     if args.approval_result != approval_result.allow else authenticate_status.company
         db.session.commit()
         return jsonify(c.serialize())
 

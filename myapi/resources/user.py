@@ -24,7 +24,6 @@ class User(Resource):
         else:
             return jsonify(result='can`t find user by userid')
 
-    @jsonp
     def post(self):
         args = post_parser.parse_args()
 
@@ -38,7 +37,6 @@ class User(Resource):
         user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.password)).one()
         return jsonify(user.serialize())
 
-    @jsonp
     def put(self):
         args = post_parser.parse_args()
         user = UserModel.query.filter_by(email=args.email).one()
@@ -52,7 +50,6 @@ class User(Resource):
         else:
             return jsonify(result='can`t find user by email')
 
-    @jsonp
     def delete(self):
         args = post_parser.parse_args()
         user = UserModel.query.filter_by(email=args.email).one()
@@ -91,7 +88,7 @@ class GetuserDetailList(Resource):
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('keyword', type=str, location='args')
 get_parser.add_argument('tag', type=str, location='args')
-get_parser.add_argument('authenticate_status', type=int, location='args', choices=range(5), default=0)
+get_parser.add_argument('authenticateStatus', type=int, location='args', choices=range(5), default=0)
 
 class GetUserList(Resource):
     def get(self, page):
@@ -105,8 +102,8 @@ class GetUserList(Resource):
 
         if args.keyword:
             users = users.filter(UserModel.nickname.contains(args.keyword))
-        if args.authenticate_status:
-            users = users.filter(UserModel.authorisedStatus == args.authenticate_status)
+        # if args.authenticateStatus:
+        #     users = users.filter(UserModel.authorisedStatus == args.authenticateStatus)
 
         # q = session.query(myClass)
         # for attr, value in web_dict.items():

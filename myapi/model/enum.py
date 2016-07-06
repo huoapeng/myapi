@@ -1,8 +1,3 @@
-
-class authenticate_status:
-    none = 1
-    start = 2
-
 class authentication_type:
     private = 1
     private_bank = 2

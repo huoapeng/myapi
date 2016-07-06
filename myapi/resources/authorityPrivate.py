@@ -4,7 +4,7 @@ from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db, app
 from myapi.model.user import UserModel
 from myapi.model.authority import PrivateAuthenticateModel
-from myapi.model.enum import verify_type, approval_result, authenticate_status
+from myapi.model.enum import verify_type, approval_result
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_id', type=int, location='json', required=True)
@@ -28,7 +28,7 @@ class AuthorityPrivate(Resource):
 
         user = UserModel.query.get(args.user_id)
         user.privateAuthority = p
-        user.authorisedStatus = authenticate_status.start
+        # user.authorisedStatus = authenticate_status.start
         db.session.commit()
         return jsonify(p.serialize())
 
@@ -41,8 +41,8 @@ class AuthorityPrivate(Resource):
 
         user = UserModel.query.get(args.user_id)
         user.privateAuthority = p
-        user.authorisedStatus = authenticate_status.none \
-            if args.approval_result != approval_result.allow else authenticate_status.private
+        # user.authorisedStatus = authenticate_status.none \
+        #     if args.approval_result != approval_result.allow else authenticate_status.private
         db.session.commit()
         return jsonify(p.serialize())
 
