@@ -1,7 +1,8 @@
 
 from flask import Blueprint
 from flask.ext.restful import Api
-from myapi.resources.general import general, image, CompressFile
+from myapi.resources.general import general
+from myapi.resources.image import image, CompressFile
 from myapi.resources.user import User, ChangePassword, GetUserList, GetuserDetailList
 from myapi.resources.tag import UserTag, UserTags, SearchUserTagsByName, UserTagList, \
 	WorkTag, WorkTags, SearchWorkTagsByName, WorkTagList
