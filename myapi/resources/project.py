@@ -13,7 +13,7 @@ from myapi.view.project import UserPublishedProjectsView, UserBidProjectsView
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('name', type=str, location='json', required=True)
 post_parser.add_argument('description', type=str, location='json')
-post_parser.add_argument('owner_id', type=int, location='json', required=True)
+post_parser.add_argument('userid', type=int, location='json', required=True)
 
 class Project(Resource):
     def get(self, projectid):
@@ -26,7 +26,7 @@ class Project(Resource):
         project = ProjectModel(args.name, args.description)
         db.session.add(project)
 
-        user = UserModel.query.get(args.owner_id)
+        user = UserModel.query.get(args.userid)
         user.publishedProjects.append(project)
         db.session.commit()
         return project.serialize()
@@ -40,7 +40,7 @@ class Project(Resource):
 
 class UserPublishedProjects(Resource):
     def get(self, userid, page):
-        projects = UserModel.query.get(userid).published_projects\
+        projects = UserModel.query.get(userid).publishedProjects\
             .paginate(page, app.config['POSTS_PER_PAGE'], False)
 
         project_obj_list = []

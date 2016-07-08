@@ -1,11 +1,10 @@
 from flask import jsonify
-from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
+from flask.ext.restful import Resource, reqparse
 from myapi import db, app
 from myapi.model.user import UserModel
 from myapi.model.tag import UserTagModel
 from myapi.model.enum import user_status
-from myapi.common.util import valid_email, md5, itemStatus
-from myapi.common.decorator import jsonp
+from myapi.common.util import valid_email, md5
 from myapi.view.user import UserMarketView
 
 post_parser = reqparse.RequestParser()

@@ -16,7 +16,7 @@ class WorkModel(db.Model):
     status = db.Column(db.Integer)
     publish_date = db.Column(db.DateTime)
 
-    owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
     tags = db.relationship('WorkTagModel', secondary=work_tags,
         backref=db.backref('works', lazy='dynamic'))
@@ -39,16 +39,16 @@ class WorkModel(db.Model):
 
     def serialize(self):
         return {
-            'userid': self.owner_id,
+            'userid': self.ownerid,
             'workid': self.id,
             'title': self.title,
-            'thumbnail': getUploadFileUrl(file_type.workThumbnail, self.owner_id, self.thumbnail),
-            'image': getUploadFileUrl(file_type.work, self.owner_id, self.image),
-            'file': getUploadFileUrl(file_type.workFile, self.owner_id, self.file),
+            'thumbnail': getUploadFileUrl(file_type.workThumbnail, self.ownerid, self.thumbnail),
+            'image': getUploadFileUrl(file_type.work, self.ownerid, self.image),
+            'file': getUploadFileUrl(file_type.workFile, self.ownerid, self.file),
             'description': self.description,
             'copyright': self.copyright,
             'status': self.status,
             'publish_date': self.publish_date.isoformat(),
-            'owner':url_for('.userep', _external=True, userid=self.owner_id),
+            'owner':url_for('.userep', _external=True, userid=self.ownerid),
             'tags':url_for('.workTags', _external=True, workid=self.id)
         }

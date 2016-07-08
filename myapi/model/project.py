@@ -10,7 +10,7 @@ class ProjectModel(db.Model):
     description = db.Column(db.Text)
     publish_date = db.Column(db.DateTime)
 
-    owner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
     tasks = db.relationship('TaskModel',
         backref=db.backref('project', lazy='joined'), lazy='dynamic')
@@ -26,11 +26,11 @@ class ProjectModel(db.Model):
 
     def serialize(self):
         return {
-            'owner_id': self.owner_id,
+            'ownerid': self.ownerid,
             'projectId': self.id,
             'projectName': self.name,
             'description': self.description,
             'publish_date': self.publish_date.isoformat(),
             'tasks_url':url_for('.getTasksByProjectID', _external=True, projectid=self.id),
-            'owner':url_for('.userep', _external=True, userid=self.owner_id)
+            'owner':url_for('.userep', _external=True, userid=self.ownerid)
         }
