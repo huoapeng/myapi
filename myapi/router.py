@@ -14,8 +14,7 @@ from myapi.resources.note import Note, TaskNotes
 from myapi.resources.kind import Kind, KindList, SearchKindsByName
 from myapi.resources.message import NoteMessage, NoteMessageList
 from myapi.resources.profile import Profile
-from myapi.resources.authorityPrivate import AuthorityPrivate, AuthorityPrivateList
-from myapi.resources.authorityCompany import AuthorityCompany, AuthorityCompanyList
+from myapi.resources.authentication import AuthenticationList
 from myapi.resources.bid import Bid, BidList
 from myapi.resources.work import Work, UserWorks
 from myapi.resources.recommend import RecommendType, RecommendTypeList, RecommendItem, RecommendItemList
@@ -46,10 +45,7 @@ api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<in
 	endpoint='publishedProjects')
 api.add_resource(UserWonProjects, '/<int:userid>/userwonprojects/<int:page>', endpoint='wonProjects')
 
-api.add_resource(AuthorityPrivate, '/private', '/private/<int:id>')
-api.add_resource(AuthorityPrivateList, '/privatelist')
-api.add_resource(AuthorityCompany, '/company', '/company/<int:id>')
-api.add_resource(AuthorityCompanyList, '/companylist')
+api.add_resource(AuthenticationList, '/<int:kind>/authenticationlist')
 
 api.add_resource(Bid, '/bid', '/<int:userid>/bid/<int:taskid>')
 api.add_resource(BidList, '/<int:taskid>/bidlist')

@@ -22,7 +22,8 @@ class ApprovalModel(db.Model):
     bankAuthenticate = db.relationship('BankModel',
         backref=db.backref('approval', lazy='joined'), lazy='dynamic')
 
-    def __init__(self, approvalStatus, userid, adminid):
+    def __init__(self, authenticationType, approvalStatus, userid, adminid):
+        self.authenticationType = authenticationType
         self.approvalStatus = approvalStatus
         self.approvalDate = datetime.datetime.now()
         self.userid = userid
@@ -47,6 +48,7 @@ class PrivateAuthenticateModel(db.Model):
     identityFrontImage = db.Column(db.String(100), nullable=False)
     identityBackImage = db.Column(db.String(100), nullable=False)
 
+    ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
 
     def __init__(self, name, identityID, identityFrontImage, identityBackImage):
@@ -62,8 +64,8 @@ class PrivateAuthenticateModel(db.Model):
             'name': self.name,
             'authenticateDate': self.authenticateDate,
             'identityID': self.identityID,
-            'identityFrontImage': getUploadFileUrl(file_type.privateFront, self.owner_id,  self.identityFrontImage),
-            'identityBackImage': getUploadFileUrl(file_type.privateBack, self.owner_id, self.identityBackImage),
+            'identityFrontImage': getUploadFileUrl(file_type.privateFront, self.ownerid,  self.identityFrontImage),
+            'identityBackImage': getUploadFileUrl(file_type.privateBack, self.ownerid, self.identityBackImage),
         }
 
 class CompanyAuthenticateModel(db.Model):
@@ -76,6 +78,7 @@ class CompanyAuthenticateModel(db.Model):
     contactImage = db.Column(db.String(500))
     verifyType = db.Column(db.Integer)
 
+    ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
 
     def __init__(self, name, businessScope, licenseID, licenseImage, contactImage, verifyType):
@@ -94,8 +97,8 @@ class CompanyAuthenticateModel(db.Model):
             'authorisedDate': self.authorisedDate,
             'businessScope': self.businessScope,
             'licenseID':self.licenseID,
-            'licenseImage': getUploadFileUrl(file_type.companyLience, self.owner_id, self.licenseImage),
-            'contactImage': getUploadFileUrl(file_type.companyContactCard, self.owner_id, self.contactImage),
+            'licenseImage': getUploadFileUrl(file_type.companyLience, self.ownerid, self.licenseImage),
+            'contactImage': getUploadFileUrl(file_type.companyContactCard, self.ownerid, self.contactImage),
             'verifyType': self.verifyType
         }
 
@@ -106,7 +109,9 @@ class BankModel(db.Model):
     bankName = db.Column(db.String(500))
     bankLocation = db.Column(db.String(200))
 
+    ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
+    # private = db.Column(db.Integer, db.ForeignKey('privateAuthenticate_model.id'))
 
     def __init__(self, bankAccount, bankName, bankLocation):
         self.authenticateDate = datetime.datetime.now()
@@ -122,4 +127,7 @@ class BankModel(db.Model):
             'bankName': bankName,
             'bankLocation': bankLocation
         }
+
+
+
         

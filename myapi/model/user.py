@@ -33,14 +33,20 @@ class UserModel(db.Model):
     notemessages = db.relationship('NoteMessageModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
-    authentications = db.relationship('ApprovalModel',
-        backref=db.backref('user', lazy='joined'), lazy='dynamic')
-
     wonTasks = db.relationship('TaskModel',
         backref=db.backref('winner', lazy='joined'), lazy='dynamic')
     bidTasks = db.relationship('BidModel', lazy='dynamic')
 
     works = db.relationship('WorkModel',
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+
+    authentications = db.relationship('ApprovalModel',
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    privateAuthenHistory = db.relationship('PrivateAuthenticateModel',
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    companyAuthenHistory = db.relationship('CompanyAuthenticateModel',
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    bankAuthenHistory = db.relationship('BankModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
     def __init__(self, email, password, nickname=None, phone=None, location=None, description=None):

@@ -1,9 +1,8 @@
 class authentication_type:
     private = 1
-    private_bank = 2
-    private_alipay = 4
-    company = 8
-    company_business = 16
+    company = 2
+    bank = 4
+    alipay = 8
 
 class verify_type:
     auto = 1
