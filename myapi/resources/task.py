@@ -18,8 +18,6 @@ post_parser.add_argument('bonus', type=str, location='json')
 post_parser.add_argument('description', type=str, location='json')
 post_parser.add_argument('bidder_qualification_requirement', type=str, location='json')
 post_parser.add_argument('bidder_location_requirement', type=str, location='json')
-post_parser.add_argument('receipt', type=str , location='json')
-post_parser.add_argument('receiptDescription', type=str, location='json')
 post_parser.add_argument('project_id', type=int, location='json')
 post_parser.add_argument('kind_ids', type=str, location='json')
 
@@ -35,9 +33,7 @@ task_fields = {
     'bidder_location_requirement': fields.String,
     'status': fields.Integer,
     'project_id': fields.Integer,
-    'winner_id': fields.Integer,
-    'receipt': fields.Boolean,
-    'receiptDescription': fields.String
+    'winner_id': fields.Integer
 }
 
 class Task(Resource):
@@ -55,9 +51,7 @@ class Task(Resource):
             args.bonus,
             args.description,
             args.bidder_qualification_requirement,
-            args.bidder_location_requirement,
-            args.receipt,
-            args.receiptDescription)
+            args.bidder_location_requirement)
         for kind_id in args.kind_ids.split(','):
             kind = KindModel.query.get(kind_id)
             task.kinds.append(kind)
