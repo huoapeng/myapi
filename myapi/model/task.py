@@ -13,6 +13,8 @@ class TaskModel(db.Model):
     publishDate = db.Column(db.DateTime)
     bidder_qualification_requirement = db.Column(db.String(100))
     bidder_location_requirement = db.Column(db.String(100))
+    receipt = db.Column(db.Boolean)
+    receiptDescription = db.Column(db.String(200))
     status = db.Column(db.Integer)
 
     project_id = db.Column(db.Integer, db.ForeignKey('project_model.id'))
@@ -30,7 +32,7 @@ class TaskModel(db.Model):
     bidders = db.relationship('BidModel', lazy='dynamic')
 
     def __init__(self, name, timespan=None, requirements=None, bonus=None, description=None, 
-        bidder_qualification_requirement=None, bidder_location_requirement=None):
+        bidder_qualification_requirement=None, bidder_location_requirement=None, receipt=False, receiptDes=None):
         self.name = name
         self.timespan = timespan
         self.requirements = requirements
@@ -39,6 +41,8 @@ class TaskModel(db.Model):
         self.publishDate = datetime.datetime.now()
         self.bidder_qualification_requirement = bidder_qualification_requirement
         self.bidder_location_requirement = bidder_location_requirement
+        self.receipt = receipt
+        self.receiptDescription = receiptDes
         self.status = task_status.bidding
 
     def __repr__(self):
