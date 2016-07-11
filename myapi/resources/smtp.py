@@ -5,16 +5,16 @@ from email.Header import Header
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
-from myapi import app
+from myapi import db, app
+from myapi.model.smtp import EmailModel
 from flask import jsonify
 from flask.ext.restful import Resource, reqparse
 
-parser = reqparse.RequestParser()
-parser.add_argument('recivers', type=str, location='json', required=True)
-parser.add_argument('folder_name', type=str, location='json', required=True)
-
 class sendEmail(Resource):
     def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('recivers', type=str, location='json', required=True)
+        parser.add_argument('folder_name', type=str, location='json', required=True)
         args = parser.parse_args()
         return jsonify(result=send(args.recivers.split(','), args.folder_name))
 
@@ -41,9 +41,10 @@ def send(recivers, folderName):
     # msgText = MIMEText('This is the alternative plain text message.', _subtype='plain', _charset='utf-8')
     # msgAlternative.attach(msgText)
 
+    params = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcbaABCDEFGHIJKLMNOPQRSTUVWXYZ',20))
     with open(filePath+'/content.html', 'rt') as f:
         data = f.read()
-        msgText = MIMEText(data, _subtype='html', _charset='utf-8')
+        msgText = MIMEText(data.replace('',params), _subtype='html', _charset='utf-8')
         msgAlternative.attach(msgText)
 
     imgPath = filePath+'/img/'
@@ -65,6 +66,10 @@ def send(recivers, folderName):
         for reciver in recivers:
             msgRoot['To'] = reciver
             server.sendmail(mail_from, reciver, msgRoot.as_string())
+
+            e = EmailModel(reciver, params, datetime.datetime.now())
+            db.session.add(e)
+            db.session.commit()
         server.quit()
         server.close()
         return True
@@ -72,5 +77,17 @@ def send(recivers, folderName):
         # print str(e)
         return str(e)
 
+class checkEmail(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('to', type=str, location='json', required=True)
+        parser.add_argument('params', type=str, location='json', required=True)
+        args = parser.parse_args()
+
+        e = EmailModel.query.filter_by(to_user=args.to).filter_by(params=args.params).first()
+        if e and e.expires > datetime.datetime.now()
+            return True
+        else
+            return False
 
 
