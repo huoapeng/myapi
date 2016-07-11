@@ -85,9 +85,9 @@ class checkEmail(Resource):
         args = parser.parse_args()
 
         e = EmailModel.query.filter_by(to_user=args.to).filter_by(params=args.params).first()
-        if e and e.expires > datetime.datetime.now()
+        if e and e.expires > datetime.datetime.now():
             return True
-        else
+        else:
             return False
 
 
