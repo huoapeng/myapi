@@ -14,7 +14,7 @@ class sendEmail(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('recivers', type=str, location='json', required=True)
-        parser.add_argument('folder_name', type=str, location='json', required=True)
+        parser.add_argument('folderName', type=str, location='json', required=True)
         args = parser.parse_args()
         return jsonify(result=send(args.recivers.split(','), args.folder_name))
 
