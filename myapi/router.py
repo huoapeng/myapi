@@ -14,7 +14,8 @@ from myapi.resources.note import Note, TaskNotes
 from myapi.resources.kind import Kind, KindList, SearchKindsByName
 from myapi.resources.message import NoteMessage, NoteMessageList
 from myapi.resources.profile import Profile
-from myapi.resources.authentication import AuthenticationList
+from myapi.resources.authentication import AuthenticationList, Approval, \
+	PrivateAuthenticate, CompanyAuthenticate, BankAuthenticate
 from myapi.resources.bid import Bid, BidList
 from myapi.resources.work import Work, UserWorks
 from myapi.resources.recommend import RecommendType, RecommendTypeList, RecommendItem, RecommendItemList
@@ -40,12 +41,15 @@ api.add_resource(WorkTags, '/<int:workid>/worktags', endpoint='workTags')
 api.add_resource(WorkTagList, '/worktaglist/<int:limit>')
 api.add_resource(SearchWorkTagsByName, '/search/worktaglist/<string:keyword>')
 
-
 api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<int:page>', \
 	endpoint='publishedProjects')
 api.add_resource(UserWonProjects, '/<int:userid>/userwonprojects/<int:page>', endpoint='wonProjects')
 
 api.add_resource(AuthenticationList, '/<int:kind>/authenticationlist')
+api.add_resource(PrivateAuthenticate, '/privateauthen')
+api.add_resource(CompanyAuthenticate, '/companyauthen')
+api.add_resource(BankAuthenticate, '/bankauthen')
+api.add_resource(Approval, '/approval')
 
 api.add_resource(Bid, '/bid', '/<int:userid>/bid/<int:taskid>')
 api.add_resource(BidList, '/<int:taskid>/bidlist')
