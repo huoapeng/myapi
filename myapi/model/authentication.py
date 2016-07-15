@@ -8,22 +8,23 @@ from myapi.model.enum import file_type
 class ApprovalModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     authenticationType = db.Column(db.Integer)
+    authenticationID = db.Column(db.Integer)
     approvalStatus = db.Column(db.Integer)
     approvalDate = db.Column(db.DateTime)
     userid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     adminid = db.Column(db.Integer)
+    # privateAuthenticate = db.relationship('PrivateAuthenticateModel',
+    #     backref=db.backref('approval', lazy='joined'), lazy='dynamic')
 
-    privateAuthenticate = db.relationship('PrivateAuthenticateModel',
-        backref=db.backref('approval', lazy='joined'), lazy='dynamic')
+    # companyAuthenticate = db.relationship('CompanyAuthenticateModel',
+    #     backref=db.backref('approval', lazy='joined'), lazy='dynamic')
 
-    companyAuthenticate = db.relationship('CompanyAuthenticateModel',
-        backref=db.backref('approval', lazy='joined'), lazy='dynamic')
+    # bankAuthenticate = db.relationship('BankModel',
+    #     backref=db.backref('approval', lazy='joined'), lazy='dynamic')
 
-    bankAuthenticate = db.relationship('BankModel',
-        backref=db.backref('approval', lazy='joined'), lazy='dynamic')
-
-    def __init__(self, authenticationType, approvalStatus, userid, adminid):
+    def __init__(self, authenticationType, authenticationID, approvalStatus, userid, adminid):
         self.authenticationType = authenticationType
+        self.authenticationID = authenticationID
         self.approvalStatus = approvalStatus
         self.approvalDate = datetime.datetime.now()
         self.userid = userid
@@ -32,6 +33,8 @@ class ApprovalModel(db.Model):
     def serialize(self):
         return {
             'id': self.id,
+            'type': self.authenticationType,
+            'authenID': self.authenticationID,
             'approvalStatus': self.approvalStatus,
             'approvalDate': self.approvalDate,
             'userid': self.userid,
@@ -42,14 +45,14 @@ class ApprovalModel(db.Model):
 
 class PrivateAuthenticateModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(200))
     authenticateDate = db.Column(db.DateTime)
     identityID = db.Column(db.String(50), nullable=False)
     identityFrontImage = db.Column(db.String(100), nullable=False)
     identityBackImage = db.Column(db.String(100), nullable=False)
 
     ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
-    approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
+    # approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
 
     def __init__(self, name, identityID, identityFrontImage, identityBackImage):
         self.name = name
@@ -70,7 +73,7 @@ class PrivateAuthenticateModel(db.Model):
 
 class CompanyAuthenticateModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(200))
     authenticateDate = db.Column(db.DateTime)
     businessScope = db.Column(db.Text)
     licenseID = db.Column(db.String(500))
@@ -79,11 +82,11 @@ class CompanyAuthenticateModel(db.Model):
     verifyType = db.Column(db.Integer)
 
     ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
-    approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
+    # approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
 
     def __init__(self, name, businessScope, licenseID, licenseImage, contactImage, verifyType):
         self.name = name
-        self.authorisedDate = datetime.datetime.now()
+        self.authenticateDate = datetime.datetime.now()
         self.businessScope = businessScope
         self.licenseID = licenseID
         self.licenseImage = licenseImage
@@ -94,7 +97,7 @@ class CompanyAuthenticateModel(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'authorisedDate': self.authorisedDate,
+            'authenticateDate': self.authenticateDate,
             'businessScope': self.businessScope,
             'licenseID':self.licenseID,
             'licenseImage': getUploadFileUrl(file_type.companyLience, self.ownerid, self.licenseImage),
@@ -104,16 +107,18 @@ class CompanyAuthenticateModel(db.Model):
 
 class BankModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.String(200))
     authenticateDate = db.Column(db.DateTime)
     bankAccount = db.Column(db.String(100))
     bankName = db.Column(db.String(500))
     bankLocation = db.Column(db.String(200))
 
     ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
-    approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
+    # approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
     # private = db.Column(db.Integer, db.ForeignKey('privateAuthenticate_model.id'))
 
-    def __init__(self, bankAccount, bankName, bankLocation):
+    def __init__(self, name, bankAccount, bankName, bankLocation):
+        self.name = name
         self.authenticateDate = datetime.datetime.now()
         self.bankAccount = bankAccount
         self.bankName = bankName
@@ -122,10 +127,11 @@ class BankModel(db.Model):
     def serialize(self):
         return {
             'id': self.id,
+            'name': self.name,
             'authenticateDate': self.authenticateDate,
             'bankAccount': self.bankAccount,
-            'bankName': bankName,
-            'bankLocation': bankLocation
+            'bankName': self.bankName,
+            'bankLocation': self.bankLocation
         }
 
 

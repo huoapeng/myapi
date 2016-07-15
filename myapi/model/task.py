@@ -8,7 +8,7 @@ class TaskModel(db.Model):
     name = db.Column(db.String(100))
     timespan = db.Column(db.String(200))
     requirements = db.Column(db.Text)
-    bonus = db.Column(db.String(200))
+    bonus = db.Column(db.Integer)
     description = db.Column(db.Text)
     publishDate = db.Column(db.DateTime)
     bidder_qualification_requirement = db.Column(db.String(100))
@@ -29,8 +29,8 @@ class TaskModel(db.Model):
     winner_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     bidders = db.relationship('BidModel', lazy='dynamic')
 
-    def __init__(self, name, timespan=None, requirements=None, bonus=None, description=None, 
-        bidder_qualification_requirement=None, bidder_location_requirement=None):
+    def __init__(self, name, timespan=None, requirements=None, bonus=0, description=None, 
+        bidder_qualification_requirement=None, bidder_location_requirement=None, receipt=False, receiptDes=None):
         self.name = name
         self.timespan = timespan
         self.requirements = requirements

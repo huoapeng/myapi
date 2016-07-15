@@ -14,16 +14,18 @@ class Approval(Resource):
     def post(self):
         post_parser = reqparse.RequestParser()
         post_parser.add_argument('authenticationType', type=int, location='json', required=True)
+        post_parser.add_argument('authenID', type=int, location='json', required=True)
         post_parser.add_argument('approvalStatus', type=int, location='json', required=True)
-        post_parser.add_argument('userid', type=str, location='json', required=True)
-        post_parser.add_argument('adminid', type=str, location='json', required=True)
+        post_parser.add_argument('userid', type=int, location='json', required=True)
+        post_parser.add_argument('adminid', type=int, location='json', required=True)
         args = post_parser.parse_args()
 
-        a = ApprovalModel(args.authenticationType, args.approvalStatus, args.userid, args.adminid)
+        a = ApprovalModel(args.authenticationType, args.authenID, args.approvalStatus, args.userid, args.adminid)
         db.session.add(a)
 
-        user = UserModel.query.get(args.user_id)
+        user = UserModel.query.get(args.userid)
         user.authentications.append(a)
+
         db.session.commit()
         return jsonify(a.serialize())
 
@@ -50,7 +52,7 @@ class PrivateAuthenticate(Resource):
         post_parser = reqparse.RequestParser()
         post_parser.add_argument('ownerid', type=int, location='json', required=True)
         post_parser.add_argument('name', type=str, location='json', required=True)
-        post_parser.add_argument('identityid', type=int, location='json', required=True)
+        post_parser.add_argument('identityid', type=str, location='json', required=True)
         post_parser.add_argument('identityFrontImage', type=str, location='json', required=True)
         post_parser.add_argument('identityBackImage', type=str, location='json', required=True)
         args = post_parser.parse_args()
@@ -96,12 +98,13 @@ class BankAuthenticate(Resource):
     def post(self):
         post_parser = reqparse.RequestParser()
         post_parser.add_argument('ownerid', type=int, location='json', required=True)
+        post_parser.add_argument('name', type=str, location='json', required=True)
         post_parser.add_argument('bankAccount', type=str, location='json', required=True)
         post_parser.add_argument('bankName', type=str, location='json', required=True)
         post_parser.add_argument('bankLocation', type=str, location='json', required=True)
         args = post_parser.parse_args()
 
-        b = BankModel(args.bankAccount, args.bankName, args.bankLocation)
+        b = BankModel(args.name, args.bankAccount, args.bankName, args.bankLocation)
         db.session.add(b)
 
         user = UserModel.query.get(args.ownerid)

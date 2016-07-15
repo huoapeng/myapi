@@ -14,10 +14,12 @@ post_parser.add_argument('id', type=int, location='json')
 post_parser.add_argument('name', type=str, location='json')
 post_parser.add_argument('timespan', type=str, location='json')
 post_parser.add_argument('requirements', type=str, location='json')
-post_parser.add_argument('bonus', type=str, location='json')
+post_parser.add_argument('bonus', type=int, location='json')
 post_parser.add_argument('description', type=str, location='json')
 post_parser.add_argument('bidder_qualification_requirement', type=str, location='json')
 post_parser.add_argument('bidder_location_requirement', type=str, location='json')
+post_parser.add_argument('receipt', type=bool , location='json')
+post_parser.add_argument('receiptDescription', type=str, location='json')
 post_parser.add_argument('project_id', type=int, location='json')
 post_parser.add_argument('kind_ids', type=str, location='json')
 
@@ -26,7 +28,7 @@ task_fields = {
     'name': fields.String,
     'timespan': fields.String,
     'requirements': fields.String,
-    'bonus': fields.String,
+    'bonus': fields.Integer,
     'description': fields.String,
     'publishDate': fields.DateTime,
     'bidder_qualification_requirement': fields.String,
