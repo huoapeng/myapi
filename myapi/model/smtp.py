@@ -7,7 +7,7 @@ class EmailModel(db.Model):
     sendDate = db.Column(db.DateTime)
     expires = db.Column(db.DateTime)
 
-    to_user = db.Column(db.Integer)
+    to_user = db.Column(db.String(200))
 
     def __init__(self, to_user=None, params=None, expires=None):
         self.to_user = to_user

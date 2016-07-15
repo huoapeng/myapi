@@ -1,7 +1,9 @@
+import datetime
 from flask import jsonify
 from flask.ext.restful import Resource, reqparse
 from myapi import db, app
 from myapi.model.user import UserModel
+from myapi.model.smtp import EmailModel
 from myapi.model.tag import UserTagModel
 from myapi.model.enum import user_status
 from myapi.common.util import valid_email, md5
@@ -14,6 +16,8 @@ post_parser.add_argument('password', type=str, location='json')
 post_parser.add_argument('phone', type=str, location='json')
 post_parser.add_argument('location', type=str, location='json')
 post_parser.add_argument('description', type=str, location='json')
+post_parser.add_argument('params', type=str, location='json')
+post_parser.add_argument('orignalPassword', type=str, location='json')
 
 class User(Resource):
     def get(self, userid):
@@ -62,13 +66,21 @@ class User(Resource):
 class ChangePassword(Resource):
     def post(self):
         args = post_parser.parse_args()
-        user = UserModel.query.filter_by(email=args.email).one()
+        if not args.orignalPassword:
+            user = UserModel.query.filter_by(email=args.email).one()
+            if user:
+                e = EmailModel.query.filter_by(to_user=args.email).filter_by(params=args.params).first()
+                if not e or e.expires < datetime.datetime.now():
+                    return jsonify(result='pls try again')
+            else:
+                return jsonify(result='can`t find user by email')
+        else:
+            user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.orignalPassword)).one()
+
         if user:
             user.password = md5(args.password)
             db.session.commit()
             return jsonify(user.serialize())
-        else:
-            return jsonify(result='can`t find user by email')
 
 class GetuserDetailList(Resource):
     def get(self, page):

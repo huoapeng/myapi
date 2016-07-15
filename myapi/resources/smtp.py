@@ -1,5 +1,5 @@
 #coding=utf-8
-import os
+import os, random, datetime, re
 import smtplib
 from email.Header import Header
 from email.mime.text import MIMEText
@@ -16,7 +16,7 @@ class sendEmail(Resource):
         parser.add_argument('recivers', type=str, location='json', required=True)
         parser.add_argument('folderName', type=str, location='json', required=True)
         args = parser.parse_args()
-        return jsonify(result=send(args.recivers.split(','), args.folder_name))
+        return jsonify(result=send(args.recivers.split(','), args.folderName))
 
 mail_host = "smtp.qq.com"
 mail_user = "huoapeng"
@@ -28,66 +28,55 @@ def send(recivers, folderName):
     msgRoot['From'] = mail_from
     filePath = os.path.join(app.config['ROOT_PATH'], app.config['EMAIL_FOLDER'], folderName)
 
-    with open(filePath+'/subject.txt', 'rt') as f:
-        data = f.read()
-        msgRoot['Subject'] = data#Header(data,'utf-8')  
 
-    # msgRoot['To'] = ";".join(recivers)
-    # msgRoot.preamble = 'This is a multi-part message in MIME format.'
+    for reciver in recivers:
+        with open(filePath+'/subject.txt', 'rt') as f:
+            data = f.read()
+            msgRoot['Subject'] = data#Header(data,'utf-8')  
 
-    msgAlternative = MIMEMultipart('alternative')
-    msgRoot.attach(msgAlternative)
+        # msgRoot['To'] = ";".join(recivers)
+        # msgRoot.preamble = 'This is a multi-part message in MIME format.'
 
-    # msgText = MIMEText('This is the alternative plain text message.', _subtype='plain', _charset='utf-8')
-    # msgAlternative.attach(msgText)
+        msgAlternative = MIMEMultipart('alternative')
+        msgRoot.attach(msgAlternative)
 
-    params = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcbaABCDEFGHIJKLMNOPQRSTUVWXYZ',20))
-    with open(filePath+'/content.html', 'rt') as f:
-        data = f.read()
-        msgText = MIMEText(data.replace('',params), _subtype='html', _charset='utf-8')
-        msgAlternative.attach(msgText)
+        # msgText = MIMEText('This is the alternative plain text message.', _subtype='plain', _charset='utf-8')
+        # msgAlternative.attach(msgText)
 
-    imgPath = filePath+'/img/'
-    for fname in os.listdir(imgPath):
-        if os.path.isfile(os.path.join(imgPath, fname)):
-            fp = open(os.path.join(imgPath, fname), 'rb')
-            msgImage = MIMEImage(fp.read())
-            fp.close()
+        params = ''.join(random.sample('zyxwvutsrqponmlkjihgfedcbaABCDEFGHIJKLMNOPQRSTUVWXYZ', 13))
+        with open(filePath+'/content.html', 'rt') as f:
+            data = f.read()
+            msgText = MIMEText(data.replace('!#1800#!', params).replace('!#email#!', reciver)
+             , _subtype='html', _charset='utf-8')
+            msgAlternative.attach(msgText)
 
-            msgImage.add_header('Content-ID', '<{}>'.format(fname.rsplit('.', 1)[0]))
-            msgRoot.attach(msgImage)
-    
-    try:
-        server = smtplib.SMTP()
-        server.connect(mail_host, 587)
-        server.ehlo()
-        server.starttls()
-        server.login(mail_user, mail_pass)
-        for reciver in recivers:
+        imgPath = filePath+'/img/'
+        for fname in os.listdir(imgPath):
+            if os.path.isfile(os.path.join(imgPath, fname)):
+                fp = open(os.path.join(imgPath, fname), 'rb')
+                msgImage = MIMEImage(fp.read())
+                fp.close()
+
+                msgImage.add_header('Content-ID', '<{}>'.format(fname.rsplit('.', 1)[0]))
+                msgRoot.attach(msgImage)
+        
+        try:
+            server = smtplib.SMTP()
+            server.connect(mail_host, 587)
+            server.ehlo()
+            server.starttls()
+            server.login(mail_user, mail_pass)
             msgRoot['To'] = reciver
             server.sendmail(mail_from, reciver, msgRoot.as_string())
 
-            e = EmailModel(reciver, params, datetime.datetime.now())
+            e = EmailModel(reciver, params, datetime.datetime.now() + datetime.timedelta(seconds=1800))
             db.session.add(e)
             db.session.commit()
-        server.quit()
-        server.close()
-        return True
-    except Exception, e:
-        # print str(e)
-        return str(e)
-
-class checkEmail(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('to', type=str, location='json', required=True)
-        parser.add_argument('params', type=str, location='json', required=True)
-        args = parser.parse_args()
-
-        e = EmailModel.query.filter_by(to_user=args.to).filter_by(params=args.params).first()
-        if e and e.expires > datetime.datetime.now():
+            server.quit()
+            server.close()
             return True
-        else:
-            return False
+        except Exception, e:
+            # print str(e)
+            return str(e)
 
 
