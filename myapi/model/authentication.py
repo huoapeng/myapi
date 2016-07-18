@@ -13,6 +13,7 @@ class ApprovalModel(db.Model):
     approvalDate = db.Column(db.DateTime)
     userid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     adminid = db.Column(db.Integer)
+    description = db.Column(db.Text)
     # privateAuthenticate = db.relationship('PrivateAuthenticateModel',
     #     backref=db.backref('approval', lazy='joined'), lazy='dynamic')
 
@@ -22,13 +23,14 @@ class ApprovalModel(db.Model):
     # bankAuthenticate = db.relationship('BankModel',
     #     backref=db.backref('approval', lazy='joined'), lazy='dynamic')
 
-    def __init__(self, authenticationType, authenticationID, approvalStatus, userid, adminid):
+    def __init__(self, authenticationType, authenticationID, approvalStatus, userid, adminid, description):
         self.authenticationType = authenticationType
         self.authenticationID = authenticationID
         self.approvalStatus = approvalStatus
         self.approvalDate = datetime.datetime.now()
         self.userid = userid
         self.adminid = adminid
+        self.description = description
 
     def serialize(self):
         return {
@@ -40,7 +42,8 @@ class ApprovalModel(db.Model):
             'userid': self.userid,
             'user': url_for('.userep', _external=True, userid=self.userid),
             'adminid': self.adminid,
-            'admin': url_for('.userep', _external=True, userid=self.adminid)
+            'admin': url_for('.userep', _external=True, userid=self.adminid),
+            'description': self.description
         }
 
 class PrivateAuthenticateModel(db.Model):
