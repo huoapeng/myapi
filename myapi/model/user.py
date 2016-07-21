@@ -1,7 +1,7 @@
 import datetime, random
 from flask import url_for
 from myapi import db, app
-from enum import user_status
+from enum import user_status, file_type
 from tag import user_tags
 from myapi.common.image import getUploadFileUrl, getDefaultImageUrl
 
