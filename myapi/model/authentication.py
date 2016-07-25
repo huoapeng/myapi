@@ -14,14 +14,6 @@ class ApprovalModel(db.Model):
     userid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     adminid = db.Column(db.Integer)
     description = db.Column(db.Text)
-    # privateAuthenticate = db.relationship('PrivateAuthenticateModel',
-    #     backref=db.backref('approval', lazy='joined'), lazy='dynamic')
-
-    # companyAuthenticate = db.relationship('CompanyAuthenticateModel',
-    #     backref=db.backref('approval', lazy='joined'), lazy='dynamic')
-
-    # bankAuthenticate = db.relationship('BankModel',
-    #     backref=db.backref('approval', lazy='joined'), lazy='dynamic')
 
     def __init__(self, authenticationType, authenticationID, approvalStatus, userid, adminid, description):
         self.authenticationType = authenticationType
@@ -55,7 +47,7 @@ class PrivateAuthenticateModel(db.Model):
     identityBackImage = db.Column(db.String(100), nullable=False)
 
     ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
-    # approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
+    approvalStatus = db.Column(db.Integer)
 
     def __init__(self, name, identityID, identityFrontImage, identityBackImage):
         self.name = name
@@ -85,7 +77,7 @@ class CompanyAuthenticateModel(db.Model):
     verifyType = db.Column(db.Integer)
 
     ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
-    # approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
+    approvalStatus = db.Column(db.Integer)
 
     def __init__(self, name, businessScope, licenseID, licenseImage, contactImage, verifyType):
         self.name = name
@@ -115,10 +107,10 @@ class BankModel(db.Model):
     bankAccount = db.Column(db.String(100))
     bankName = db.Column(db.String(500))
     bankLocation = db.Column(db.String(200))
+    checkCode = db.Column(db.Integer)
 
     ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
-    # approvalid = db.Column(db.Integer, db.ForeignKey('approval_model.id'))
-    # private = db.Column(db.Integer, db.ForeignKey('privateAuthenticate_model.id'))
+    approvalStatus = db.Column(db.Integer)
 
     def __init__(self, name, bankAccount, bankName, bankLocation):
         self.name = name

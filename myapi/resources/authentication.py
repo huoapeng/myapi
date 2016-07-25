@@ -13,35 +13,31 @@ class Approval(Resource):
 
     def post(self):
         post_parser = reqparse.RequestParser()
-        post_parser.add_argument('authenticationType', type=int, location='json', required=True)
+        post_parser.add_argument('authenType', type=int, location='json', required=True)
         post_parser.add_argument('authenID', type=int, location='json', required=True)
         post_parser.add_argument('approvalStatus', type=int, location='json', required=True)
         post_parser.add_argument('userid', type=int, location='json', required=True)
         post_parser.add_argument('adminid', type=int, location='json', required=True)
+        post_parser.add_argument('description', type=int, location='json', required=True)
         args = post_parser.parse_args()
 
-        a = ApprovalModel(args.authenticationType, args.authenID, args.approvalStatus, args.userid, args.adminid)
+        a = ApprovalModel(
+            args.authenType, args.authenID, args.approvalStatus, args.userid, args.adminid, args.description)
         db.session.add(a)
 
         user = UserModel.query.get(args.userid)
         user.authentications.append(a)
+        if args.approvalStatus == approval_result.allow:
+            user.authenticationType = user.authenticationType | args.authenticationType
+
+        for key in authentication_type.__dict__:
+            if not key.startswith('__') and kind == authentication_type.__dict__[key]:
+                p = model[key].query.filter_by(id = args.authenID).one()
+                p.approvalStatus = args.approvalStatus
+                break;
 
         db.session.commit()
         return jsonify(a.serialize())
-
-    def put(self):
-        args = post_parser.parse_args()
-
-        p = PrivateAuthenticateModel.query.get(args.approval_id)
-        p.approval_result = args.approval_result
-        p.approvalDate = datetime.datetime.now()
-
-        user = UserModel.query.get(args.user_id)
-        user.privateAuthority = p
-        # user.authorisedStatus = authenticate_status.none \
-        #     if args.approval_result != approval_result.allow else authenticate_status.private
-        db.session.commit()
-        return jsonify(p.serialize())
         
 class PrivateAuthenticate(Resource):
     def get(self, id):
@@ -112,13 +108,28 @@ class BankAuthenticate(Resource):
         db.session.commit()
         return jsonify(b.serialize())
 
+    def put(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('id', type=int, location='json', required=True)
+        post_parser.add_argument('code', type=str, location='json', required=True)
+        args = post_parser.parse_args()
+
+        b = BankModel.query.get(args.id)
+        if b.checkCode:
+            return jsonify(result='already has check code')
+        else:
+            b.checkCode = args.code
+            db.session.commit()
+            return jsonify(b.serialize())
+
 class AuthenticationList(Resource):
     def get(self, kind):
         # for x in dir(authentication_type):
         #     print getattr(authentication_type, str(x))
         for key in authentication_type.__dict__:
             if not key.startswith('__') and kind == authentication_type.__dict__[key]:
-                return jsonify(kind=kind, data=[e.serialize() for e in model[key].query.all()])
+                result = model[key].query.filter_by(approvalStatus = None).all()
+                return jsonify(kind=kind, data=[e.serialize() for e in result])
 
         return jsonify(data=[])
 
