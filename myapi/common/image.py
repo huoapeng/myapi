@@ -53,7 +53,9 @@ def getDefaultImageUrl(fileName):
         fileName)
 
 filePath = {
-    file_type.profile : lambda folderName: 'user/{}/profile/'.format(folderName),
+    file_type.profileLarge : lambda folderName: 'user/{}/profileLarge/'.format(folderName),
+    file_type.profileMedium : lambda folderName: 'user/{}/profileMedium/'.format(folderName),
+    file_type.profileSmall : lambda folderName: 'user/{}/profileSmall/'.format(folderName),
     file_type.version : lambda folderName: 'user/{}/version/'.format(folderName),
     file_type.privateFront : lambda folderName: 'user/{}/privateFront/'.format(folderName),
     file_type.privateBack : lambda folderName: 'user/{}/privateBack/'.format(folderName),

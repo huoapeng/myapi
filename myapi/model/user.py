@@ -12,7 +12,9 @@ class UserModel(db.Model):
     password = db.Column(db.String(200))
     phone = db.Column(db.String(50))
     location = db.Column(db.String(200))
-    image = db.Column(db.String(200))
+    imageLarge = db.Column(db.String(200))
+    imageMedium = db.Column(db.String(200))
+    imageSmall = db.Column(db.String(200))
     defaultImage = db.Column(db.String(200))
     description = db.Column(db.Text)
     status = db.Column(db.Integer)
@@ -85,9 +87,13 @@ class UserModel(db.Model):
             'wonProjects': url_for('.wonProjects', _external=True, userid=self.id, page=1)
         }
 
-    def getImage(self):
-        if self.image:
-            return getUploadFileUrl(file_type.profile, self.id, self.image)
+    def getImage(self, imageType=file_type.profileSmall):
+        if self.imageLarge and imageType == file_type.profileLarge:
+            return getUploadFileUrl(imageType, self.id, self.imageLarge)
+        elif self.imageMedium and imageType == file_type.profileMedium:
+            return getUploadFileUrl(imageType, self.id, self.imageMedium)
+        elif self.imageSmall and imageType == file_type.profileSmall:
+            return getUploadFileUrl(imageType, self.id, self.imageSmall)
         else:
             return getDefaultImageUrl(self.defaultImage)
 
