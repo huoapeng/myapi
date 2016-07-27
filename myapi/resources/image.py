@@ -29,7 +29,12 @@ class image(Resource):
 
             if args.type in [file_type.profileLarge, file_type.profileMedium, file_type.profileSmall]:
                 user = UserModel.query.get(args.foldername)
-                user.image = os.path.basename(sf)
+                if args.type == file_type.profileLarge:
+                    user.imageLarge = os.path.basename(sf)
+                if args.type == file_type.profileMedium:
+                    user.imageMedium = os.path.basename(sf)
+                if args.type == file_type.profileSmall:
+                    user.imageSmall = os.path.basename(sf)
                 db.session.commit()
                 # file = resize(file, 100, 80)
 
