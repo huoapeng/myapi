@@ -17,7 +17,7 @@ class ProjectModel(db.Model):
 
     def __init__(self, projectName, description=None):
         self.name = projectName
-        self.status = project_status.normal
+        self.status = project_status.disable
         self.description = description
         self.publish_date = datetime.datetime.now()
 
