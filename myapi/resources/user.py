@@ -55,7 +55,7 @@ class User(Resource):
 
     def delete(self):
         args = post_parser.parse_args()
-        user = UserModel.query.filter_by(email=args.email).one()
+        user = UserModel.query.get(args.id).one()
         if user:
             user.status = args.userStatus
             db.session.commit()
@@ -89,7 +89,7 @@ class GetUserList(Resource):
         args = get_parser.parse_args()
 
         users = UserModel.query
-        if args.all:
+        if not args.all:
             users = users.filter_by(status = user_status.normal)
 
         users = users.paginate(page, app.config['POSTS_PER_PAGE'], False)
