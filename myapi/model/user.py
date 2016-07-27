@@ -61,7 +61,7 @@ class UserModel(db.Model):
         self.location = location
         self.description = description
         self.registDate = datetime.datetime.now()
-        self.status = user_status.normal
+        self.status = user_status.disable
         self.authenticationType = 0
 
     def __repr__(self):

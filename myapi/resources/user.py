@@ -57,7 +57,7 @@ class User(Resource):
         args = post_parser.parse_args()
         user = UserModel.query.filter_by(email=args.email).one()
         if user:
-            user.status = user_status.delete
+            user.status = args.userStatus
             db.session.commit()
             return jsonify(user.serialize())
         else:
@@ -82,10 +82,17 @@ class ChangePassword(Resource):
             db.session.commit()
             return jsonify(user.serialize())
 
-class GetuserDetailList(Resource):
+class GetUserList(Resource):
     def get(self, page):
-        users = UserModel.query.filter_by(status = user_status.normal)\
-            .paginate(page, app.config['POSTS_PER_PAGE'], False)
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('all', type=int, location='args', choices=range(2), default=0)
+        args = get_parser.parse_args()
+
+        users = UserModel.query
+        if args.all:
+            users = users.filter_by(status = user_status.normal)
+
+        users = users.paginate(page, app.config['POSTS_PER_PAGE'], False)
         return jsonify(total = users.total,
             pages = users.pages,
             page = users.page,
@@ -96,17 +103,17 @@ class GetuserDetailList(Resource):
             prev_num = users.prev_num,
             data=[e.serialize() for e in users.items])
 
-get_parser = reqparse.RequestParser()
-get_parser.add_argument('keyword', type=str, location='args')
-get_parser.add_argument('tag', type=str, location='args')
-get_parser.add_argument('authenticateStatus', type=int, location='args', choices=range(5), default=0)
-
-class GetUserList(Resource):
+class GetUserMarketList(Resource):
     def get(self, page):
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('keyword', type=str, location='args')
+        get_parser.add_argument('tag', type=str, location='args')
+        get_parser.add_argument('authenticateStatus', type=int, location='args', choices=range(5), default=0)
+
         args = get_parser.parse_args()
         user_obj_list = []
 
-        users = UserModel.query
+        users = UserModel.query.filter_by(status = user_status.normal)
 
         if args.tag:
             users = users.filter(UserModel.tags.any(UserTagModel.name == args.tag))
