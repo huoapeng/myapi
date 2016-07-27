@@ -18,7 +18,7 @@ class Approval(Resource):
         post_parser.add_argument('approvalStatus', type=int, location='json', required=True)
         post_parser.add_argument('userid', type=int, location='json', required=True)
         post_parser.add_argument('adminid', type=int, location='json', required=True)
-        post_parser.add_argument('description', type=int, location='json', required=True)
+        post_parser.add_argument('description', type=str, location='json', required=True)
         args = post_parser.parse_args()
 
         a = ApprovalModel(
@@ -28,10 +28,10 @@ class Approval(Resource):
         user = UserModel.query.get(args.userid)
         user.authentications.append(a)
         if args.approvalStatus == approval_result.allow:
-            user.authenticationType = user.authenticationType | args.authenticationType
+            user.authenticationType = user.authenticationType | args.authenType
 
         for key in authentication_type.__dict__:
-            if not key.startswith('__') and kind == authentication_type.__dict__[key]:
+            if not key.startswith('__') and args.authenType == authentication_type.__dict__[key]:
                 p = model[key].query.filter_by(id = args.authenID).one()
                 p.approvalStatus = args.approvalStatus
                 break;
