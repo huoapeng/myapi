@@ -27,11 +27,11 @@ class image(Resource):
         if file and allowedFile(args.type, file.filename):
             sf = getServerPath(args.type, args.foldername, file.filename)
 
-            if args.type == file_type.profile:
+            if args.type in [file_type.profileLarge, file_type.profileMedium, file_type.profileSmall]:
                 user = UserModel.query.get(args.foldername)
                 user.image = os.path.basename(sf)
                 db.session.commit()
-                file = resize(file, 100, 80)
+                # file = resize(file, 100, 80)
 
             file.save(sf)
 
