@@ -42,12 +42,14 @@ class kind_status:
 class project_status:
     normal = 1
     disable = 2
+    delete = 3
 
 class task_status:
     bidding = 1
     selectBidder = 2
     finish = 3
     disable = 4
+    delete = 5
 
 class version_status:
     normal = 1
