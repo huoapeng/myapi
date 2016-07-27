@@ -31,7 +31,7 @@ class file_type:
 
 class user_status:
     normal = 1
-    delete = 2
+    disable = 2
 
 class kind_status:
     normal = 1
@@ -39,12 +39,13 @@ class kind_status:
 
 class project_status:
     normal = 1
-    delete = 2
+    disable = 2
 
 class task_status:
     bidding = 1
     selectBidder = 2
     finish = 3
+    disable = 4
 
 class version_status:
     normal = 1
