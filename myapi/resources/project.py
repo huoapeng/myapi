@@ -33,7 +33,7 @@ class Project(Resource):
 
     def delete(self):
         args = post_parser.parse_args()
-        project = ProjectModel.query.get(args.id)
+        project = ProjectModel.query.get(args.id).one()
         project.status = args.projectStatus
         db.session.commit()
         return project.serialize()

@@ -72,7 +72,7 @@ class Task(Resource):
     @marshal_with(task_fields)
     def delete(self):
         args = post_parser.parse_args()
-        task = TaskModel.query.get(args.id)
+        task = TaskModel.query.get(args.id).one()
         task.status = args.taskStatus
         db.session.commit()
         return task
