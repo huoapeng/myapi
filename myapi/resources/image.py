@@ -19,7 +19,7 @@ class image(Resource):
     def post(self):
         file = request.files['file']
         get_parser = reqparse.RequestParser()
-        get_parser.add_argument('type', type=int, location='args', choices=range(1, 10), required=True)
+        get_parser.add_argument('type', type=int, location='args', choices=range(1, 14), required=True)
         get_parser.add_argument('foldername', type=int, location='args', required=True)
         get_parser.add_argument('thumbnail', type=int, location='args', default=0)
         args = get_parser.parse_args()
