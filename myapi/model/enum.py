@@ -18,7 +18,9 @@ class bid_status:
     finish = 3
 
 class file_type:
-    profile = 1
+    profileLarge = 11
+    profileMedium = 12
+    profileSmall = 13
     version = 2
     privateFront = 3
     privateBack = 4
