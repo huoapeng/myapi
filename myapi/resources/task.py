@@ -73,12 +73,12 @@ class Task(Resource):
     def delete(self):
         args = post_parser.parse_args()
         task = TaskModel.query.get(args.id)
-        task.status = task_status.finish
+        task.status = args.taskStatus
         db.session.commit()
         return task
 
 parser = reqparse.RequestParser()
-parser.add_argument('status', type=int, location='args', choices=range(4), default=0)
+parser.add_argument('status', type=int, location='args', choices=range(5), default=0)
 
 class GetTaskDetail(Resource):
     def get(self, taskid):

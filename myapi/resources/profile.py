@@ -5,7 +5,6 @@ from myapi import db
 from myapi.model.project import ProjectModel
 from myapi.model.user import UserModel
 from myapi.model.kind import KindModel
-from myapi.model.enum import project_status
 from myapi.common.util import itemStatus
 
 parser = reqparse.RequestParser()

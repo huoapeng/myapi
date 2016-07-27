@@ -39,7 +39,7 @@ class TaskModel(db.Model):
         self.publishDate = datetime.datetime.now()
         self.bidder_qualification_requirement = bidder_qualification_requirement
         self.bidder_location_requirement = bidder_location_requirement
-        self.status = task_status.bidding
+        self.status = task_status.disable
 
     def __repr__(self):
         return '<User %r>' % (self.name)
