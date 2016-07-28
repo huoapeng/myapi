@@ -3,7 +3,7 @@ from flask import Blueprint
 from flask.ext.restful import Api
 from myapi.resources.general import general
 from myapi.resources.image import image, CompressFile
-from myapi.resources.user import User, ChangePassword, GetUserList, GetUserMarketList
+from myapi.resources.user import User, ChangePassword, GetUserList, GetUserMarketList, ChangeUserStatus
 from myapi.resources.tag import UserTag, UserTags, SearchUserTagsByName, UserTagList, \
 	WorkTag, WorkTags, SearchWorkTagsByName, WorkTagList
 from myapi.resources.project import Project, UserPublishedProjects, UserWonProjects
@@ -28,6 +28,7 @@ api.add_resource(general, '/general/<string:method>')
 api.add_resource(image, '/image')
 api.add_resource(CompressFile, '/compressfile')
 api.add_resource(ChangePassword, '/changepwd')
+api.add_resource(ChangeUserStatus, '/changeuserstatus')
 
 api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')
 api.add_resource(GetUserList, '/userlist/<int:page>')

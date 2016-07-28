@@ -54,8 +54,16 @@ class User(Resource):
             return jsonify(result='can`t find user by email')
 
     def delete(self):
+        pass
+
+class ChangeUserStatus(Resource):
+    def put(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('id', type=int, location='json', required=True)
+        post_parser.add_argument('userStatus', type=int, location='json', required=True)
+
         args = post_parser.parse_args()
-        user = UserModel.query.get(args.id).one()
+        user = UserModel.query.get(args.id)
         if user:
             user.status = args.userStatus
             db.session.commit()
