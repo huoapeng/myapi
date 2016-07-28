@@ -64,6 +64,7 @@ class PrivateAuthenticateModel(db.Model):
             'identityID': self.identityID,
             'identityFrontImage': getUploadFileUrl(file_type.privateFront, self.ownerid,  self.identityFrontImage),
             'identityBackImage': getUploadFileUrl(file_type.privateBack, self.ownerid, self.identityBackImage),
+            'userid': self.ownerid
         }
 
 class CompanyAuthenticateModel(db.Model):
@@ -97,7 +98,8 @@ class CompanyAuthenticateModel(db.Model):
             'licenseID':self.licenseID,
             'licenseImage': getUploadFileUrl(file_type.companyLience, self.ownerid, self.licenseImage),
             'contactImage': getUploadFileUrl(file_type.companyContactCard, self.ownerid, self.contactImage),
-            'verifyType': self.verifyType
+            'verifyType': self.verifyType,
+            'userid': self.ownerid
         }
 
 class BankModel(db.Model):
@@ -126,7 +128,8 @@ class BankModel(db.Model):
             'authenticateDate': self.authenticateDate,
             'bankAccount': self.bankAccount,
             'bankName': self.bankName,
-            'bankLocation': self.bankLocation
+            'bankLocation': self.bankLocation,
+            'userid': self.ownerid
         }
 
 
