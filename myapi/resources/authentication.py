@@ -109,10 +109,10 @@ class BankAuthenticate(Resource):
         return jsonify(b.serialize())
 
     def put(self):
-        post_parser = reqparse.RequestParser()
-        post_parser.add_argument('id', type=int, location='json', required=True)
-        post_parser.add_argument('code', type=str, location='json', required=True)
-        args = post_parser.parse_args()
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('id', type=int, location='json', required=True)
+        get_parser.add_argument('code', type=str, location='json', required=True)
+        args = get_parser.parse_args()
 
         b = BankModel.query.get(args.id)
         if b.checkCode:
@@ -123,15 +123,20 @@ class BankAuthenticate(Resource):
             return jsonify(b.serialize())
 
 class AuthenticationList(Resource):
-    def get(self, kind):
+    def get(self):
         # for x in dir(authentication_type):
         #     print getattr(authentication_type, str(x))
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('type', type=int, location='args', required=True)
+        get_parser.add_argument('userid', type=str, location='args')
+        args = get_parser.parse_args()
         for key in authentication_type.__dict__:
-            if not key.startswith('__') and kind == authentication_type.__dict__[key]:
-                result = model[key].query.filter_by(approvalStatus = None).all()
-                return jsonify(kind=kind, data=[e.serialize() for e in result])
-
-        return jsonify(data=[])
+            if not key.startswith('__') and args.type == authentication_type.__dict__[key]:
+                result = model[key].query.filter_by(approvalStatus = None)
+                if args.userid:
+                    result = result.filter_by(ownerid = args.userid)
+                return jsonify(type=args.type, data=[e.serialize() for e in result])
+        return jsonify(type=args.type, data=[])
 
 model = {
     'private' : PrivateAuthenticateModel,

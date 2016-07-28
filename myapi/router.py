@@ -46,7 +46,7 @@ api.add_resource(UserPublishedProjects, '/<int:userid>/userpublishedprojects/<in
 	endpoint='publishedProjects')
 api.add_resource(UserWonProjects, '/<int:userid>/userwonprojects/<int:page>', endpoint='wonProjects')
 
-api.add_resource(AuthenticationList, '/<int:kind>/authenticationlist')
+api.add_resource(AuthenticationList, '/authenticationlist')
 api.add_resource(PrivateAuthenticate, '/privateauthen')
 api.add_resource(CompanyAuthenticate, '/companyauthen')
 api.add_resource(BankAuthenticate, '/bankauthen')
