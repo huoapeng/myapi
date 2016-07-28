@@ -9,18 +9,16 @@ from myapi.model.bid import BidModel
 from myapi.common.util import itemStatus
 from myapi.view.project import UserPublishedProjectsView, UserBidProjectsView
 
-
-post_parser = reqparse.RequestParser()
-post_parser.add_argument('name', type=str, location='json', required=True)
-post_parser.add_argument('description', type=str, location='json')
-post_parser.add_argument('userid', type=int, location='json', required=True)
-
 class Project(Resource):
     def get(self, projectid):
         project = ProjectModel.query.get(projectid)
         return project.serialize()
 
     def post(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('name', type=str, location='json', required=True)
+        post_parser.add_argument('description', type=str, location='json')
+        post_parser.add_argument('userid', type=int, location='json', required=True)
         args = post_parser.parse_args()
 
         project = ProjectModel(args.name, args.description)
@@ -31,9 +29,12 @@ class Project(Resource):
         db.session.commit()
         return project.serialize()
 
-    def delete(self):
+    def put(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('id', type=int, location='json', required=True)
+        post_parser.add_argument('projectStatus', type=int, location='json', required=True)
         args = post_parser.parse_args()
-        project = ProjectModel.query.get(args.id).one()
+        project = ProjectModel.query.get(args.id)
         project.status = args.projectStatus
         db.session.commit()
         return project.serialize()

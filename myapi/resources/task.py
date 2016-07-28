@@ -9,20 +9,6 @@ from myapi.model.enum import task_status
 from myapi.common.util import itemStatus
 from myapi.view.task import TaskDetailView
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument('id', type=int, location='json')
-post_parser.add_argument('name', type=str, location='json')
-post_parser.add_argument('timespan', type=str, location='json')
-post_parser.add_argument('requirements', type=str, location='json')
-post_parser.add_argument('bonus', type=int, location='json')
-post_parser.add_argument('description', type=str, location='json')
-post_parser.add_argument('bidder_qualification_requirement', type=str, location='json')
-post_parser.add_argument('bidder_location_requirement', type=str, location='json')
-post_parser.add_argument('receipt', type=bool , location='json')
-post_parser.add_argument('receiptDescription', type=str, location='json')
-post_parser.add_argument('project_id', type=int, location='json')
-post_parser.add_argument('kind_ids', type=str, location='json')
-
 task_fields = {
     'id': fields.Integer,
     'name': fields.String,
@@ -45,6 +31,19 @@ class Task(Resource):
 
     @marshal_with(task_fields)
     def post(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('id', type=int, location='json')
+        post_parser.add_argument('name', type=str, location='json')
+        post_parser.add_argument('timespan', type=str, location='json')
+        post_parser.add_argument('requirements', type=str, location='json')
+        post_parser.add_argument('bonus', type=int, location='json')
+        post_parser.add_argument('description', type=str, location='json')
+        post_parser.add_argument('bidder_qualification_requirement', type=str, location='json')
+        post_parser.add_argument('bidder_location_requirement', type=str, location='json')
+        post_parser.add_argument('receipt', type=bool , location='json')
+        post_parser.add_argument('receiptDescription', type=str, location='json')
+        post_parser.add_argument('project_id', type=int, location='json')
+        post_parser.add_argument('kind_ids', type=str, location='json')
         args = post_parser.parse_args()
 
         task = TaskModel(args.name, 
@@ -67,15 +66,18 @@ class Task(Resource):
 
     @marshal_with(task_fields)
     def put(self):
-        pass
-
-    @marshal_with(task_fields)
-    def delete(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('id', type=int, location='json', required=True)
+        post_parser.add_argument('taskStatus', type=int, location='json', required=True)
         args = post_parser.parse_args()
-        task = TaskModel.query.get(args.id).one()
+        task = TaskModel.query.get(args.id)
         task.status = args.taskStatus
         db.session.commit()
         return task
+
+    @marshal_with(task_fields)
+    def delete(self):
+        pass
 
 parser = reqparse.RequestParser()
 parser.add_argument('status', type=int, location='args', choices=range(5), default=0)
