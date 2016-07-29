@@ -61,6 +61,16 @@ class PrivateAuthenticate(Resource):
         db.session.commit()
         return jsonify(p.serialize())
 
+    def delete(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('ownerid', type=int, location='json', required=True)
+        args = post_parser.parse_args()
+
+        user = UserModel.query.get(args.ownerid)
+        user.authenticationType = user.authenticationType ^ authentication_type.private
+        db.session.commit()
+        return jsonify(p.serialize())
+
 class CompanyAuthenticate(Resource):
     def get(self, id):
         authority = CompanyAuthenticateModel.query.get(id)
@@ -85,6 +95,16 @@ class CompanyAuthenticate(Resource):
         user.companyAuthenHistory.append(c)
         db.session.commit()
         return jsonify(c.serialize())
+
+    def delete(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('ownerid', type=int, location='json', required=True)
+        args = post_parser.parse_args()
+
+        user = UserModel.query.get(args.ownerid)
+        user.authenticationType = user.authenticationType ^ authentication_type.company
+        db.session.commit()
+        return jsonify(p.serialize())
 
 class BankAuthenticate(Resource):
     def get(self, id):
@@ -121,6 +141,16 @@ class BankAuthenticate(Resource):
             b.checkCode = args.code
             db.session.commit()
             return jsonify(b.serialize())
+
+    def delete(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('ownerid', type=int, location='json', required=True)
+        args = post_parser.parse_args()
+
+        user = UserModel.query.get(args.ownerid)
+        user.authenticationType = user.authenticationType ^ authentication_type.bank
+        db.session.commit()
+        return jsonify(p.serialize())
 
 class AuthenticationList(Resource):
     def get(self):

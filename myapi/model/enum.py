@@ -1,4 +1,5 @@
 class authentication_type:
+    none = 0
     private = 1
     company = 2
     bank = 4
