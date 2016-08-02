@@ -1,3 +1,4 @@
+#coding=utf-8
 import datetime
 from flask import jsonify
 from flask.ext.restful import Resource, reqparse
@@ -32,17 +33,19 @@ class User(Resource):
 
         user = UserModel.query.filter_by(email=args.email).first()
         if user:
-            if user.status = user_status.normal:
-                return jsonify(result=True, data=user.serialize())
-            else:
-                return jsonify(result=False, data=user.serialize())
+            if user.status == user_status.disable:
+                return jsonify(result=False, message='此账号已被冻结！')
         else:
             u = UserModel(args.email, md5(args.password), \
                 args.nickname, args.phone, args.location, args.description)
             db.session.add(u)
             db.session.commit()
-            user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.password)).one()
+        
+        user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.password)).first()
+        if user:
             return jsonify(result=True, data=user.serialize())
+        else:
+            return jsonify(result=False, message='用户名或密码错误！')
 
     def put(self):
         args = post_parser.parse_args()
