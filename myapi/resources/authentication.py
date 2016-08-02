@@ -158,13 +158,16 @@ class AuthenticationList(Resource):
         #     print getattr(authentication_type, str(x))
         get_parser = reqparse.RequestParser()
         get_parser.add_argument('type', type=int, location='args', required=True)
-        get_parser.add_argument('userid', type=str, location='args')
+        get_parser.add_argument('userid', type=int, location='args')
         args = get_parser.parse_args()
         for key in authentication_type.__dict__:
             if not key.startswith('__') and args.type == authentication_type.__dict__[key]:
-                result = model[key].query.filter_by(approvalStatus = None)
+                result = model[key].query
                 if args.userid:
-                    result = result.filter_by(ownerid = args.userid)
+                    result = result.filter_by(ownerid = args.userid)\
+                        .order_by(model[key].authenticateDate.desc()).limit(1)
+                else:
+                    result = result.filter_by(approvalStatus = None)
                 return jsonify(type=args.type, data=[e.serialize() for e in result])
         return jsonify(type=args.type, data=[])
 
