@@ -69,7 +69,7 @@ class PrivateAuthenticate(Resource):
         user = UserModel.query.get(args.ownerid)
         user.authenticationType = user.authenticationType ^ authentication_type.private
         db.session.commit()
-        return jsonify(p.serialize())
+        return jsonify(user.serialize())
 
 class CompanyAuthenticate(Resource):
     def get(self, id):
@@ -104,7 +104,7 @@ class CompanyAuthenticate(Resource):
         user = UserModel.query.get(args.ownerid)
         user.authenticationType = user.authenticationType ^ authentication_type.company
         db.session.commit()
-        return jsonify(p.serialize())
+        return jsonify(user.serialize())
 
 class BankAuthenticate(Resource):
     def get(self, id):
@@ -150,7 +150,7 @@ class BankAuthenticate(Resource):
         user = UserModel.query.get(args.ownerid)
         user.authenticationType = user.authenticationType ^ authentication_type.bank
         db.session.commit()
-        return jsonify(p.serialize())
+        return jsonify(user.serialize())
 
 class AuthenticationList(Resource):
     def get(self):
