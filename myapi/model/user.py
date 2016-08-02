@@ -21,30 +21,16 @@ class UserModel(db.Model):
     authenticationType = db.Column(db.Integer)
     registDate = db.Column(db.DateTime)
 
-    publishedProjects = db.relationship('ProjectModel',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-
-    tags = db.relationship('UserTagModel', secondary=user_tags,
-        backref=db.backref('users', lazy='dynamic'))
-
-    versions = db.relationship('VersionModel',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-
-    notes = db.relationship('NoteModel',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-    notemessages = db.relationship('NoteMessageModel',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-
-    wonTasks = db.relationship('TaskModel',
-        backref=db.backref('winner', lazy='joined'), lazy='dynamic')
+    publishedProjects = db.relationship('ProjectModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    tags = db.relationship('UserTagModel', secondary=user_tags, backref=db.backref('users', lazy='dynamic'))
+    versions = db.relationship('VersionModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    notes = db.relationship('NoteModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    notemessages = db.relationship('NoteMessageModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    wonTasks = db.relationship('TaskModel', backref=db.backref('winner', lazy='joined'), lazy='dynamic')
     bidTasks = db.relationship('BidModel', lazy='dynamic')
-
-    works = db.relationship('WorkModel',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-
-    authentications = db.relationship('ApprovalModel',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-    privateAuthenHistory = db.relationship('PrivateAuthenticateModel',
+    works = db.relationship('WorkModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    authentications = db.relationship('ApprovalModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    privateAuthenHistory = db.relationship('PrivateAuthenticateModel', 
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
     companyAuthenHistory = db.relationship('CompanyAuthenticateModel',
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
@@ -85,8 +71,8 @@ class UserModel(db.Model):
             'registDate': self.registDate.isoformat(),
             'tags': url_for('.userTags', _external=True, userid=self.id),
             'works': url_for('.userWorks', _external=True, userid=self.id, page=1),
-            'publishedProjects': url_for('.publishedProjects', _external=True, userid=self.id, page=1),
-            'wonProjects': url_for('.wonProjects', _external=True, userid=self.id, page=1)
+            'publishedProjects': url_for('.userPublishedProjects', _external=True, userid=self.id, page=1),
+            'wonProjects': url_for('.userWonProjects', _external=True, userid=self.id, page=1)
         }
 
     def getImage(self, imageType=file_type.profileSmall):
