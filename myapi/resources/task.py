@@ -17,11 +17,13 @@ task_fields = {
     'bonus': fields.Integer,
     'description': fields.String,
     'publishDate': fields.DateTime,
-    'bidder_qualification_requirement': fields.String,
-    'bidder_location_requirement': fields.String,
+    'bidderQualifiRequire': fields.String,
+    'bidderLocationRequire': fields.String,
     'status': fields.Integer,
-    'project_id': fields.Integer,
-    'winner_id': fields.Integer
+    'receipt': fields.Boolean,
+    'receiptDes': fields.String,
+    'winnerid': fields.Integer,
+    'projectid': fields.Integer,
 }
 
 class Task(Resource):
@@ -38,12 +40,12 @@ class Task(Resource):
         post_parser.add_argument('requirements', type=str, location='json')
         post_parser.add_argument('bonus', type=int, location='json')
         post_parser.add_argument('description', type=str, location='json')
-        post_parser.add_argument('bidder_qualification_requirement', type=str, location='json')
-        post_parser.add_argument('bidder_location_requirement', type=str, location='json')
+        post_parser.add_argument('bidderQualifiRequire', type=str, location='json')
+        post_parser.add_argument('bidderLocationRequire', type=str, location='json')
         post_parser.add_argument('receipt', type=bool , location='json')
         post_parser.add_argument('receiptDescription', type=str, location='json')
-        post_parser.add_argument('project_id', type=int, location='json')
-        post_parser.add_argument('kind_ids', type=str, location='json')
+        post_parser.add_argument('projectid', type=int, location='json')
+        post_parser.add_argument('kindids', type=str, location='json')
         args = post_parser.parse_args()
 
         task = TaskModel(args.name, 
@@ -51,15 +53,17 @@ class Task(Resource):
             args.requirements,
             args.bonus,
             args.description,
-            args.bidder_qualification_requirement,
-            args.bidder_location_requirement)
-        for kind_id in args.kind_ids.split(','):
-            kind = KindModel.query.get(kind_id)
+            args.bidderQualifiRequire,
+            args.bidderLocationRequire,
+            args.receipt,
+            args.receiptDescription)
+        for kid in args.kindids.split(','):
+            kind = KindModel.query.get(kid)
             task.kinds.append(kind)
 
         db.session.add(task)
 
-        project = ProjectModel.query.get(args.project_id)
+        project = ProjectModel.query.get(args.projectid)
         project.tasks.append(task)
         db.session.commit()
         return task
@@ -79,9 +83,6 @@ class Task(Resource):
     def delete(self):
         pass
 
-parser = reqparse.RequestParser()
-parser.add_argument('status', type=int, location='args', choices=range(5), default=0)
-
 class GetTaskDetail(Resource):
     def get(self, taskid):
         task = TaskModel.query.get(taskid)
@@ -91,95 +92,58 @@ class GetTaskDetail(Resource):
         for kind in task.kinds:
             kind_str_list.append(kind.name)
 
-        taskview = TaskDetailView(task.id,
-                task.name,
+        taskview = TaskDetailView(task,
                 project.id,
                 project.name,
                 owner.id,
                 owner.nickname,
                 owner.location,
-                task.timespan,
-                task.requirements,
-                task.bonus,
-                task.description,
-                task.publishDate,
-                task.bidder_qualification_requirement,
-                task.bidder_location_requirement,
-                task.status,
-                kind_str_list
-            )
-
+                kind_str_list)
         return jsonify(taskview.serialize())
 
-class GetTaskListByProjectID(Resource):
+class GetTasksByProjectID(Resource):
     @marshal_with(task_fields)
     def get(self, projectid):
+        parser = reqparse.RequestParser()
+        parser.add_argument('status', type=int, location='args', choices=range(5), default=0)
+        parser.add_argument('bidderid', type=int, location='args')
         args = parser.parse_args()
         tasks = ProjectModel.query.get(projectid).tasks
         if args.status:
-            tasks = tasks.filter(TaskModel.status == args.status)
-        return tasks.all()
+            tasks = tasks.filter_by(status = args.status)
 
-class GetTaskListByBidderID(Resource):
-    @marshal_with(task_fields)
-    def get(self, projectid, bidderid):
-        args = parser.parse_args()
-        tasks = ProjectModel.query.get(projectid).tasks
-        if args.status:
-            tasks = tasks.filter(TaskModel.status == args.status)
-
-        result = []
-        for task in tasks:
-            for bidder in task.bidders:
-                if bidderid == bidder.user_id:
-                    result.append(task)
-        return result
-
-get_parser = reqparse.RequestParser()
-get_parser.add_argument('keyword', type=str, location='args')
-get_parser.add_argument('status', type=int, location='args', choices=range(4), default=0)
-get_parser.add_argument('orderby', type=int, location='args', choices=range(3), default=0)
-get_parser.add_argument('desc', type=int, location='args', choices=range(3), default=0)
-
-from flask import redirect, url_for
-class GetVRTaskList(Resource):
-    def get(self):
-        return marketRouter('VR/AR大厅')
-
-class GetMoiveTaskList(Resource):
-    def get(self):
-        return marketRouter('影视大厅')
-
-def marketRouter(name):
-    kind = KindModel.query.filter_by(name = name).first()
-    if kind and kind.id:
-        return redirect(url_for('.tasklistep', _external=True, kindid=kind.id, page=1))
-    else:
-        return jsonify(total = 0,
-            pages = 0,
-            page = 0,
-            per_page = 0,
-            has_next = 0,
-            has_prev = 0,
-            next_num = 0,
-            prev_num = 0,
-            result=[])
+        if args.bidderid:
+            result = []
+            for task in tasks:
+                for bidder in task.bidders:
+                    if bidder.user_id == args.bidderid:
+                        result.append(task)
+            return result
+        else:
+            return tasks.all()
 
 from sqlalchemy import or_
 class GetTaskList(Resource):
     def get(self, kindid, page):
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('keyword', type=str, location='args')
+        get_parser.add_argument('status', type=int, location='args', choices=range(4), default=0)
+        get_parser.add_argument('orderby', type=int, location='args', choices=range(3), default=0)
+        get_parser.add_argument('desc', type=int, location='args', choices=range(3), default=0)
         args = get_parser.parse_args()
         task_obj_list = []
         
         tasks = TaskModel.query.filter( \
             or_( \
                 TaskModel.kinds.any(KindModel.id == kindid), \
-                TaskModel.kinds.any(KindModel.parent_id == kindid) \
+                TaskModel.kinds.any(KindModel.parent_id == kindid), \
+                TaskModel.kinds.any(KindModel.parent.parent_id == kindid)
                 ) \
             )
 
         if args.keyword:
             tasks = tasks.filter(TaskModel.name.contains(args.keyword))
+
         if args.status:
             tasks = tasks.filter(TaskModel.status == args.status)
             
@@ -214,8 +178,8 @@ class GetTaskList(Resource):
                     task.bonus,
                     task.description,
                     task.publishDate,
-                    task.bidder_qualification_requirement,
-                    task.bidder_location_requirement,
+                    task.bidderQualifiRequire,
+                    task.bidderLocationRequire,
                     task.status,
                     kind_str_list
                 )
