@@ -7,7 +7,7 @@ from myapi.model.kind import KindModel
 from myapi.model.enum import project_status
 from myapi.model.bid import BidModel
 from myapi.common.util import itemStatus
-from myapi.view.project import UserPublishedProjectsView, UserBidProjectsView
+from myapi.view.project import UserBidProjectsView
 
 class Project(Resource):
     def get(self, projectid):
@@ -39,15 +39,24 @@ class Project(Resource):
         db.session.commit()
         return project.serialize()
 
+# from sqlalchemy import func
 class UserPublishedProjects(Resource):
-    def get(self, userid, page):
-        projects = UserModel.query.get(userid).publishedProjects\
-            .paginate(page, app.config['POSTS_PER_PAGE'], False)
+    def get(self, page):
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('userid', type=int, location='args', required=True)
+        get_parser.add_argument('projectStatus', type=int, location='args')
+        args = get_parser.parse_args()
 
-        project_obj_list = []
-        for project in projects.items:
-            v = UserPublishedProjectsView(project.id, project.name)
-            project_obj_list.append(v)
+        projects = UserModel.query.get(args.userid).publishedProjects
+        if args.projectStatus:
+            projects = projects.filter_by(status = args.projectStatus)
+        projects = projects.paginate(page, app.config['POSTS_PER_PAGE'], False)
+
+        # project_obj_list = []
+        # for project in projects.items:
+        #     if func.count(project.tasks) == 0:
+        #         continue
+        #     project_obj_list.append(project)
 
         return jsonify(total = projects.total,
             pages = projects.pages,
@@ -57,11 +66,15 @@ class UserPublishedProjects(Resource):
             has_prev = projects.has_prev,
             next_num = projects.next_num,
             prev_num = projects.prev_num,
-            data=[e.serialize() for e in project_obj_list])
+            data=[e.serialize() for e in projects.items])
 
-class UserWonProjects(Resource):
-    def get(self, userid, page):
-        bidTasks = UserModel.query.get(userid).bidTasks\
+class UserParticipateProjects(Resource):
+    def get(self, page):
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('userid', type=int, location='args', required=True)
+        args = get_parser.parse_args()
+
+        bidTasks = UserModel.query.get(args.userid).bidTasks\
             .paginate(page, app.config['POSTS_PER_PAGE'], False)
 
         project_obj_dict = {}

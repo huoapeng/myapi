@@ -1,19 +1,6 @@
 
 
-from flask import url_for
-
-class UserPublishedProjectsView(object):
-
-    def __init__(self, projectid, projectname):
-        self.projectid = projectid
-        self.projectname = projectname
-
-    def serialize(self):
-        return {
-            'projectId': self.projectid,
-            'projectName': self.projectname,
-            'tasks_url':url_for('.getTasksByProjectID', _external=True, projectid=self.projectid),
-        }
+from flask import url_for, request
 
 class UserBidProjectsView(object):
 
@@ -27,6 +14,7 @@ class UserBidProjectsView(object):
             'userid': self.userid,
             'projectId': self.projectid,
             'projectName': self.projectname,
-            'tasks_url':url_for('.GetTaskListByBidderID', _external=True, projectid=self.projectid,\
-                 bidderid=self.userid),
+            'tasks_url':url_for('.getTasksByProjectID', _external=True, projectid=self.projectid,
+                bidderid=self.userid)
+                # bidderid=request.args.get('bidderid'))
         }

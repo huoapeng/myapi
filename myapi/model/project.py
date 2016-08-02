@@ -31,6 +31,7 @@ class ProjectModel(db.Model):
             'projectName': self.name,
             'description': self.description,
             'publish_date': self.publish_date.isoformat(),
+            'status': self.status,
             'tasks_url':url_for('.getTasksByProjectID', _external=True, projectid=self.id),
             'owner':url_for('.userep', _external=True, userid=self.ownerid)
         }
