@@ -72,7 +72,7 @@ class UserModel(db.Model):
             'tags': url_for('.userTags', _external=True, userid=self.id),
             'works': url_for('.userWorks', _external=True, userid=self.id, page=1),
             'publishedProjects': url_for('.userPublishedProjects', _external=True, userid=self.id, page=1),
-            'wonProjects': url_for('.userWonProjects', _external=True, userid=self.id, page=1)
+            'participateProjects': url_for('.userParticipateProjects', _external=True, userid=self.id, page=1)
         }
 
     def getImage(self, imageType=file_type.profileSmall):
