@@ -31,14 +31,18 @@ class User(Resource):
         args = post_parser.parse_args()
 
         user = UserModel.query.filter_by(email=args.email).first()
-        if user is None:
+        if user:
+            if user.status = user_status.normal:
+                return jsonify(result=True, data=user.serialize())
+            else:
+                return jsonify(result=False, data=user.serialize())
+        else:
             u = UserModel(args.email, md5(args.password), \
                 args.nickname, args.phone, args.location, args.description)
             db.session.add(u)
             db.session.commit()
-
-        user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.password)).one()
-        return jsonify(user.serialize())
+            user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.password)).one()
+            return jsonify(result=True, data=user.serialize())
 
     def put(self):
         args = post_parser.parse_args()
