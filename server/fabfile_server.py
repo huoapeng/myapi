@@ -14,7 +14,7 @@ def build():
         cmd.extend(includes)
         local(' '.join(cmd))
 
-env.host_string = 'root@10.0.1.122'
+env.host_string = 'root@139.196.183.6'
 env.password = 'hiPpo111111'
 _REMOTE_TMP_TAR = '/root/myproject/{}'.format(_TAR_FILE)
 _REMOTE_BASE_DIR = '/root/myproject'
