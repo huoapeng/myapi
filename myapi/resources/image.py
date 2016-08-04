@@ -1,3 +1,4 @@
+#coding=utf-8
 import os
 from flask import request, jsonify#, send_from_directory
 from flask.ext.restful import Resource, reqparse
@@ -19,35 +20,41 @@ class image(Resource):
     def post(self):
         file = request.files['file']
         get_parser = reqparse.RequestParser()
-        get_parser.add_argument('type', type=int, location='args', choices=range(1, 14), required=True)
+        get_parser.add_argument('type', type=int, location='args', required=True)
         get_parser.add_argument('foldername', type=int, location='args', required=True)
         get_parser.add_argument('thumbnail', type=int, location='args', default=0)
         args = get_parser.parse_args()
 
         if file and allowedFile(args.type, file.filename):
-            sf = getServerPath(args.type, args.foldername, file.filename)
+            serverFilePath = getServerPath(args.type, args.foldername, file.filename)
 
-            if args.type in [file_type.profileLarge, file_type.profileMedium, file_type.profileSmall]:
+            if args.type == file_type.profileLarge:
                 user = UserModel.query.get(args.foldername)
-                if args.type == file_type.profileLarge:
-                    user.imageLarge = os.path.basename(sf)
-                if args.type == file_type.profileMedium:
-                    user.imageMedium = os.path.basename(sf)
-                if args.type == file_type.profileSmall:
-                    user.imageSmall = os.path.basename(sf)
-                db.session.commit()
-                # file = resize(file, 100, 80)
+                file.save(serverFilePath)
+                user.imageLarge = os.path.basename(serverFilePath)
 
-            file.save(sf)
+                mediumImageFilePath = getServerPath(file_type.profileMedium, args.foldername, file.filename)
+                mediumImageFile = resize(file, 63, 63)
+                mediumImageFile.save(mediumImageFilePath)
+                user.imageMedium = os.path.basename(mediumImageFilePath)
+
+                smallImageFilePath = getServerPath(file_type.profileSmall, args.foldername, file.filename)
+                smallImageFile = resize(file, 36, 36)
+                smallImageFile.save(smallImageFilePath)
+                user.imageSmall = os.path.basename(smallImageFilePath)
+                db.session.commit()
+                return jsonify(user=UserModel.query.get(args.foldername).serialize())
+            else:
+                file.save(serverFilePath)
 
             if args.thumbnail:
                 thumbnailfile = resize(file, 223, 99999)
                 tsf = getServerPath(file_type.workThumbnail, args.foldername, file.filename)
                 thumbnailfile.save(tsf)
-                return jsonify(image=os.path.basename(sf), thumbnail=os.path.basename(tsf))
+                return jsonify(fileName=os.path.basename(serverFilePath), thumbnailFileName=os.path.basename(tsf))
             else:
-                return jsonify(data=os.path.basename(sf))
-        return 'pls check file suffix'
+                return jsonify(fileName=os.path.basename(serverFilePath))
+        return '不支持文件类型！'
 
 class CompressFile(Resource):
     def post(self):
