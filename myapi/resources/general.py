@@ -8,7 +8,7 @@ from myapi import db#, app
 # from myapi.model.user import UserModel
 from myapi.model.kind import KindModel
 from myapi.model.recommend import RecommendTypeModel
-# from myapi.common.image import resize, allowedFile, getServerPath
+# from myapi.common.image import resize, isAllowedFile, getServerFilePath
 
 class general(Resource):
     def get(self, method = None):

@@ -67,15 +67,25 @@ filePath = {
     file_type.workFile : lambda folderName: 'user/{}/workfile/'.format(folderName)
 }
 
-def allowedFile(fileType, fileName):
+def isAllowedFile(fileType, fileName):
     ALLOWED_IMAGE_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
     ALLOWED_FILE_EXTENSIONS = set(['zip', 'rar'])
-    if fileType > 50:
-        return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_FILE_EXTENSIONS
-    else:
-        return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_IMAGE_EXTENSIONS
 
-def getServerPath(fileType, folderName, filename):
+    flag = False
+    for key in file_type.__dict__:
+        if fileType == file_type.__dict__[key]:
+            flag = True
+            break
+            
+    if flag:
+        if fileType > 50:
+            return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_FILE_EXTENSIONS
+        else:
+            return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_IMAGE_EXTENSIONS
+    else:
+        return False
+
+def getServerFilePath(fileType, folderName, filename):
     serverPath = os.path.join(app.config['ROOT_PATH'], \
         app.config['UPLOAD_FOLDER'], filePath[fileType](folderName))
     if not os.path.exists(serverPath):
