@@ -11,9 +11,8 @@ api.add_resource(Profile, '/profile')
 from myapi.resources.general import general
 api.add_resource(general, '/general/<string:method>')
 
-from myapi.resources.image import image, CompressFile
-api.add_resource(image, '/image')
-api.add_resource(CompressFile, '/compressfile')
+from myapi.resources.file import UploadFile
+api.add_resource(UploadFile, '/uploadfile')
 
 from myapi.resources.user import User, ChangePassword, ChangeUserStatus, GetUserList, GetUserMarketList
 api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='userep')
