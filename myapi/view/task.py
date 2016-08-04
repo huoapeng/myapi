@@ -12,7 +12,7 @@ class TaskDetailView(object):
             userLocation,
             kind_str_list,
         ):
-        self.task
+        self.task = task
         self.projectid = projectid
         self.projectName = projectName
         self.userid = userid

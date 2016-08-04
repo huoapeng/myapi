@@ -41,7 +41,7 @@ api.add_resource(UserParticipateProjects, '/userParticipateProjects/<int:page>',
 from myapi.resources.task import Task, GetTaskDetail, GetTaskList, GetTasksByProjectID
 api.add_resource(Task, '/task', '/task/<int:taskid>', endpoint='taskep')
 api.add_resource(GetTaskDetail, '/taskdetail/<int:taskid>', endpoint='taskdetailep')
-api.add_resource(GetTaskList, '/<int:kindid>/tasklist/<int:page>', endpoint='tasklistep')
+api.add_resource(GetTaskList, '/tasklist/<int:page>', endpoint='tasklistep')
 api.add_resource(GetTasksByProjectID, '/<int:projectid>/getTasksByProjectID', endpoint='getTasksByProjectID')
 
 from myapi.resources.bid import Bid, BidList

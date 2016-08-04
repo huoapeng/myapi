@@ -124,22 +124,26 @@ class GetTasksByProjectID(Resource):
 
 from sqlalchemy import or_
 class GetTaskList(Resource):
-    def get(self, kindid, page):
+    def get(self, page):
         get_parser = reqparse.RequestParser()
+        get_parser.add_argument('kindid', type=int, location='args', default=0)
         get_parser.add_argument('keyword', type=str, location='args')
-        get_parser.add_argument('status', type=int, location='args', choices=range(4), default=0)
+        get_parser.add_argument('status', type=int, location='args', choices=range(6), default=0)
         get_parser.add_argument('orderby', type=int, location='args', choices=range(3), default=0)
         get_parser.add_argument('desc', type=int, location='args', choices=range(3), default=0)
         args = get_parser.parse_args()
         task_obj_list = []
         
-        tasks = TaskModel.query.filter( \
-            or_( \
-                TaskModel.kinds.any(KindModel.id == kindid), \
-                TaskModel.kinds.any(KindModel.parent_id == kindid), \
-                TaskModel.kinds.any(KindModel.parent.parent_id == kindid)
-                ) \
-            )
+        tasks = TaskModel.query
+
+        if args.kindid:
+            tasks = tasks.filter( \
+                or_( \
+                    TaskModel.kinds.any(KindModel.id == args.kindid), \
+                    TaskModel.kinds.any(KindModel.parent_id == args.kindid), \
+                    TaskModel.kinds.any(KindModel.parent.parent_id == args.kindid)
+                    ) \
+                )
 
         if args.keyword:
             tasks = tasks.filter(TaskModel.name.contains(args.keyword))
@@ -166,21 +170,12 @@ class GetTaskList(Resource):
             for kind in task.kinds:
                 kind_str_list.append(kind.name)
 
-            taskview = TaskDetailView(task.id,
-                    task.name,
+            taskview = TaskDetailView(task,
                     project.id,
                     project.name,
                     owner.id,
                     owner.nickname,
                     owner.location,
-                    task.timespan,
-                    task.requirements,
-                    task.bonus,
-                    task.description,
-                    task.publishDate,
-                    task.bidderQualifiRequire,
-                    task.bidderLocationRequire,
-                    task.status,
                     kind_str_list
                 )
             task_obj_list.append(taskview)

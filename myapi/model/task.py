@@ -1,4 +1,5 @@
 import datetime
+from flask import url_for
 from myapi import db
 from enum import task_status
 from kind import task_kinds
@@ -41,3 +42,21 @@ class TaskModel(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.name)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'timespan': self.timespan,
+            'requirements': self.requirements,
+            'bonus': self.bonus,
+            'description': self.description,
+            'publishDate': self.publishDate.isoformat(),
+            'bidderQualifiRequire': self.bidderQualifiRequire,
+            'status': self.status,
+            'receipt': self.receipt,
+            'receiptDes': self.receiptDes,
+            'owner': url_for('.userep', _external=True, userid=self.winnerid),
+            'project': url_for('.projectep', _external=True, projectid=self.projectid)
+        }
+
