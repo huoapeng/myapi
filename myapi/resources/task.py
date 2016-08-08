@@ -165,6 +165,10 @@ class GetTaskList(Resource):
         tasks = tasks.paginate(page, app.config['POSTS_PER_PAGE'], False)
         for task in tasks.items:
             project = task.project
+
+            if not project:
+                continue
+
             owner = project.owner
             kind_str_list = []
             for kind in task.kinds:
