@@ -76,7 +76,7 @@ def isAllowedFile(fileType, fileName):
         if fileType == file_type.__dict__[key]:
             flag = True
             break
-            
+
     if flag:
         if fileType > 50:
             return '.' in fileName and fileName.rsplit('.', 1)[1] in ALLOWED_FILE_EXTENSIONS

@@ -19,7 +19,7 @@ class UploadFile(Resource):
 
         if file and isAllowedFile(args.type, file.filename):
             serverFilePath = getServerFilePath(args.type, args.foldername, file.filename)
-
+            
             if args.type == file_type.profileLarge:
                 user = UserModel.query.get(args.foldername)
                 file.save(serverFilePath)
@@ -46,7 +46,7 @@ class UploadFile(Resource):
                 return jsonify(fileName=os.path.basename(serverFilePath), thumbnailFileName=os.path.basename(tsf))
             else:
                 return jsonify(fileName=os.path.basename(serverFilePath))
-        return '不支持文件类型！'
+        return jsonify(message='不支持文件类型！')
 
     # def get(self, foldername, imagetype, filename):
     #     if filename:
