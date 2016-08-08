@@ -20,7 +20,7 @@ from myapi import db
 class NoteMessageModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.Text)
-    publish_date = db.Column(db.DateTime)
+    publishDate = db.Column(db.DateTime)
 
     note_id = db.Column(db.Integer, db.ForeignKey('note_model.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))

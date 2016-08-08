@@ -3,14 +3,14 @@ from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.note import NoteModel
 from myapi.model.user import UserModel
-from myapi.model.task import TaskModel
-from myapi.model.enum import note_status
+from myapi.model.project import ProjectModel
+# from myapi.model.enum import note_status
 from myapi.common.util import itemStatus
 
 parser = reqparse.RequestParser()
 parser.add_argument('title', type=str, location='json', required=True)
-parser.add_argument('task_id', type=int, location='json', required=True)
-parser.add_argument('user_id', type=int, location='json', required=True)
+parser.add_argument('projectid', type=int, location='json', required=True)
+parser.add_argument('userid', type=int, location='json', required=True)
 
 note_fields = {
     'id': fields.Integer,
@@ -18,7 +18,7 @@ note_fields = {
     'publish_date': fields.DateTime,
     'status':  itemStatus(attribute='status'),
     'user_id': fields.Integer,
-    'task_id': fields.Integer
+    'project_id': fields.Integer
 }
 
 class Note(Resource):
@@ -32,10 +32,10 @@ class Note(Resource):
         note = NoteModel(args.title)
         db.session.add(note)
 
-        task = TaskModel.query.get(args.task_id)
-        task.notes.append(note)
+        project = ProjectModel.query.get(args.projectid)
+        project.notes.append(note)
 
-        user = UserModel.query.get(args.user_id)
+        user = UserModel.query.get(args.userid)
         user.notes.append(note)
         db.session.commit()
         return note
@@ -52,7 +52,7 @@ class Note(Resource):
         return note
 
 class TaskNotes(Resource):
-    def get(self, taskid):
-        notes = NoteModel.query.filter_by(task_id=taskid).all()
+    def get(self, projectid):
+        notes = NoteModel.query.filter_by(project_id=projectid).all()
         return jsonify(data=[e.serialize() for e in notes])
 

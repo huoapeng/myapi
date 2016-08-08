@@ -1,7 +1,7 @@
 import datetime
 from flask import url_for
 from myapi import db
-from myapi.common.image import getUploadFileUrl
+from myapi.common.file import getUploadFileUrl
 from myapi.model.enum import file_type
 
 class RecommendTypeModel(db.Model):

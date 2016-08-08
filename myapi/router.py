@@ -22,51 +22,48 @@ api.add_resource(GetUserList, '/userlist/<int:page>')
 api.add_resource(GetUserMarketList, '/usermarketlist/<int:page>')
 
 from myapi.resources.tag import UserTag, UserTags, UserTagList, SearchUserTagsByName, \
-    WorkTag, WorkTags, WorkTagList, SearchWorkTagsByName
+	WorkTag, WorkTags, SearchWorkTagsByName
 api.add_resource(UserTag, '/usertag', '/usertag/<int:tagid>')
 api.add_resource(UserTags, '/<int:userid>/usertags', endpoint='userTags')
 api.add_resource(UserTagList, '/usertaglist/<int:page>')
 api.add_resource(SearchUserTagsByName, '/search/usertaglist/<string:keyword>')
 api.add_resource(WorkTag, '/worktag', '/worktag/<int:tagid>')
 api.add_resource(WorkTags, '/<int:workid>/worktags', endpoint='workTags')
-api.add_resource(WorkTagList, '/worktaglist/<int:limit>')
 api.add_resource(SearchWorkTagsByName, '/search/worktaglist/<string:keyword>')
 
-from myapi.resources.project import Project, UserPublishedProjects, UserParticipateProjects
+from myapi.resources.project import Project, GetProjectDetail, GetProjectList, \
+	UserPublishedProjects, UserParticipateProjects
 api.add_resource(Project, '/project', '/project/<int:projectid>', endpoint='projectep')
+api.add_resource(GetProjectDetail, '/projectdetail/<int:projectid>', endpoint='projectdetailep')
+api.add_resource(GetProjectList, '/projectlist/<int:page>', endpoint='projectlistep')
 api.add_resource(UserPublishedProjects, '/userPublishedProjects/<int:page>', endpoint='userPublishedProjects')
 api.add_resource(UserParticipateProjects, '/userParticipateProjects/<int:page>', endpoint='userParticipateProjects')
 
-from myapi.resources.task import Task, GetTaskDetail, GetTaskList, GetTasksByProjectID
-api.add_resource(Task, '/task', '/task/<int:taskid>', endpoint='taskep')
-api.add_resource(GetTaskDetail, '/taskdetail/<int:taskid>', endpoint='taskdetailep')
-api.add_resource(GetTaskList, '/tasklist/<int:page>', endpoint='tasklistep')
-api.add_resource(GetTasksByProjectID, '/<int:projectid>/getTasksByProjectID', endpoint='getTasksByProjectID')
-
 from myapi.resources.bid import Bid, BidList
-api.add_resource(Bid, '/bid', '/<int:userid>/bid/<int:taskid>')
-api.add_resource(BidList, '/<int:taskid>/bidlist')
+api.add_resource(Bid, '/bid', '/<int:userid>/bid/<int:projectid>')
+api.add_resource(BidList, '/<int:projectid>/bidlist')
 
 from myapi.resources.version import Version, TaskVersions
 api.add_resource(Version, '/version', '/version/<int:versionid>')
-api.add_resource(TaskVersions, '/<int:taskid>/taskversions')
+api.add_resource(TaskVersions, '/<int:projectid>/projectversions')
 
 from myapi.resources.note import Note, TaskNotes
 api.add_resource(Note, '/note', '/note/<int:noteid>')
-api.add_resource(TaskNotes, '/<int:taskid>/tasknotes')
+api.add_resource(TaskNotes, '/<int:projectid>/projectnotes')
 
 from myapi.resources.authentication import AuthenticationList, Approval, \
-    PrivateAuthenticate, CompanyAuthenticate, BankAuthenticate
+    PrivateAuthenticate, CompanyAuthenticate, BankAuthenticate, UserAuthentication
 api.add_resource(AuthenticationList, '/authenticationlist')
+api.add_resource(UserAuthentication, '/userauthen', endpoint='userAuthen')
 api.add_resource(Approval, '/approval')
 api.add_resource(PrivateAuthenticate, '/privateauthen')
 api.add_resource(CompanyAuthenticate, '/companyauthen')
 api.add_resource(BankAuthenticate, '/bankauthen')
 
-from myapi.resources.kind import Kind, KindList, SearchKindsByName
-api.add_resource(Kind, '/kind', '/kind/<int:kindid>')
-api.add_resource(KindList, '/kindlist')
-api.add_resource(SearchKindsByName, '/search/kindlist/<string:keyword>')
+from myapi.resources.category import Category, CategoryList, SearchCategorysByName
+api.add_resource(Category, '/category', '/category/<int:cid>')
+api.add_resource(CategoryList, '/categorylist')
+api.add_resource(SearchCategorysByName, '/search/categorylist/<string:keyword>')
 
 from myapi.resources.message import NoteMessage, NoteMessageList
 api.add_resource(NoteMessage, '/notemessage')

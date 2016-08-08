@@ -84,7 +84,7 @@ class ChangePassword(Resource):
         if not args.orignalPassword:
             user = UserModel.query.filter_by(email=args.email).one()
             if user:
-                e = EmailModel.query.filter_by(to_user=args.email).filter_by(params=args.params).first()
+                e = EmailModel.query.filter_by(toUser=args.email).filter_by(params=args.params).first()
                 if not e or e.expires < datetime.datetime.now():
                     return jsonify(result='pls try again')
             else:

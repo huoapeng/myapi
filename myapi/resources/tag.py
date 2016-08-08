@@ -9,8 +9,8 @@ from sqlalchemy import func
 parser = reqparse.RequestParser()
 parser.add_argument('id', type=int, location='json')
 parser.add_argument('name', type=str, location='json')
-parser.add_argument('user_id', type=int, location='json')
-parser.add_argument('work_id', type=int, location='json')
+parser.add_argument('userid', type=int, location='json')
+parser.add_argument('workid', type=int, location='json')
 
 tag_fields = {
     'id': fields.Integer,
@@ -25,25 +25,25 @@ class UserTag(Resource):
     @marshal_with(tag_fields)
     def post(self):
         args = parser.parse_args()
-        tag = UserTagModel(args.name)
-        db.session.add(tag)
+        tag = UserTagModel.query.filter_by(name = args.name).first()
+        if not tag:
+            tag = UserTagModel(args.name)
+            db.session.add(tag)
 
-        if args.user_id:
-            user = UserModel.query.get(args.user_id)
+        if args.userid:
+            user = UserModel.query.get(args.userid)
             user.tags.append(tag)
             
         db.session.commit()
         return tag
 
-    def put(self):
-        pass
-
     def delete(self):
         args = parser.parse_args()
         tag = UserTagModel.query.get(args.id)
-        db.session.delete(tag)
+        user = UserModel.query.get(args.userid)
+        user.tags.remove(tag)
         db.session.commit()
-        return {'result':'true'}
+        return jsonify(result=true)
 
 class UserTags(Resource):
     @marshal_with(tag_fields)
@@ -81,35 +81,31 @@ class WorkTag(Resource):
     @marshal_with(tag_fields)
     def post(self):
         args = parser.parse_args()
-        tag = WorkTagModel(args.name)
-        db.session.add(tag)
+        tag = WorkTagModel.query.filter_by(name = args.name).first()
+        if not tag:
+            tag = WorkTagModel(args.name)
+            db.session.add(tag)
 
-        # work = WorkModel.query.get(args.work_id)
-        # work.tags.append(tag)
+        if args.workid:
+            work = WorkModel.query.get(args.workid)
+            work.tags.append(tag)
+
         db.session.commit()
         return tag
-
-    def put(self):
-        pass
 
     def delete(self):
         args = parser.parse_args()
         tag = WorkTagModel.query.get(args.id)
-        db.session.delete(tag)
+        work = WorkTagModel.query.get(args.workid)
+        work.tags.remove(tag)
         db.session.commit()
-        return {'result':'true'}
+        return jsonify(result=true)
 
 class WorkTags(Resource):
     @marshal_with(tag_fields)
     def get(self, workid):
         work = WorkModel.query.get(workid)
         return work.tags
-
-class WorkTagList(Resource):
-    def get(self, limit):
-        tags = db.session.query(WorkTagModel.name, func.count(WorkTagModel.name)).\
-            group_by(WorkTagModel.name).order_by(func.count(WorkTagModel.name).desc()).limit(limit)
-        return jsonify(data=[e for e in tags])
 
 class SearchWorkTagsByName(Resource):
     @marshal_with(tag_fields)

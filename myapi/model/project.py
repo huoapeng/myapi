@@ -2,36 +2,63 @@ import datetime
 from flask import url_for
 from myapi import db
 from enum import project_status
+from category import project_kinds
 
 class ProjectModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(500))
-    status = db.Column(db.Integer)
+    name = db.Column(db.String(100))
+    timespan = db.Column(db.String(200))
+    requirements = db.Column(db.Text)
+    bonus = db.Column(db.Integer)
     description = db.Column(db.Text)
-    publish_date = db.Column(db.DateTime)
+    publishDate = db.Column(db.DateTime)
+    bidderQualifiRequire = db.Column(db.String(100))
+    bidderLocationRequire = db.Column(db.String(100))
+    status = db.Column(db.Integer)
+    receipt = db.Column(db.Boolean)
+    receiptDes = db.Column(db.String(500))
 
     ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    winnerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
-    tasks = db.relationship('TaskModel',
-        backref=db.backref('project', lazy='joined'), lazy='dynamic')
+    categorys = db.relationship('CategoryModel', secondary=project_kinds, 
+        backref=db.backref('projects', lazy='dynamic'))
+    versions = db.relationship('VersionModel', backref=db.backref('project', lazy='joined'), lazy='dynamic')
+    notes = db.relationship('NoteModel', backref=db.backref('project', lazy='joined'), lazy='dynamic')
+    bidders = db.relationship('BidModel', lazy='dynamic')
 
-    def __init__(self, projectName, description=None):
-        self.name = projectName
-        self.status = project_status.disable
+    def __init__(self, name, timespan=None, requirements=None, bonus=0, description=None, 
+        bidderQualifiRequire=None, bidderLocationRequire=None, receipt=False, receiptDes=None):
+        self.name = name
+        self.timespan = timespan
+        self.requirements = requirements
+        self.bonus = bonus
         self.description = description
-        self.publish_date = datetime.datetime.now()
+        self.publishDate = datetime.datetime.now()
+        self.bidderQualifiRequire = bidderQualifiRequire
+        self.bidderLocationRequire = bidderLocationRequire
+        self.status = project_status.disable
+        self.receipt = receipt
+        self.receiptDes = receiptDes
 
     def __repr__(self):
         return '<User %r>' % (self.name)
 
     def serialize(self):
         return {
-            'ownerid': self.ownerid,
-            'projectId': self.id,
-            'projectName': self.name,
+            'id': self.id,
+            'name': self.name,
+            'timespan': self.timespan,
+            'requirements': self.requirements,
+            'bonus': self.bonus,
             'description': self.description,
-            'publish_date': self.publish_date.isoformat(),
+            'publishDate': self.publishDate.isoformat(),
+            'bidderQualifiRequire': self.bidderQualifiRequire,
+            'bidderLocationRequire': self.bidderLocationRequire,
             'status': self.status,
-            'tasks_url':url_for('.getTasksByProjectID', _external=True, projectid=self.id),
-            'owner':url_for('.userep', _external=True, userid=self.ownerid)
+            'receipt': self.receipt,
+            'receiptDes': self.receiptDes,
+            'owner': url_for('.userep', _external=True, userid=self.ownerid),
+            'winner': url_for('.userep', _external=True, userid=self.winnerid)
         }
+

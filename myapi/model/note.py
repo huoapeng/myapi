@@ -5,13 +5,13 @@ from enum import note_status
 class NoteModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(500))
-    publish_date = db.Column(db.DateTime)
+    publishDate = db.Column(db.DateTime)
     status = db.Column(db.Integer)
 
-    task_id = db.Column(db.Integer, db.ForeignKey('task_model.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project_model.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
-    messages = db.relationship('NoteMessageModel', order_by="NoteMessageModel.publish_date",
+    messages = db.relationship('NoteMessageModel', order_by="NoteMessageModel.publishDate",
         backref=db.backref('note', lazy='joined'), lazy='dynamic')
 
     def __init__(self, title):
@@ -25,7 +25,7 @@ class NoteModel(db.Model):
     def serialize(self):
         return {
             'noteid': self.id,
-            'userid': self.owner.id,
+            'userid': self.user_id,
             'userName': self.owner.nickname,
             'userImage': self.owner.getImage(),
             'title': self.title,

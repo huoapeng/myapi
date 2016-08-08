@@ -7,10 +7,10 @@ class EmailModel(db.Model):
     sendDate = db.Column(db.DateTime)
     expires = db.Column(db.DateTime)
 
-    to_user = db.Column(db.String(200))
+    toUser = db.Column(db.String(200))
 
-    def __init__(self, to_user=None, params=None, expires=None):
-        self.to_user = to_user
+    def __init__(self, toUser=None, params=None, expires=None):
+        self.toUser = toUser
         self.params = params
         self.sendDate = datetime.datetime.now()
         self.expires = expires

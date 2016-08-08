@@ -7,13 +7,13 @@ from myapi.model.user import UserModel
 
 parser = reqparse.RequestParser()
 parser.add_argument('message', type=str, location='json', required=True)
-parser.add_argument('note_id', type=int, location='json', required=True)
-parser.add_argument('user_id', type=int, location='json', required=True)
+parser.add_argument('noteid', type=int, location='json', required=True)
+parser.add_argument('userid', type=int, location='json', required=True)
 
 result_field = {
     'id': fields.Integer,
     'message': fields.String,
-    'publish_date': fields.DateTime,
+    'publishDate': fields.DateTime,
     'note_id': fields.Integer,
     'user_id': fields.Integer
 }
@@ -28,10 +28,10 @@ class NoteMessage(Resource):
         message = NoteMessageModel(args.message)
         db.session.add(message)
 
-        note = NoteModel.query.get(args.note_id)
+        note = NoteModel.query.get(args.noteid)
         note.messages.append(message)
 
-        user = UserModel.query.get(args.user_id)
+        user = UserModel.query.get(args.userid)
         user.notemessages.append(message)
         db.session.commit()
         return message

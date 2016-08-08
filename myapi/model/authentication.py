@@ -2,7 +2,7 @@ import datetime
 from flask import url_for
 from myapi import db
 from enum import verify_type, authentication_type
-from myapi.common.image import getUploadFileUrl
+from myapi.common.file import getUploadFileUrl
 from myapi.model.enum import file_type
 
 class ApprovalModel(db.Model):
@@ -46,7 +46,7 @@ class PrivateAuthenticateModel(db.Model):
     identityFrontImage = db.Column(db.String(100), nullable=False)
     identityBackImage = db.Column(db.String(100), nullable=False)
 
-    ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    userid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     approvalStatus = db.Column(db.Integer)
 
     def __init__(self, name, identityID, identityFrontImage, identityBackImage):
@@ -62,9 +62,9 @@ class PrivateAuthenticateModel(db.Model):
             'name': self.name,
             'authenticateDate': self.authenticateDate,
             'identityID': self.identityID,
-            'identityFrontImage': getUploadFileUrl(file_type.privateFront, self.ownerid,  self.identityFrontImage),
-            'identityBackImage': getUploadFileUrl(file_type.privateBack, self.ownerid, self.identityBackImage),
-            'userid': self.ownerid,
+            'identityFrontImage': getUploadFileUrl(file_type.privateFront, self.userid,  self.identityFrontImage),
+            'identityBackImage': getUploadFileUrl(file_type.privateBack, self.userid, self.identityBackImage),
+            'userid': self.userid,
             'status': self.approvalStatus
         }
 
@@ -78,7 +78,7 @@ class CompanyAuthenticateModel(db.Model):
     contactImage = db.Column(db.String(500))
     verifyType = db.Column(db.Integer)
 
-    ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    userid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     approvalStatus = db.Column(db.Integer)
 
     def __init__(self, name, businessScope, licenseID, licenseImage, contactImage, verifyType):
@@ -97,10 +97,10 @@ class CompanyAuthenticateModel(db.Model):
             'authenticateDate': self.authenticateDate,
             'businessScope': self.businessScope,
             'licenseID':self.licenseID,
-            'licenseImage': getUploadFileUrl(file_type.companyLience, self.ownerid, self.licenseImage),
-            'contactImage': getUploadFileUrl(file_type.companyContactCard, self.ownerid, self.contactImage),
+            'licenseImage': getUploadFileUrl(file_type.companyLience, self.userid, self.licenseImage),
+            'contactImage': getUploadFileUrl(file_type.companyContactCard, self.userid, self.contactImage),
             'verifyType': self.verifyType,
-            'userid': self.ownerid,
+            'userid': self.userid,
             'status': self.approvalStatus
         }
 
@@ -113,7 +113,7 @@ class BankModel(db.Model):
     bankLocation = db.Column(db.String(200))
     checkCode = db.Column(db.Integer)
 
-    ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    userid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     approvalStatus = db.Column(db.Integer)
 
     def __init__(self, name, bankAccount, bankName, bankLocation):
@@ -131,7 +131,7 @@ class BankModel(db.Model):
             'bankAccount': self.bankAccount,
             'bankName': self.bankName,
             'bankLocation': self.bankLocation,
-            'userid': self.ownerid,
+            'userid': self.userid,
             'status': self.approvalStatus,
             'checkCode': self.checkCode
         }

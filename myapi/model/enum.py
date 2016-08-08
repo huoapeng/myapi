@@ -36,16 +36,11 @@ class user_status:
     normal = 1
     disable = 2
 
-class kind_status:
+class category_status:
     normal = 1
     delete = 2
 
 class project_status:
-    normal = 1
-    disable = 2
-    delete = 3
-
-class task_status:
     bidding = 1
     selectBidder = 2
     finish = 3

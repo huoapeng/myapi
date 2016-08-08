@@ -2,51 +2,51 @@ from flask import jsonify
 from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db, app
 from myapi.model.bid import BidModel
-from myapi.model.task import TaskModel
+from myapi.model.project import ProjectModel
 from myapi.model.user import UserModel
-from myapi.model.enum import bid_status, task_status
+from myapi.model.enum import bid_status, project_status
 
 parser = reqparse.RequestParser()
-parser.add_argument('task_id', type=int, location='json', required=True)
-parser.add_argument('user_id', type=int, location='json', required=True)
-parser.add_argument('bidding_price', type=str, location='json')
-parser.add_argument('bidding_description', type=str, location='json')
-parser.add_argument('bidding_timespan', type=str, location='json')
+parser.add_argument('projectid', type=int, location='json', required=True)
+parser.add_argument('userid', type=int, location='json', required=True)
+parser.add_argument('price', type=str, location='json')
+parser.add_argument('description', type=str, location='json')
+parser.add_argument('timespan', type=str, location='json')
 
 class Bid(Resource):
     def get(self, userid, taskid):
-        e = BidModel.query.filter_by(user_id=userid).filter_by(task_id=taskid).first()
+        e = BidModel.query.filter_by(user_id=userid).filter_by(project_id=taskid).first()
         return jsonify(data=e.serialize() if e else '')
 
     def post(self):
         args = parser.parse_args()
-        bid = BidModel(args.bidding_price, args.bidding_description, args.bidding_timespan)
+        bid = BidModel(args.price, args.description, args.timespan)
 
-        user = UserModel.query.get(args.user_id)
+        user = UserModel.query.get(args.userid)
         bid.user = user
 
-        task = TaskModel.query.get(args.task_id)
-        task.bidders.append(bid)
+        project = ProjectModel.query.get(args.projectid)
+        project.bidders.append(bid)
 
         db.session.commit()
         return jsonify(bid.serialize())
 
     def put(self):
         args = parser.parse_args()
-        bid = BidModel.query.filter_by(user_id=args.user_id).filter_by(task_id=args.task_id).first_or_404()
+        bid = BidModel.query.filter_by(user_id=args.userid).filter_by(project_id=args.projectid).first_or_404()
         bid.status = bid_status.selectBidder
 
-        task = TaskModel.query.get(args.task_id)
-        task.status = task_status.selectBidder
+        project = ProjectModel.query.get(args.projectid)
+        project.status = project_status.selectBidder
 
-        user = UserModel.query.get(args.user_id)
-        user.wonTasks.append(task)
+        user = UserModel.query.get(args.userid)
+        user.wonProjects.append(project)
 
         db.session.commit()
         return jsonify(result='true')
 
 class BidList(Resource):
     def get(self, taskid):
-        return jsonify(data=[e.serialize() for e in TaskModel.query.get(taskid).bidders])
+        return jsonify(data=[e.serialize() for e in ProjectModel.query.get(taskid).bidders])
 
 

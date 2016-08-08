@@ -4,7 +4,6 @@ from flask.ext.restful import Resource, fields, marshal_with, marshal, reqparse
 from myapi import db
 from myapi.model.project import ProjectModel
 from myapi.model.user import UserModel
-from myapi.model.kind import KindModel
 from myapi.common.util import itemStatus
 
 parser = reqparse.RequestParser()
@@ -43,8 +42,8 @@ class Profile(Resource):
         # projectKinds = ','.join(project.kinds)
         # project = db.session.query(ProjectModel, ).first()
         # print project.kinds
-        for kind in project.kinds:
-            str_list.append(kind.name)
+        for category in project.kinds:
+            str_list.append(category.name)
 
         # return ProjectView(project.name,','.join(str_list))
         return jsonify({

@@ -3,7 +3,7 @@ from flask import url_for
 from myapi import db, app
 from enum import user_status, file_type, authentication_type
 from tag import user_tags
-from myapi.common.image import getUploadFileUrl, getDefaultImageUrl
+from myapi.common.file import getUploadFileUrl, getDefaultImageUrl
 
 class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,14 +21,18 @@ class UserModel(db.Model):
     authenticationType = db.Column(db.Integer)
     registDate = db.Column(db.DateTime)
 
-    publishedProjects = db.relationship('ProjectModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
     tags = db.relationship('UserTagModel', secondary=user_tags, backref=db.backref('users', lazy='dynamic'))
     versions = db.relationship('VersionModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
     notes = db.relationship('NoteModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
     notemessages = db.relationship('NoteMessageModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-    wonTasks = db.relationship('TaskModel', backref=db.backref('winner', lazy='joined'), lazy='dynamic')
-    bidTasks = db.relationship('BidModel', lazy='dynamic')
     works = db.relationship('WorkModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+
+    publishedProjects = db.relationship('ProjectModel', primaryjoin='UserModel.id==ProjectModel.ownerid', 
+        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    wonProjects = db.relationship('ProjectModel', primaryjoin='UserModel.id==ProjectModel.winnerid', 
+        backref=db.backref('winner', lazy='joined'), lazy='dynamic')
+    bidProjects = db.relationship('BidModel', lazy='dynamic')
+
     authentications = db.relationship('ApprovalModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
     privateAuthenHistory = db.relationship('PrivateAuthenticateModel', 
         backref=db.backref('owner', lazy='joined'), lazy='dynamic')
@@ -72,7 +76,10 @@ class UserModel(db.Model):
             'tags': url_for('.userTags', _external=True, userid=self.id),
             'works': url_for('.userWorks', _external=True, userid=self.id, page=1),
             'publishedProjects': url_for('.userPublishedProjects', _external=True, userid=self.id, page=1),
-            'participateProjects': url_for('.userParticipateProjects', _external=True, userid=self.id, page=1)
+            'participateProjects': url_for('.userParticipateProjects', _external=True, userid=self.id, page=1),
+            'privateAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=1),
+            'companyAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=2),
+            'bankAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=4),
         }
 
     def getImage(self, imageType=file_type.profileSmall):

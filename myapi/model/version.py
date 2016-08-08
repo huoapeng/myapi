@@ -2,7 +2,7 @@ import datetime
 from flask import url_for
 from myapi import db
 from enum import version_status
-from myapi.common.image import getUploadFileUrl
+from myapi.common.file import getUploadFileUrl
 from myapi.model.enum import file_type
 
 class VersionModel(db.Model):
@@ -11,17 +11,17 @@ class VersionModel(db.Model):
     image = db.Column(db.String(500))
     title = db.Column(db.String(500))
     description = db.Column(db.Text)
-    publish_date = db.Column(db.DateTime)
+    publishDate = db.Column(db.DateTime)
     status = db.Column(db.Integer)
 
-    task_id = db.Column(db.Integer, db.ForeignKey('task_model.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project_model.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
     def __init__(self, title, description, image):
         self.title = title
         self.description = description
         self.image = image
-        self.publish_date = datetime.datetime.now()
+        self.publishDate = datetime.datetime.now()
         self.status = version_status.normal
 
     def __repr__(self):
@@ -33,8 +33,8 @@ class VersionModel(db.Model):
             'image': getUploadFileUrl(file_type.version, self.user_id, self.image),
             'title': self.title,
             'description': self.description,
-            'publish_date': self.publish_date,
+            'publish_date': self.publishDate,
             'status': self.status,
-            'user_id': self.user_id,
-            'task_id': self.task_id
+            'userid': self.user_id,
+            'projectid': self.project_id
         }

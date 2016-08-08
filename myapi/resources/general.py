@@ -1,14 +1,6 @@
 #coding=utf-8
-# import os
-# from flask import request, url_for, jsonify, send_from_directory
-from flask.ext.restful import Resource#, reqparse
-# # from werkzeug.datastructures import FileStorage
-from myapi import db#, app
-# from myapi.model.enum import file_type
-# from myapi.model.user import UserModel
-from myapi.model.kind import KindModel
-from myapi.model.recommend import RecommendTypeModel
-# from myapi.common.image import resize, isAllowedFile, getServerFilePath
+from flask.ext.restful import Resource
+from myapi import db
 
 class general(Resource):
     def get(self, method = None):

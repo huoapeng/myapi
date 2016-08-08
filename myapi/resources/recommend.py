@@ -16,38 +16,38 @@ post_parser.add_argument('orderid', type=int, location='json')
 
 class RecommendType(Resource):
     def get(self, id):
-        kind = RecommendTypeModel.query.get(id)
-        return jsonify(data=kind.serialize()) if kind else jsonify(data='')
+        category = RecommendTypeModel.query.get(id)
+        return jsonify(data=category.serialize()) if category else jsonify(data='')
     
     def post(self):
         args = post_parser.parse_args()
 
-        kind = RecommendTypeModel(args.name)
-        db.session.add(kind)
+        category = RecommendTypeModel(args.name)
+        db.session.add(category)
         db.session.commit()
 
-        return jsonify(data=kind.serialize())
+        return jsonify(data=category.serialize())
 
     def put(self):
         args = post_parser.parse_args()
-        kind = RecommendTypeModel.query.get(args.typeid)
-        kind.name = args.name
+        category = RecommendTypeModel.query.get(args.typeid)
+        category.name = args.name
         db.session.commit()
-        return jsonify(data=kind.serialize())
+        return jsonify(data=category.serialize())
 
     def delete(self):
         args = post_parser.parse_args()
-        kind = RecommendTypeModel.query.get(args.typeid)
-        for item in kind.items:
+        category = RecommendTypeModel.query.get(args.typeid)
+        for item in category.items:
             db.session.delete(item)
-        db.session.delete(kind)
+        db.session.delete(category)
         db.session.commit()
         return jsonify(result='true')
 
 class RecommendTypeList(Resource):
     def get(self):
-        kinds = RecommendTypeModel.query.all()
-        return jsonify(data=[kind.serialize() for kind in kinds])
+        categorys = RecommendTypeModel.query.all()
+        return jsonify(data=[category.serialize() for category in categorys])
 
 class RecommendItem(Resource):
     def get(self, id):
@@ -59,8 +59,8 @@ class RecommendItem(Resource):
         item = RecommendItemModel(args.title, args.description, args.image, args.url, args.orderid)
         db.session.add(item)
 
-        kind = RecommendTypeModel.query.get(args.typeid)
-        kind.items.append(item)
+        category = RecommendTypeModel.query.get(args.typeid)
+        category.items.append(item)
         db.session.commit()
         return jsonify(data=item.serialize())
 
@@ -90,9 +90,9 @@ class RecommendItem(Resource):
 
 class RecommendItemList(Resource):
     def get(self, typeid):
-        kind = RecommendTypeModel.query.get(typeid)
-        if kind and kind.items:
-            return jsonify(data=[item.serialize() for item in kind.items])
+        category = RecommendTypeModel.query.get(typeid)
+        if category and category.items:
+            return jsonify(data=[item.serialize() for item in category.items])
         else:
             return jsonify(data='')
 
