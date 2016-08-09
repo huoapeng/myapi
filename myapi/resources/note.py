@@ -51,8 +51,8 @@ class Note(Resource):
         db.session.commit()
         return note
 
-class TaskNotes(Resource):
+class ProjectNotes(Resource):
     def get(self, projectid):
-        notes = NoteModel.query.filter_by(project_id=projectid).all()
+        notes = NoteModel.query.filter_by(project_id=projectid).order_by(NoteModel.publishDate.desc()).all()
         return jsonify(data=[e.serialize() for e in notes])
 

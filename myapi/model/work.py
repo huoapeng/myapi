@@ -46,6 +46,6 @@ class WorkModel(db.Model):
             'copyright': self.copyright,
             'status': self.status,
             'publishDate': self.publishDate.isoformat(),
-            'owner':url_for('.userep', _external=True, userid=self.ownerid),
+            'owner':url_for('.user', _external=True, userid=self.ownerid),
             'tags':url_for('.workTags', _external=True, workid=self.id)
         }

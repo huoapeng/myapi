@@ -41,11 +41,8 @@ class Version(Resource):
         db.session.commit()
         return jsonify(version.serialize())
 
-class TaskVersions(Resource):
+class ProjectVersions(Resource):
     def get(self, projectid):
-        project = ProjectModel.query.get(projectid)
-        if project:
-            return jsonify(data=[e.serialize() for e in project.versions.order_by(VersionModel.publishDate.desc())])
-        else:
-            return jsonify(data=[])
+        versions = VersionModel.query.filter_by(project_id=projectid).order_by(VersionModel.publishDate.desc()).all()
+        return jsonify(data=[e.serialize() for e in versions])
 

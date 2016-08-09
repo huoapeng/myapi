@@ -174,7 +174,7 @@ class UserAuthentication(Resource):
         args = get_parser.parse_args()
         for key in authentication_type.__dict__:
             if not key.startswith('__') and args.type == authentication_type.__dict__[key]:
-                result = model[key].query.filter_by(ownerid = args.userid)\
+                result = model[key].query.filter_by(userid = args.userid)\
                         .order_by(model[key].authenticateDate.desc()).limit(1)
                 return jsonify(type=args.type, data=[e.serialize() for e in result])
         return jsonify(type=args.type, data=[])

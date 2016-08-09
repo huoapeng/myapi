@@ -8,13 +8,13 @@ class ProjectDetailView(object):
             userid,
             userName,
             userLocation,
-            kind_str_list,
+            category_str_list,
         ):
         self.project = project
         self.userid = userid
         self.userName = userName
         self.userLocation = userLocation
-        self.kind_str_list = kind_str_list
+        self.category_str_list = category_str_list
 
     def serialize(self):
         return {
@@ -22,7 +22,7 @@ class ProjectDetailView(object):
             'userid': self.userid,
             'userName': self.userName,
             'userLocation': self.userLocation,
-            'userURI': url_for('.userep', userid=self.userid, _external=True),
-            'taskKinds': ','.join(self.kind_str_list)
+            'userURI': url_for('.user', userid=self.userid, _external=True),
+            'categoryString': ','.join(self.category_str_list)
         }
 

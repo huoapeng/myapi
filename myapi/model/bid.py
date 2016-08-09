@@ -29,7 +29,7 @@ class BidModel(db.Model):
             'timespan': self.timespan,
             'status': self.status,
             'userid': self.user_id,
-            'user': url_for('.userep', _external=True, userid=self.user_id),
+            'user': url_for('.user', _external=True, userid=self.user_id),
             'projectid': self.project_id,
-            'project': url_for('.projectep', _external=True, projectid=self.project_id),
+            'project': url_for('.project', _external=True, projectid=self.project_id),
         }

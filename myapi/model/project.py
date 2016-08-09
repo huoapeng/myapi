@@ -2,7 +2,7 @@ import datetime
 from flask import url_for
 from myapi import db
 from enum import project_status
-from category import project_kinds
+from category import project_categorys
 
 class ProjectModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,7 +21,7 @@ class ProjectModel(db.Model):
     ownerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     winnerid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
 
-    categorys = db.relationship('CategoryModel', secondary=project_kinds, 
+    categorys = db.relationship('CategoryModel', secondary=project_categorys, 
         backref=db.backref('projects', lazy='dynamic'))
     versions = db.relationship('VersionModel', backref=db.backref('project', lazy='joined'), lazy='dynamic')
     notes = db.relationship('NoteModel', backref=db.backref('project', lazy='joined'), lazy='dynamic')
@@ -58,7 +58,11 @@ class ProjectModel(db.Model):
             'status': self.status,
             'receipt': self.receipt,
             'receiptDes': self.receiptDes,
-            'owner': url_for('.userep', _external=True, userid=self.ownerid),
-            'winner': url_for('.userep', _external=True, userid=self.winnerid)
+            'owner': url_for('.user', _external=True, userid=self.ownerid),
+            'winner': url_for('.user', _external=True, userid=self.winnerid) if self.winnerid else '',
+            'versions': url_for('.projectVersions', _external=True, projectid=self.id),
+            'notes': url_for('.projectNotes', _external=True, projectid=self.id),
+            'bids': url_for('.projectBids', _external=True, projectid=self.id),
+            'categorys': url_for('.projectCategorys', _external=True, projectid=self.id)
         }
 

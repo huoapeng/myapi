@@ -7,8 +7,8 @@ from myapi.model.project import ProjectModel
 from myapi.model.user import UserModel
 
 class Project(Resource):
-    def get(self, taskid):
-        return ProjectModel.query.get(taskid).serialize()
+    def get(self, projectid):
+        return ProjectModel.query.get(projectid).serialize()
 
     def post(self):
         post_parser = reqparse.RequestParser()
@@ -42,7 +42,7 @@ class Project(Resource):
         db.session.add(project)
 
         user = UserModel.query.get(args.userid)
-        user.projects.append(project)
+        user.publishedProjects.append(project)
         db.session.commit()
         return project.serialize()
 
@@ -55,17 +55,6 @@ class Project(Resource):
         project.status = args.status
         db.session.commit()
         return project
-
-class GetProjectDetail(Resource):
-    def get(self, projectid):
-        project = ProjectModel.query.get(projectid)
-        owner = project.owner
-        category_str_list = []
-        for category in project.categorys:
-            category_str_list.append(category.name)
-
-        taskview = TaskDetailView(project, owner.id, owner.nickname, owner.location, category_str_list)
-        return jsonify(taskview.serialize())
 
 class UserPublishedProjects(Resource):
     def get(self, page):
@@ -112,7 +101,7 @@ class UserParticipateProjects(Resource):
             result=[e.serialize() for e in bids.items])
 
 from sqlalchemy import or_
-class GetProjectList(Resource):
+class ProjectList(Resource):
     def get(self, page):
         get_parser = reqparse.RequestParser()
         get_parser.add_argument('cid', type=int, location='args', default=0)
@@ -121,16 +110,15 @@ class GetProjectList(Resource):
         get_parser.add_argument('orderby', type=int, location='args', choices=range(3), default=0)
         get_parser.add_argument('desc', type=int, location='args', choices=range(3), default=0)
         args = get_parser.parse_args()
-        project_obj_list = []
         
         projects = ProjectModel.query
 
         if args.cid:
             projects = projects.filter( \
                 or_( \
-                    ProjectModel.kinds.any(CategoryModel.id == args.cid), \
-                    ProjectModel.kinds.any(CategoryModel.parent_id == args.cid), \
-                    ProjectModel.kinds.any(CategoryModel.parent.parent_id == args.cid)
+                    ProjectModel.categorys.any(CategoryModel.id == args.cid), \
+                    ProjectModel.categorys.any(CategoryModel.parent_id == args.cid), \
+                    ProjectModel.categorys.any(CategoryModel.parent.parent_id == args.cid)
                     ) \
                 )
 
@@ -152,14 +140,6 @@ class GetProjectList(Resource):
                 projects = projects.order_by(ProjectModel.bonus.asc())
 
         projects = projects.paginate(page, app.config['POSTS_PER_PAGE'], False)
-        for project in projects.items:
-            owner = project.owner
-            category_str_list = []
-            for category in project.categorys:
-                category_str_list.append(category.name)
-
-            taskview = TaskDetailView(project, owner.id, owner.nickname, owner.location, category_str_list)
-            project_obj_list.append(taskview)
 
         return jsonify(total = projects.total,
             pages = projects.pages,
@@ -169,5 +149,5 @@ class GetProjectList(Resource):
             has_prev = projects.has_prev,
             next_num = projects.next_num,
             prev_num = projects.prev_num,
-            result=[e.serialize() for e in project_obj_list])
+            result=[e.serialize() for e in projects.items])
 

@@ -32,9 +32,9 @@ class ApprovalModel(db.Model):
             'approvalStatus': self.approvalStatus,
             'approvalDate': self.approvalDate,
             'userid': self.userid,
-            'user': url_for('.userep', _external=True, userid=self.userid),
+            'user': url_for('.user', _external=True, userid=self.userid),
             'adminid': self.adminid,
-            'admin': url_for('.userep', _external=True, userid=self.adminid),
+            'admin': url_for('.user', _external=True, userid=self.adminid),
             'description': self.description
         }
 

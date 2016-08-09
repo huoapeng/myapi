@@ -10,7 +10,6 @@ parser = reqparse.RequestParser()
 parser.add_argument('name', type=str, location='json', required=True)
 parser.add_argument('description', type=str, location='json')
 parser.add_argument('owner_id', type=int, location='json', required=True)
-parser.add_argument('kind_id', type=int, location='json', required=True)
 
 resource_fields = {'project': itemStatus(attribute='status')}
 resource_fields['list']={}
@@ -37,18 +36,9 @@ class Profile(Resource):
         str_list = []
 
         project = ProjectModel.query.get(1)
-        # for name, fullname in db.session.query(User.name, User.fullname).filter(User.fullname=='Ed Jones'):
-        #     print(name, fullname)
-        # projectKinds = ','.join(project.kinds)
-        # project = db.session.query(ProjectModel, ).first()
-        # print project.kinds
-        for category in project.kinds:
-            str_list.append(category.name)
-
-        # return ProjectView(project.name,','.join(str_list))
         return jsonify({
             'projectName':project.name,
             'projectKinds':','.join(str_list),
-            'url':url_for('.userep', _external=True, userid=1),
+            'url':url_for('.user', _external=True, userid=1),
             })
 
