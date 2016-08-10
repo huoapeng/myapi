@@ -22,5 +22,5 @@ class EmailModel(db.Model):
             # 'userName': self.owner.nickname,
             # 'userImage': self.owner.getImage(),
             # 'title': self.title,
-            # 'publishDate': self.publish_date.isoformat()
+            # 'publishDate': self.publishDate.isoformat()
         }

@@ -15,7 +15,7 @@ parser.add_argument('userid', type=int, location='json', required=True)
 note_fields = {
     'id': fields.Integer,
     'title': fields.String,
-    'publish_date': fields.DateTime,
+    'publishDate': fields.DateTime,
     'status':  itemStatus(attribute='status'),
     'user_id': fields.Integer,
     'project_id': fields.Integer

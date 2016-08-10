@@ -16,7 +16,7 @@ class NoteModel(db.Model):
 
     def __init__(self, title):
         self.title = title
-        self.publish_date = datetime.datetime.now()
+        self.publishDate = datetime.datetime.now()
         self.status = note_status.normal
 
     def __repr__(self):
@@ -29,5 +29,5 @@ class NoteModel(db.Model):
             'userName': self.owner.nickname,
             'userImage': self.owner.getImage(),
             'title': self.title,
-            'publishDate': self.publish_date.isoformat()
+            'publishDate': self.publishDate.isoformat()
         }

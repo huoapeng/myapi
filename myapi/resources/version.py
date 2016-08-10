@@ -43,6 +43,9 @@ class Version(Resource):
 
 class ProjectVersions(Resource):
     def get(self, projectid):
-        versions = VersionModel.query.filter_by(project_id=projectid).order_by(VersionModel.publishDate.desc()).all()
+        versions = VersionModel.query\
+            .filter_by(status = version_status.normal)\
+            .filter_by(project_id = projectid)\
+            .order_by(VersionModel.publishDate.desc()).all()
         return jsonify(data=[e.serialize() for e in versions])
 

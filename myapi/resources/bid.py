@@ -54,4 +54,7 @@ class BidList(Resource):
     def get(self, projectid):
         return jsonify(data=[e.serialize() for e in BidModel.query.filter_by(project_id=projectid)])
 
+class BidCount(Resource):
+    def get(self, projectid):
+        return jsonify(count=BidModel.query.filter_by(project_id=projectid).count())
 

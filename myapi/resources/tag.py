@@ -30,10 +30,8 @@ class UserTag(Resource):
             tag = UserTagModel(args.name)
             db.session.add(tag)
 
-        if args.userid:
-            user = UserModel.query.get(args.userid)
-            user.tags.append(tag)
-            
+        user = UserModel.query.get(args.userid)
+        user.tags.append(tag)
         db.session.commit()
         return tag
 
@@ -43,7 +41,7 @@ class UserTag(Resource):
         user = UserModel.query.get(args.userid)
         user.tags.remove(tag)
         db.session.commit()
-        return jsonify(result=true)
+        return jsonify(result='True')
 
 class UserTags(Resource):
     @marshal_with(tag_fields)
@@ -85,12 +83,7 @@ class WorkTag(Resource):
         if not tag:
             tag = WorkTagModel(args.name)
             db.session.add(tag)
-
-        if args.workid:
-            work = WorkModel.query.get(args.workid)
-            work.tags.append(tag)
-
-        db.session.commit()
+            db.session.commit()
         return tag
 
     def delete(self):
@@ -99,7 +92,7 @@ class WorkTag(Resource):
         work = WorkTagModel.query.get(args.workid)
         work.tags.remove(tag)
         db.session.commit()
-        return jsonify(result=true)
+        return jsonify(result='true')
 
 class WorkTags(Resource):
     @marshal_with(tag_fields)

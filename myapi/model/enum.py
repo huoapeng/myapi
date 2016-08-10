@@ -45,7 +45,8 @@ class project_status:
     selectBidder = 2
     finish = 3
     disable = 4
-    delete = 5
+    abort = 5
+    deny = 6
 
 class version_status:
     normal = 1

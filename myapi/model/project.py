@@ -63,6 +63,7 @@ class ProjectModel(db.Model):
             'versions': url_for('.projectVersions', _external=True, projectid=self.id),
             'notes': url_for('.projectNotes', _external=True, projectid=self.id),
             'bids': url_for('.projectBids', _external=True, projectid=self.id),
+            'bidCount': url_for('.projectCount', _external=True, projectid=self.id),
             'categorys': url_for('.projectCategorys', _external=True, projectid=self.id)
         }
 

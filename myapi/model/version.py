@@ -33,7 +33,7 @@ class VersionModel(db.Model):
             'image': getUploadFileUrl(file_type.version, self.user_id, self.image),
             'title': self.title,
             'description': self.description,
-            'publish_date': self.publishDate,
+            'publishDate': self.publishDate,
             'status': self.status,
             'userid': self.user_id,
             'projectid': self.project_id

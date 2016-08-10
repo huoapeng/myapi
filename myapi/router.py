@@ -34,9 +34,10 @@ from myapi.resources.work import Work, UserWorks
 api.add_resource(Work, '/work', '/work/<int:workid>')
 api.add_resource(UserWorks, '/<int:userid>/userworks/<int:page>', endpoint='userWorks')
 
-from myapi.resources.bid import Bid, BidList
+from myapi.resources.bid import Bid, BidList, BidCount
 api.add_resource(Bid, '/bid')
 api.add_resource(BidList, '/<int:projectid>/bidlist', endpoint='projectBids')
+api.add_resource(BidCount, '/<int:projectid>/bidcount', endpoint='projectCount')
 
 from myapi.resources.project import Project, ProjectList, UserPublishedProjects, UserParticipateProjects
 api.add_resource(Project, '/project', '/project/<int:projectid>', endpoint='project')
