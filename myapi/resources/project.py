@@ -54,7 +54,7 @@ class Project(Resource):
         project = ProjectModel.query.get(args.id)
         project.status = args.status
         db.session.commit()
-        return project
+        return project.serialize()
 
 class UserPublishedProjects(Resource):
     def get(self, page):
@@ -76,7 +76,7 @@ class UserPublishedProjects(Resource):
             has_prev = projects.has_prev,
             next_num = projects.next_num,
             prev_num = projects.prev_num,
-            result=[e.serialize() for e in projects.items])
+            data=[e.serialize() for e in projects.items])
 
 class UserParticipateProjects(Resource):
     def get(self, page):
@@ -98,7 +98,7 @@ class UserParticipateProjects(Resource):
             has_prev = bids.has_prev,
             next_num = bids.next_num,
             prev_num = bids.prev_num,
-            result=[e.serialize() for e in bids.items])
+            data=[e.serialize() for e in bids.items])
 
 from sqlalchemy import or_
 class ProjectList(Resource):
@@ -106,7 +106,7 @@ class ProjectList(Resource):
         get_parser = reqparse.RequestParser()
         get_parser.add_argument('cid', type=int, location='args', default=0)
         get_parser.add_argument('keyword', type=str, location='args')
-        get_parser.add_argument('status', type=int, location='args', choices=range(6), default=0)
+        get_parser.add_argument('status', type=int, location='args', default=0)
         get_parser.add_argument('orderby', type=int, location='args', choices=range(3), default=0)
         get_parser.add_argument('desc', type=int, location='args', choices=range(3), default=0)
         args = get_parser.parse_args()
@@ -149,5 +149,5 @@ class ProjectList(Resource):
             has_prev = projects.has_prev,
             next_num = projects.next_num,
             prev_num = projects.prev_num,
-            result=[e.serialize() for e in projects.items])
+            data=[e.serialize() for e in projects.items])
 
