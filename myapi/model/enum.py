@@ -3,11 +3,7 @@ class authentication_type:
     private = 1
     company = 2
     bank = 4
-    alipay = 8
-
-class verify_type:
-    auto = 1
-    manual = 2
+    manual = 8
 
 class approval_result:
     deny = 1

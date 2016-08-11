@@ -12,14 +12,15 @@ api.add_resource(ChangePassword, '/changepwd')
 api.add_resource(ChangeUserStatus, '/changeuserstatus')
 api.add_resource(ChangeUserDefaultImg, '/changeuserdefaultimg')
 
-from myapi.resources.authentication import AuthenticationList, Approval, \
-    PrivateAuthenticate, CompanyAuthenticate, BankAuthenticate, UserAuthentication
+from myapi.resources.authentication import AuthenticationList, UserAuthentication, Approval, \
+    PrivateAuthenticate, CompanyAuthenticate, BankAuthenticate, ManualAuthenticate
 api.add_resource(AuthenticationList, '/authenticationlist')
 api.add_resource(UserAuthentication, '/userauthen', endpoint='userAuthen')
 api.add_resource(Approval, '/approval')
 api.add_resource(PrivateAuthenticate, '/privateauthen')
 api.add_resource(CompanyAuthenticate, '/companyauthen')
 api.add_resource(BankAuthenticate, '/bankauthen')
+api.add_resource(ManualAuthenticate, '/manualthen')
 
 from myapi.resources.tag import UserTag, UserTags, UserTagList, SearchUserTagsByName, \
 	WorkTag, WorkTags, SearchWorkTagsByName

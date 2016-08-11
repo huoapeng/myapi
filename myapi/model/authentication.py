@@ -1,7 +1,6 @@
 import datetime
 from flask import url_for
 from myapi import db
-from enum import verify_type, authentication_type
 from myapi.common.file import getUploadFileUrl
 from myapi.model.enum import file_type
 
@@ -38,7 +37,7 @@ class ApprovalModel(db.Model):
             'description': self.description
         }
 
-class PrivateAuthenticateModel(db.Model):
+class PrivateModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(200))
     authenticateDate = db.Column(db.DateTime)
@@ -68,7 +67,7 @@ class PrivateAuthenticateModel(db.Model):
             'status': self.approvalStatus
         }
 
-class CompanyAuthenticateModel(db.Model):
+class CompanyModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(200))
     authenticateDate = db.Column(db.DateTime)
@@ -133,6 +132,30 @@ class BankModel(db.Model):
             'checkCode': self.checkCode
         }
 
+class ManualModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.String(100))
+    phone = db.Column(db.String(100))
+    location = db.Column(db.String(100))
+    authenticateDate = db.Column(db.DateTime)
 
+    userid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
+    approvalStatus = db.Column(db.Integer)
 
+    def __init__(self, name, phone, location):
+        self.name = name
+        self.phone = phone
+        self.location = location
+        self.authenticateDate = datetime.datetime.now()
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'authenticateDate': self.authenticateDate,
+            'phone': self.phone,
+            'location': self.location,
+            'userid': self.userid,
+            'status': self.approvalStatus
+        }
         

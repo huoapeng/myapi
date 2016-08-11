@@ -3,8 +3,8 @@ from flask import jsonify
 from flask.ext.restful import Resource, reqparse
 from myapi import db
 from myapi.model.user import UserModel
-from myapi.model.authentication import ApprovalModel, PrivateAuthenticateModel, CompanyAuthenticateModel, BankModel
-from myapi.model.enum import authentication_type, verify_type, approval_result
+from myapi.model.authentication import ApprovalModel, PrivateModel, CompanyModel, BankModel, ManualModel
+from myapi.model.enum import authentication_type, approval_result
 
 class Approval(Resource):
     def get(self, id):
@@ -41,7 +41,7 @@ class Approval(Resource):
         
 class PrivateAuthenticate(Resource):
     def get(self, id):
-        authority = PrivateAuthenticateModel.query.get(id)
+        authority = PrivateModel.query.get(id)
         return jsonify(authority.serialize())
 
     def post(self):
@@ -53,7 +53,7 @@ class PrivateAuthenticate(Resource):
         post_parser.add_argument('identityBackImage', type=str, location='json', required=True)
         args = post_parser.parse_args()
 
-        p = PrivateAuthenticateModel(args.name, args.identityid, args.identityFrontImage, args.identityBackImage)
+        p = PrivateModel(args.name, args.identityid, args.identityFrontImage, args.identityBackImage)
         db.session.add(p)
 
         user = UserModel.query.get(args.ownerid)
@@ -73,7 +73,7 @@ class PrivateAuthenticate(Resource):
 
 class CompanyAuthenticate(Resource):
     def get(self, id):
-        authority = CompanyAuthenticateModel.query.get(id)
+        authority = CompanyModel.query.get(id)
         return jsonify(authority.serialize())
 
     def post(self):
@@ -86,7 +86,7 @@ class CompanyAuthenticate(Resource):
         post_parser.add_argument('contactImage', type=str, location='json', required=True)
         args = post_parser.parse_args()
 
-        c = CompanyAuthenticateModel(args.name, args.businessScope, args.licenseID, 
+        c = CompanyModel(args.name, args.businessScope, args.licenseID, 
             args.licenseImage, args.contactImage)
         db.session.add(c)
 
@@ -151,6 +151,37 @@ class BankAuthenticate(Resource):
         db.session.commit()
         return jsonify(user.serialize())
 
+class ManualAuthenticate(Resource):
+    def get(self, id):
+        authority = ManualModel.query.get(id)
+        return jsonify(authority.serialize())
+
+    def post(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('ownerid', type=int, location='json', required=True)
+        post_parser.add_argument('name', type=str, location='json', required=True)
+        post_parser.add_argument('phone', type=str, location='json', required=True)
+        post_parser.add_argument('location', type=str, location='json', required=True)
+        args = post_parser.parse_args()
+
+        m = ManualModel(args.name, args.phone, args.location)
+        db.session.add(m)
+
+        user = UserModel.query.get(args.ownerid)
+        user.manualAuthenHistory.append(m)
+        db.session.commit()
+        return jsonify(p.serialize())
+
+    def delete(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('ownerid', type=int, location='json', required=True)
+        args = post_parser.parse_args()
+
+        user = UserModel.query.get(args.ownerid)
+        user.authenticationType = user.authenticationType ^ authentication_type.manual
+        db.session.commit()
+        return jsonify(user.serialize())
+
 class AuthenticationList(Resource):
     def get(self):
         # for x in dir(authentication_type):
@@ -179,8 +210,9 @@ class UserAuthentication(Resource):
         return jsonify(type=args.type, data=[])
 
 model = {
-    'private' : PrivateAuthenticateModel,
-    'company' : CompanyAuthenticateModel,
-    'bank' : BankModel
+    'private' : PrivateModel,
+    'company' : CompanyModel,
+    'bank' : BankModel,
+    'manual' : ManualModel
 }
 

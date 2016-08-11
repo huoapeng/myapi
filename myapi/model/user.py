@@ -34,12 +34,10 @@ class UserModel(db.Model):
     bidProjects = db.relationship('BidModel', lazy='dynamic')
 
     authentications = db.relationship('ApprovalModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-    privateAuthenHistory = db.relationship('PrivateAuthenticateModel', 
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-    companyAuthenHistory = db.relationship('CompanyAuthenticateModel',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
-    bankAuthenHistory = db.relationship('BankModel',
-        backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    privateAuthenHistory = db.relationship('PrivateModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    companyAuthenHistory = db.relationship('CompanyModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    bankAuthenHistory = db.relationship('BankModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
+    manualAuthenHistory = db.relationship('ManualModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
     def __init__(self, email, password, nickname=None, phone=None, location=None, description=None):
         if nickname:
@@ -80,6 +78,7 @@ class UserModel(db.Model):
             'privateAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=1),
             'companyAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=2),
             'bankAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=4),
+            'manualAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=8)
         }
 
     def getImage(self, imageType=file_type.profileSmall):
