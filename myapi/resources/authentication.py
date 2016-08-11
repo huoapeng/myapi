@@ -18,7 +18,7 @@ class Approval(Resource):
         post_parser.add_argument('approvalStatus', type=int, location='json', required=True)
         post_parser.add_argument('userid', type=int, location='json', required=True)
         post_parser.add_argument('adminid', type=int, location='json', required=True)
-        post_parser.add_argument('description', type=str, location='json', required=True)
+        post_parser.add_argument('description', type=str, location='json')
         args = post_parser.parse_args()
 
         a = ApprovalModel(
@@ -84,11 +84,10 @@ class CompanyAuthenticate(Resource):
         post_parser.add_argument('licenseID', type=str, location='json', required=True)
         post_parser.add_argument('licenseImage', type=str, location='json', required=True)
         post_parser.add_argument('contactImage', type=str, location='json', required=True)
-        post_parser.add_argument('verifyType', type=str, location='json', required=True)
         args = post_parser.parse_args()
 
         c = CompanyAuthenticateModel(args.name, args.businessScope, args.licenseID, 
-            args.licenseImage, args.contactImage, args.verifyType)
+            args.licenseImage, args.contactImage)
         db.session.add(c)
 
         user = UserModel.query.get(args.ownerid)

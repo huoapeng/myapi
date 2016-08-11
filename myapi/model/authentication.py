@@ -76,19 +76,17 @@ class CompanyAuthenticateModel(db.Model):
     licenseID = db.Column(db.String(500))
     licenseImage = db.Column(db.String(500))
     contactImage = db.Column(db.String(500))
-    verifyType = db.Column(db.Integer)
 
     userid = db.Column(db.Integer, db.ForeignKey('user_model.id'))
     approvalStatus = db.Column(db.Integer)
 
-    def __init__(self, name, businessScope, licenseID, licenseImage, contactImage, verifyType):
+    def __init__(self, name, businessScope, licenseID, licenseImage, contactImage):
         self.name = name
         self.authenticateDate = datetime.datetime.now()
         self.businessScope = businessScope
         self.licenseID = licenseID
         self.licenseImage = licenseImage
         self.contactImage = contactImage
-        self.verifyType = verifyType
 
     def serialize(self):
         return {
@@ -99,7 +97,6 @@ class CompanyAuthenticateModel(db.Model):
             'licenseID':self.licenseID,
             'licenseImage': getUploadFileUrl(file_type.companyLience, self.userid, self.licenseImage),
             'contactImage': getUploadFileUrl(file_type.companyContactCard, self.userid, self.contactImage),
-            'verifyType': self.verifyType,
             'userid': self.userid,
             'status': self.approvalStatus
         }
