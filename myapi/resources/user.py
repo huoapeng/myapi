@@ -9,16 +9,6 @@ from myapi.model.tag import UserTagModel
 from myapi.model.enum import user_status
 from myapi.common.util import valid_email, md5
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument('email', type=valid_email, location='json', required=True)
-post_parser.add_argument('nickname', type=str, location='json')
-post_parser.add_argument('password', type=str, location='json')
-post_parser.add_argument('phone', type=str, location='json')
-post_parser.add_argument('location', type=str, location='json')
-post_parser.add_argument('description', type=str, location='json')
-post_parser.add_argument('params', type=str, location='json')
-post_parser.add_argument('orignalPassword', type=str, location='json')
-
 class User(Resource):
     def get(self, userid):
         user = UserModel.query.get(userid)
@@ -28,6 +18,13 @@ class User(Resource):
             return jsonify(result='can`t find user by userid')
 
     def post(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('email', type=valid_email, location='json', required=True)
+        post_parser.add_argument('nickname', type=str, location='json')
+        post_parser.add_argument('password', type=str, location='json')
+        post_parser.add_argument('phone', type=str, location='json')
+        post_parser.add_argument('location', type=str, location='json')
+        post_parser.add_argument('description', type=str, location='json')
         args = post_parser.parse_args()
 
         user = UserModel.query.filter_by(email=args.email).first()
@@ -47,6 +44,8 @@ class User(Resource):
             return jsonify(result=False, message='用户名或密码错误！')
 
     def put(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('email', type=valid_email, location='json', required=True)
         args = post_parser.parse_args()
         user = UserModel.query.filter_by(email=args.email).one()
         if user:
@@ -59,15 +58,11 @@ class User(Resource):
         else:
             return jsonify(result='can`t find user by email')
 
-    def delete(self):
-        pass
-
 class ChangeUserStatus(Resource):
     def put(self):
         post_parser = reqparse.RequestParser()
         post_parser.add_argument('id', type=int, location='json', required=True)
         post_parser.add_argument('userStatus', type=int, location='json', required=True)
-
         args = post_parser.parse_args()
         user = UserModel.query.get(args.id)
         if user:
@@ -75,10 +70,14 @@ class ChangeUserStatus(Resource):
             db.session.commit()
             return jsonify(user.serialize())
         else:
-            return jsonify(result='can`t find user by email')
+            return jsonify(result='can`t find user by id')
 
 class ChangePassword(Resource):
-    def post(self):
+    def put(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('email', type=valid_email, location='json', required=True)
+        post_parser.add_argument('params', type=str, location='json')
+        post_parser.add_argument('orignalPassword', type=str, location='json')
         args = post_parser.parse_args()
         if not args.orignalPassword:
             user = UserModel.query.filter_by(email=args.email).one()
@@ -95,6 +94,20 @@ class ChangePassword(Resource):
             user.password = md5(args.password)
             db.session.commit()
             return jsonify(user.serialize())
+
+class ChangeUserDefaultImg(Resource):
+    def put(self):
+        post_parser = reqparse.RequestParser()
+        post_parser.add_argument('userid', type=int, location='json', required=True)
+        post_parser.add_argument('imageid', type=int, location='json', required=True)
+        args = post_parser.parse_args()
+        user = UserModel.query.get(args.userid)
+        if user:
+            user.defaultImage = '{}.jpg'.format(args.imageid)
+            db.session.commit()
+            return jsonify(user.serialize())
+        else:
+            return jsonify(result='can`t find user by id')
 
 class GetUserList(Resource):
     def get(self, page):
