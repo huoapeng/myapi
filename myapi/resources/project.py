@@ -5,6 +5,7 @@ from myapi import db, app
 from myapi.model.category import CategoryModel
 from myapi.model.project import ProjectModel
 from myapi.model.user import UserModel
+from myapi.model.bid import BidModel
 
 class Project(Resource):
     def get(self, projectid):
@@ -87,7 +88,7 @@ class UserParticipateProjects(Resource):
         bids = UserModel.query.get(args.userid).bidProjects
 
         if args.status:
-            bids = bids.project.filter_by(status = args.status)
+            bids = bids.filter(BidModel.project.has(ProjectModel.status == args.status))
         
         bids = bids.paginate(page, app.config['POSTS_PER_PAGE'], False)
         return jsonify(total = bids.total,
