@@ -29,10 +29,12 @@ class UserTag(Resource):
         if not tag:
             tag = UserTagModel(args.name)
             db.session.add(tag)
+            db.session.commit()
 
-        user = UserModel.query.get(args.userid)
-        user.tags.append(tag)
-        db.session.commit()
+        if args.userid:
+            user = UserModel.query.get(args.userid)
+            user.tags.append(tag)
+            db.session.commit()
         return tag
 
     def delete(self):
