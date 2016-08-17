@@ -119,7 +119,7 @@ class ProjectList(Resource):
                 or_( \
                     ProjectModel.categorys.any(CategoryModel.id == args.cid), \
                     ProjectModel.categorys.any(CategoryModel.parent_id == args.cid), \
-                    ProjectModel.categorys.any(CategoryModel.parent.parent_id == args.cid)
+                    ProjectModel.categorys.any(CategoryModel.parent.has(CategoryModel.parent_id == args.cid))
                     ) \
                 )
 
