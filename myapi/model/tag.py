@@ -20,7 +20,9 @@ class UserTagModel(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'count': self.users.count(),
+            'users': [u.serialize() for u in self.users]
         }
 
 class WorkTagModel(db.Model):
