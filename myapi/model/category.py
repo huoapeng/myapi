@@ -1,6 +1,11 @@
 from myapi import db
 from enum import category_status
 
+user_categorys = db.Table('user_categorys',
+    db.Column('category_id', db.Integer, db.ForeignKey('category_model.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('user_model.id'), primary_key=True)
+)
+
 project_categorys = db.Table('project_categorys',
     db.Column('category_id', db.Integer, db.ForeignKey('category_model.id'), primary_key=True),
     db.Column('project_id', db.Integer, db.ForeignKey('project_model.id'), primary_key=True)

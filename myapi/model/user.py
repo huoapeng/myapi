@@ -21,6 +21,9 @@ class UserModel(db.Model):
     authenticationType = db.Column(db.Integer)
     registDate = db.Column(db.DateTime)
 
+    categorys = db.relationship('CategoryModel', secondary=user_categorys, 
+        backref=db.backref('users', lazy='dynamic'))
+
     tags = db.relationship('UserTagModel', secondary=user_tags, backref=db.backref('users', lazy='dynamic'))
     versions = db.relationship('VersionModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
     notes = db.relationship('NoteModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
