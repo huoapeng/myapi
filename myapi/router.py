@@ -6,7 +6,7 @@ api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
 from myapi.resources.login import Login, ChangePassword
-api.add_resource(Login, '/login')
+api.add_resource(Login, '/login', '/login/<int:id>')
 api.add_resource(ChangePassword, '/changepwd')
 
 from myapi.resources.user import User, GetUserList

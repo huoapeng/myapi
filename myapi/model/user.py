@@ -69,6 +69,7 @@ class UserModel(db.Model):
             'imageMedium': self.getImage(file_type.profileMedium),
             'imageSmall': self.getImage(file_type.profileSmall),
             'description': self.description,
+            'defaultImage': self.defaultImage,
             'status': self.status,
             'authenticationType': self.authenticationType,
             'registDate': self.registDate.isoformat(),

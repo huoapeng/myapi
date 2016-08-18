@@ -64,11 +64,11 @@ class SearchCategorysByName(Resource):
 class ProjectCategorys(Resource):
     def get(self, projectid):
         categorys = CategoryModel.query.filter_by(status = category_status.normal)\
-            .filter(CategoryModel.projects.has(ProjectModel.id == projectid))
+            .filter(CategoryModel.projects.any(ProjectModel.id == projectid))
         return jsonify(data=[e.serialize() for e in categorys])
 
 class UserCategorys(Resource):
     def get(self, userid):
         categorys = CategoryModel.query.filter_by(status = category_status.normal)\
-            .filter(CategoryModel.users.has(UserModel.id == userid))
+            .filter(CategoryModel.users.any(UserModel.id == userid))
         return jsonify(data=[e.serialize() for e in categorys])

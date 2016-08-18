@@ -6,6 +6,7 @@ from myapi import db, app
 from myapi.model.user import UserModel
 from myapi.model.smtp import EmailModel
 from myapi.model.tag import UserTagModel
+from myapi.model.category import CategoryModel
 from myapi.model.enum import account_status
 from myapi.common.util import valid_email, md5
 
@@ -24,17 +25,21 @@ class User(Resource):
         post_parser.add_argument('phone', type=str, location='json')
         post_parser.add_argument('location', type=str, location='json')
         post_parser.add_argument('description', type=str, location='json')  
-        post_parser.add_argument('imageid', type=int, location='json')
+        post_parser.add_argument('defaultImage', type=str, location='json')
+        post_parser.add_argument('cids', type=str, location='json')
         post_parser.add_argument('status', type=int, location='json')      
         args = post_parser.parse_args()
-        user = UserModel.query.get(args.id).first()
+        user = UserModel.query.get(args.id)
         if user:
             user.nickname = args.nickname
             user.phone = args.phone
             user.location = args.location
             user.description = args.description
-            user.defaultImage = '{}.jpg'.format(args.imageid)
+            user.defaultImage = args.defaultImage
             user.status = args.status
+            for id in args.cids.split(','):
+                category = CategoryModel.query.get(id)
+                user.categorys.append(category)
             db.session.add(user)
             db.session.commit()    
             return jsonify(user.serialize())

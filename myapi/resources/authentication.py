@@ -170,7 +170,7 @@ class ManualAuthenticate(Resource):
         user = UserModel.query.get(args.ownerid)
         user.manualAuthenHistory.append(m)
         db.session.commit()
-        return jsonify(p.serialize())
+        return jsonify(user.serialize())
 
     def delete(self):
         post_parser = reqparse.RequestParser()

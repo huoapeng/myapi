@@ -11,6 +11,11 @@ from myapi.model.enum import account_status
 from myapi.common.util import valid_email, md5
 
 class Login(Resource):
+    def get(self, id):
+        login = LoginModel.query.get(id)
+        if login:
+            return jsonify(login.serialize())
+
     def post(self):
         post_parser = reqparse.RequestParser()
         post_parser.add_argument('email', type=valid_email, location='json', required=True)
@@ -26,7 +31,7 @@ class Login(Resource):
             db.session.add(user)
             db.session.commit()
 
-            login = LoginModel(args.email, args.password, user.id)
+            login = LoginModel(args.email, md5(args.password), user.id)
             db.session.add(login)
             db.session.commit()
         
@@ -65,7 +70,7 @@ class ChangePassword(Resource):
             login = LoginModel.query.filter_by(email=args.email).first()
             email = EmailModel.query.filter_by(toUser=args.email).filter_by(params=args.params).first()
 
-            if login && email && email.expires < datetime.datetime.now():
+            if login and email and email.expires < datetime.datetime.now():
                 pass
             else:
                 return jsonify(result=False, message='请重试')

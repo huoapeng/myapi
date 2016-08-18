@@ -17,7 +17,7 @@ class UserTagModel(db.Model):
     status = db.Column(db.Integer)
 
     def __init__(self, name):
-		self.name = name
+        self.name = name
         self.status = tag_status.normal
 
     def serialize(self):
@@ -34,4 +34,4 @@ class WorkTagModel(db.Model):
     name = db.Column(db.String(50))
     
     def __init__(self, name):
-		self.name = name
+        self.name = name
