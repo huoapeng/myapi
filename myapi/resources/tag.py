@@ -4,17 +4,20 @@ from myapi import db, app
 from myapi.model.tag import UserTagModel, WorkTagModel
 from myapi.model.user import UserModel
 from myapi.model.work import WorkModel
-from sqlalchemy import func
+from myapi.model.enum import tag_status
+# from sqlalchemy import func
 
 parser = reqparse.RequestParser()
 parser.add_argument('id', type=int, location='json')
 parser.add_argument('name', type=str, location='json')
 parser.add_argument('userid', type=int, location='json')
 parser.add_argument('workid', type=int, location='json')
+parser.add_argument('status', type=int, location='json')
 
 tag_fields = {
     'id': fields.Integer,
-    'name': fields.String
+    'name': fields.String,
+    'status': fields.Integer
 }
 
 class UserTag(Resource):
@@ -37,6 +40,13 @@ class UserTag(Resource):
             db.session.commit()
         return tag
 
+    def put(self):
+        args = parser.parse_args()
+        tag = UserTagModel.query.get(args.id)
+        tag.status = args.status
+        db.session.commit()
+        return jsonify(result='True')
+
     def delete(self):
         args = parser.parse_args()
         tag = UserTagModel.query.get(args.id)
@@ -48,7 +58,7 @@ class UserTag(Resource):
 class UserTags(Resource):
     @marshal_with(tag_fields)
     def get(self, userid):
-        user = UserModel.query.get(userid)
+        user = UserModel.query.get(userid).filter_by(status = tag_status.normal)
         return user.tags
 
 class UserTagList(Resource):
@@ -56,7 +66,8 @@ class UserTagList(Resource):
         # tags = db.session.query(UserTagModel.name, func.count(UserTagModel.name)).\
         #     group_by(UserTagModel.name).order_by(func.count(UserTagModel.name).desc()).limit(limit)
         # return jsonify(data=[e for e in tags])
-        tags = UserTagModel.query.paginate(page, app.config['POSTS_PER_PAGE'], False)
+        tags = UserTagModel.query.filter_by(status = tag_status.normal)\
+            .paginate(page, app.config['POSTS_PER_PAGE'], False)
         return jsonify(total = tags.total,
             pages = tags.pages,
             page = tags.page,
@@ -71,7 +82,8 @@ class UserTagList(Resource):
 class SearchUserTagsByName(Resource):
     @marshal_with(tag_fields)
     def get(self, keyword):
-        return UserTagModel.query.filter(UserTagModel.name.contains(keyword)).all()
+        return UserTagModel.query.filter(UserTagModel.name.contains(keyword))\
+            .filter_by(status = tag_status.normal).all()
 
 class WorkTag(Resource):
     @marshal_with(tag_fields)

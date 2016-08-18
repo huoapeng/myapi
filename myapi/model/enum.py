@@ -44,6 +44,10 @@ class project_status:
     abort = 5
     deny = 6
 
+class tag_status:
+    normal = 1
+    delete = 2
+
 class version_status:
     normal = 1
     delete = 2
