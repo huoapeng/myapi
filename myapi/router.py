@@ -5,10 +5,13 @@ from flask.ext.restful import Api
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
 
-from myapi.resources.user import User, ChangePassword, ChangeUserStatus, ChangeUserDefaultImg, GetUserList
+from myapi.resources.login import Login, ChangePassword
+api.add_resource(Login, '/login')
+api.add_resource(ChangePassword, '/changepwd')
+
+from myapi.resources.user import User, ChangeUserStatus, ChangeUserDefaultImg, GetUserList
 api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='user')
 api.add_resource(GetUserList, '/userlist/<int:page>')
-api.add_resource(ChangePassword, '/changepwd')
 api.add_resource(ChangeUserStatus, '/changeuserstatus')
 api.add_resource(ChangeUserDefaultImg, '/changeuserdefaultimg')
 

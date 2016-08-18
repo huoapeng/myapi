@@ -28,7 +28,7 @@ class file_type:
     recommend = 9
     workFile = 51
 
-class user_status:
+class account_status:
     normal = 1
     disable = 2
 
