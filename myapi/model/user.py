@@ -1,15 +1,15 @@
 import datetime, random
 from flask import url_for
 from myapi import db, app
-from enum import user_status, file_type, authentication_type
+from enum import account_status, file_type, authentication_type
 from tag import user_tags
+from category import user_categorys
 from myapi.common.file import getUploadFileUrl, getDefaultImageUrl
 
 class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(200))
     email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(200))
     phone = db.Column(db.String(50))
     location = db.Column(db.String(200))
     imageLarge = db.Column(db.String(200))
@@ -42,19 +42,17 @@ class UserModel(db.Model):
     bankAuthenHistory = db.relationship('BankModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
     manualAuthenHistory = db.relationship('ManualModel', backref=db.backref('owner', lazy='joined'), lazy='dynamic')
 
-    def __init__(self, email, password, nickname=None, phone=None, location=None, description=None):
+    def __init__(self, email, nickname=None, phone=None, location=None, description=None):
         if nickname:
             self.nickname = nickname
         else:
             self.nickname = email[:email.find(r'@')]
         self.defaultImage = '{}.jpg'.format(random.randint(1, app.config['DEFAULT_IMAGE_COUNT']))
         self.email = email
-        self.password = password
         self.phone = phone
         self.location = location
         self.description = description
         self.registDate = datetime.datetime.now()
-        self.status = user_status.disable
         self.authenticationType = authentication_type.none
 
     def __repr__(self):

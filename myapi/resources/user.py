@@ -6,7 +6,7 @@ from myapi import db, app
 from myapi.model.user import UserModel
 from myapi.model.smtp import EmailModel
 from myapi.model.tag import UserTagModel
-from myapi.model.enum import user_status
+from myapi.model.enum import account_status
 from myapi.common.util import valid_email, md5
 
 class User(Resource):
@@ -15,99 +15,31 @@ class User(Resource):
         if user:
             return jsonify(user.serialize())
         else:
-            return jsonify(result='can`t find user by userid')
-
-    def post(self):
-        post_parser = reqparse.RequestParser()
-        post_parser.add_argument('email', type=valid_email, location='json', required=True)
-        post_parser.add_argument('nickname', type=str, location='json')
-        post_parser.add_argument('password', type=str, location='json')
-        post_parser.add_argument('phone', type=str, location='json')
-        post_parser.add_argument('location', type=str, location='json')
-        post_parser.add_argument('description', type=str, location='json')
-        args = post_parser.parse_args()
-
-        user = UserModel.query.filter_by(email=args.email).first()
-        if user:
-            if user.status == user_status.disable:
-                return jsonify(result=False, message='此账号已被冻结！')
-        else:
-            u = UserModel(args.email, md5(args.password), \
-                args.nickname, args.phone, args.location, args.description)
-            db.session.add(u)
-            db.session.commit()
-        
-        user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.password)).first()
-        if user:
-            return jsonify(result=True, data=user.serialize())
-        else:
-            return jsonify(result=False, message='用户名或密码错误！')
+            return jsonify(result=False, message='未找到此用户')
 
     def put(self):
         post_parser = reqparse.RequestParser()
-        post_parser.add_argument('email', type=valid_email, location='json', required=True)
+        post_parser.add_argument('id', type=int, location='json', required=True)
+        post_parser.add_argument('nickname', type=str, location='json')
+        post_parser.add_argument('phone', type=str, location='json')
+        post_parser.add_argument('location', type=str, location='json')
+        post_parser.add_argument('description', type=str, location='json')  
+        post_parser.add_argument('imageid', type=int, location='json')
+        post_parser.add_argument('status', type=int, location='json')      
         args = post_parser.parse_args()
-        user = UserModel.query.filter_by(email=args.email).one()
+        user = UserModel.query.get(args.id).first()
         if user:
             user.nickname = args.nickname
             user.phone = args.phone
             user.location = args.location
             user.description = args.description
+            user.defaultImage = '{}.jpg'.format(args.imageid)
+            user.status = args.status
+            db.session.add(user)
             db.session.commit()    
             return jsonify(user.serialize())
         else:
-            return jsonify(result='can`t find user by email')
-
-class ChangeUserStatus(Resource):
-    def put(self):
-        post_parser = reqparse.RequestParser()
-        post_parser.add_argument('id', type=int, location='json', required=True)
-        post_parser.add_argument('userStatus', type=int, location='json', required=True)
-        args = post_parser.parse_args()
-        user = UserModel.query.get(args.id)
-        if user:
-            user.status = args.userStatus
-            db.session.commit()
-            return jsonify(user.serialize())
-        else:
-            return jsonify(result='can`t find user by id')
-
-class ChangePassword(Resource):
-    def put(self):
-        post_parser = reqparse.RequestParser()
-        post_parser.add_argument('email', type=valid_email, location='json', required=True)
-        post_parser.add_argument('params', type=str, location='json')
-        post_parser.add_argument('orignalPassword', type=str, location='json')
-        args = post_parser.parse_args()
-        if not args.orignalPassword:
-            user = UserModel.query.filter_by(email=args.email).one()
-            if user:
-                e = EmailModel.query.filter_by(toUser=args.email).filter_by(params=args.params).first()
-                if not e or e.expires < datetime.datetime.now():
-                    return jsonify(result='pls try again')
-            else:
-                return jsonify(result='can`t find user by email')
-        else:
-            user = UserModel.query.filter_by(email=args.email).filter_by(password=md5(args.orignalPassword)).one()
-
-        if user:
-            user.password = md5(args.password)
-            db.session.commit()
-            return jsonify(user.serialize())
-
-class ChangeUserDefaultImg(Resource):
-    def put(self):
-        post_parser = reqparse.RequestParser()
-        post_parser.add_argument('userid', type=int, location='json', required=True)
-        post_parser.add_argument('imageid', type=int, location='json', required=True)
-        args = post_parser.parse_args()
-        user = UserModel.query.get(args.userid)
-        if user:
-            user.defaultImage = '{}.jpg'.format(args.imageid)
-            db.session.commit()
-            return jsonify(user.serialize())
-        else:
-            return jsonify(result='can`t find user by id')
+            return jsonify(result='未找到此用户')
 
 class GetUserList(Resource):
     def get(self, page):
@@ -120,7 +52,7 @@ class GetUserList(Resource):
 
         users = UserModel.query
         if not args.all:
-            users = users.filter_by(status = user_status.normal)
+            users = users.filter_by(status = account_status.normal)
 
         if args.tag:
             users = users.filter(UserModel.tags.any(UserTagModel.name == args.tag))

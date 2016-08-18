@@ -9,11 +9,9 @@ from myapi.resources.login import Login, ChangePassword
 api.add_resource(Login, '/login')
 api.add_resource(ChangePassword, '/changepwd')
 
-from myapi.resources.user import User, ChangeUserStatus, ChangeUserDefaultImg, GetUserList
+from myapi.resources.user import User, GetUserList
 api.add_resource(User, '/user', '/user/<int:userid>',  endpoint='user')
 api.add_resource(GetUserList, '/userlist/<int:page>')
-api.add_resource(ChangeUserStatus, '/changeuserstatus')
-api.add_resource(ChangeUserDefaultImg, '/changeuserdefaultimg')
 
 from myapi.resources.authentication import AuthenticationList, UserAuthentication, Approval, \
     PrivateAuthenticate, CompanyAuthenticate, BankAuthenticate, ManualAuthenticate
