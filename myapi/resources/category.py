@@ -3,6 +3,7 @@ from flask.ext.restful import Resource, reqparse
 from myapi import db
 from myapi.model.category import CategoryModel
 from myapi.model.project import ProjectModel
+from myapi.model.user import UserModel
 from myapi.model.enum import category_status
 
 parser = reqparse.RequestParser()
@@ -62,10 +63,12 @@ class SearchCategorysByName(Resource):
 
 class ProjectCategorys(Resource):
     def get(self, projectid):
-        categorys = ProjectModel.query.get(projectid).categorys
-        clist = []
-        for category in categorys:
-            if category.status == category_status.normal:
-                clist.append(category)
-        return jsonify(data=[e.serialize() for e in clist])
+        categorys = CategoryModel.query.filter_by(status = category_status.normal)\
+            .filter(CategoryModel.projects.has(ProjectModel.id == projectid))
+        return jsonify(data=[e.serialize() for e in categorys])
 
+class UserCategorys(Resource):
+    def get(self, userid):
+        categorys = CategoryModel.query.filter_by(status = category_status.normal)\
+            .filter(CategoryModel.users.has(UserModel.id == userid))
+        return jsonify(data=[e.serialize() for e in categorys])

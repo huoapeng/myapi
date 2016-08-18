@@ -48,11 +48,12 @@ api.add_resource(ProjectList, '/projectlist/<int:page>')
 api.add_resource(UserPublishedProjects, '/userPublishedProjects/<int:page>', endpoint='userPublishedProjects')
 api.add_resource(UserParticipateProjects, '/userParticipateProjects/<int:page>', endpoint='userParticipateProjects')
 
-from myapi.resources.category import Category, CategoryList, SearchCategorysByName, ProjectCategorys
+from myapi.resources.category import Category, CategoryList, SearchCategorysByName, ProjectCategorys, UserCategorys
 api.add_resource(Category, '/category', '/category/<int:cid>')
 api.add_resource(CategoryList, '/categorylist')
 api.add_resource(SearchCategorysByName, '/search/categorylist/<string:keyword>')
 api.add_resource(ProjectCategorys, '/<int:projectid>/projectcategorys', endpoint='projectCategorys')
+api.add_resource(UserCategorys, '/<int:userid>/usercategorys', endpoint='userCategorys')
 
 from myapi.resources.version import Version, ProjectVersions
 api.add_resource(Version, '/version', '/version/<int:versionid>')

@@ -79,7 +79,8 @@ class UserModel(db.Model):
             'privateAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=1),
             'companyAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=2),
             'bankAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=4),
-            'manualAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=8)
+            'manualAuthentication': url_for('.userAuthen', _external=True, userid=self.id, type=8),
+            'categorys': url_for('.userCategorys', _external=True, userid=self.id)
         }
 
     def getImage(self, imageType=file_type.profileSmall):
