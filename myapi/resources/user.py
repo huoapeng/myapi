@@ -37,11 +37,12 @@ class User(Resource):
             user.description = args.description
             user.defaultImage = args.defaultImage
             user.status = args.status
+            for c in user.categorys:
+                user.categorys.remove(c)
             for id in args.cids.split(','):
                 category = CategoryModel.query.get(id)
                 user.categorys.append(category)
-            db.session.add(user)
-            db.session.commit()    
+            db.session.commit()
             return jsonify(user.serialize())
         else:
             return jsonify(result='未找到此用户')
@@ -78,4 +79,4 @@ class GetUserList(Resource):
             next_num = users.next_num,
             prev_num = users.prev_num,
             data=[e.serialize() for e in users.items])
-        
+
