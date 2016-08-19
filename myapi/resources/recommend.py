@@ -78,7 +78,7 @@ class RecommendItem(Resource):
         # target.orderid = orderid
 
         db.session.commit()
-        return jsonify(result='true')
+        return jsonify(data=item.serialize())
 
     def delete(self):
         args = post_parser.parse_args()

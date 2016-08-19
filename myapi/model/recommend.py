@@ -44,6 +44,7 @@ class RecommendItemModel(db.Model):
             'title': self.title,
             'description': self.description,
             'image': getUploadFileUrl(file_type.recommend, self.typeid, self.image),
+            'imageName': self.image,
             'url':self.url,
             'orderid': self.orderid
         }
