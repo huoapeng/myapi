@@ -37,11 +37,12 @@ class User(Resource):
             user.description = args.description
             user.defaultImage = args.defaultImage
             user.status = args.status
-            for c in user.categorys:
-                user.categorys.remove(c)
-            for id in args.cids.split(','):
-                category = CategoryModel.query.get(id)
-                user.categorys.append(category)
+            if args.cids:
+                for c in user.categorys:
+                    user.categorys.remove(c)
+                for id in args.cids.split(','):
+                    category = CategoryModel.query.get(id)
+                    user.categorys.append(category)
             db.session.commit()
             return jsonify(user.serialize())
         else:

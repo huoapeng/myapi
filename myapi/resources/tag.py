@@ -58,8 +58,10 @@ class UserTag(Resource):
 class UserTags(Resource):
     @marshal_with(tag_fields)
     def get(self, userid):
-        user = UserModel.query.get(userid).filter_by(status = tag_status.normal)
-        return user.tags
+        tags = UserTagModel.query\
+            .filter_by(status = tag_status.normal)\
+            .filter(UserTagModel.users.any(UserModel.id == userid)).all()
+        return tags
 
 class UserTagList(Resource):
     def get(self, page):
