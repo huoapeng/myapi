@@ -49,9 +49,11 @@ class Login(Resource):
         post_parser.add_argument('status', type=int, location='json', required=True)
         args = post_parser.parse_args()
         login = LoginModel.query.filter_by(email=args.email).one()
-        if login:
+        user = UserModel.query.filter_by(email=args.email).one()
+        if login and user:
             login.status = args.status
-            db.session.commit()    
+            user.status = args.status
+            db.session.commit()
             return jsonify(login.serialize())
         else:
             return jsonify(result=False, message='未找到此用户')
