@@ -48,16 +48,27 @@ class User(Resource):
         else:
             return jsonify(result='未找到此用户')
 
+from sqlalchemy import or_
 class GetUserList(Resource):
     def get(self, page):
         get_parser = reqparse.RequestParser()
         get_parser.add_argument('all', type=int, location='args', choices=range(2), default=0)
+        get_parser.add_argument('cid', type=int, location='args', default=0)
         get_parser.add_argument('keyword', type=str, location='args')
         get_parser.add_argument('tag', type=str, location='args')
-        get_parser.add_argument('status', type=int, location='args', default=0)
+        get_parser.add_argument('authentype', type=int, location='args', default=0)
         args = get_parser.parse_args()
 
         users = UserModel.query
+        if args.cid:
+            users = users.filter( \
+                or_( \
+                    UserModel.categorys.any(CategoryModel.id == args.cid), \
+                    UserModel.categorys.any(CategoryModel.parent_id == args.cid), \
+                    UserModel.categorys.any(CategoryModel.parent.has(CategoryModel.parent_id == args.cid))
+                    ) \
+                )
+
         if not args.all:
             users = users.filter_by(status = account_status.normal)
 
@@ -67,8 +78,8 @@ class GetUserList(Resource):
         if args.keyword:
             users = users.filter(UserModel.nickname.contains(args.keyword))
 
-        if args.status:
-            users = users.filter(UserModel.authenticationType & args.status == args.status)
+        if args.authentype:
+            users = users.filter(UserModel.authenticationType.op('&')(args.authentype) == args.authentype)
 
         users = users.paginate(page, app.config['POSTS_PER_PAGE'], False)
         return jsonify(total = users.total,
