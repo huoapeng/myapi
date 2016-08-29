@@ -27,6 +27,7 @@ class file_type:
     workThumbnail = 8
     recommend = 9
     workFile = 51
+    bidFile = 52
 
 class account_status:
     normal = 1

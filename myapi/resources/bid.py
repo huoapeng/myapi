@@ -12,20 +12,20 @@ post_parser.add_argument('userid', type=int, location='json', required=True)
 post_parser.add_argument('price', type=str, location='json')
 post_parser.add_argument('description', type=str, location='json')
 post_parser.add_argument('timespan', type=str, location='json')
-
-get_parser = reqparse.RequestParser()
-get_parser.add_argument('projectid', type=int, location='args', required=True)
-get_parser.add_argument('userid', type=int, location='args', required=True)
+post_parser.add_argument('file', type=str, location='json')
 
 class Bid(Resource):
     def get(self):
+        get_parser = reqparse.RequestParser()
+        get_parser.add_argument('projectid', type=int, location='args', required=True)
+        get_parser.add_argument('userid', type=int, location='args', required=True)
         args = get_parser.parse_args()
         e = BidModel.query.filter_by(user_id=args.userid).filter_by(project_id=args.projectid).first()
         return jsonify(data=e.serialize() if e else '')
 
     def post(self):
         args = post_parser.parse_args()
-        bid = BidModel(args.price, args.description, args.timespan)
+        bid = BidModel(args.price, args.description, args.timespan, args.file)
 
         user = UserModel.query.get(args.userid)
         bid.user = user
