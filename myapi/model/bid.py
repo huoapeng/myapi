@@ -9,7 +9,7 @@ class BidModel(db.Model):
     price = db.Column(db.String(100))
     description = db.Column(db.Text)
     timespan = db.Column(db.String(100))
-    file = db.Column(db.String(100))
+    file = db.Column(db.String(200))
     status = db.Column(db.Integer)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user_model.id'), primary_key=True)
