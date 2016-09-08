@@ -7,3 +7,4 @@ this is a test project for flask-restful
 flask-restful flask-sqlalchemy mysql
 
 #holly shit !
+输入中文试试
