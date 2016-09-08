@@ -7,5 +7,5 @@ worker_class = "gevent"
 debug = True
 proc_name = 'gunicorn.proc'
 pidfile = '/tmp/gunicorn.pid'
-logfile = '/var/log/gunicorn/debug.log'
+logfile = '/tmp/gunicorn.log'
 loglevel = 'debug'
