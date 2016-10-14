@@ -1,3 +1,18 @@
+class model_type:
+    account = 1
+    authentication = 2
+    tag = 3
+    work = 4
+    project = 5
+    bid = 6
+    note = 7
+    version = 8
+
+class mail_status:
+    unread = 1
+    read = 2
+    delete = 3
+
 class authentication_type:
     none = 0
     private = 1
